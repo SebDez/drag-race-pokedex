@@ -8,7 +8,7 @@ import { Contestant } from '../../../contestants/models/contestant';
   standalone: true,
   imports: [NgOptimizedImage, TranslateModule],
   templateUrl: './contestant-detail.component.html',
-  styleUrl: './contestant-detail.component.css',
+  host: { class: 'col-span-full' },
 })
 export class ContestantDetailComponent {
   readonly contestant = input.required<Contestant>();
