@@ -1,0 +1,25 @@
+{
+  "home": {
+    "title": "Drag Race Pokédex",
+    "subtitle": "Parce que vous connaissez la reine, mais vous ne vous souvenez pas dans quelle saison elle était...",
+    "loading": "Chargement des contestants…",
+    "contestantsCount": "{{count}} contestants"
+  },
+  "common": {
+    "wins": "{{count}} win(s)",
+    "winner": "Gagnante"
+  },
+  "detail": {
+    "seasons": "Saisons",
+    "place": "Place",
+    "challengeWins": "Wins",
+    "wikiLink": "Fiche wiki"
+  },
+  "errors": {
+    "loadFailed": "Erreur lors du chargement des contestants"
+  },
+  "aria": {
+    "loading": "Chargement",
+    "language": "Langue"
+  }
+}

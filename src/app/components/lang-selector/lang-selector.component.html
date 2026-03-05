@@ -1,0 +1,16 @@
+<div class="fixed top-3 right-3 z-[100]">
+  <label for="lang-select" class="sr-only">
+    {{ 'aria.language' | translate }}
+  </label>
+  <select
+    id="lang-select"
+    class="appearance-none px-2.5 py-1.5 text-sm font-semibold text-[var(--color-gold-dark)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg cursor-pointer shadow-sm hover:border-[var(--color-pink-light)] focus:outline-2 focus:outline-[var(--color-pink)] focus:outline-offset-2"
+    [value]="current()"
+    (change)="selectLang($any($event.target).value)"
+    [attr.aria-label]="'aria.language' | translate"
+  >
+    @for (opt of options(); track opt.code) {
+      <option [value]="opt.code">{{ opt.label }}</option>
+    }
+  </select>
+</div>

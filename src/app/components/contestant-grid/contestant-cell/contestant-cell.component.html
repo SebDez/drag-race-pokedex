@@ -1,0 +1,21 @@
+<button
+  type="button"
+  class="aspect-square p-0 border-none rounded-xl overflow-hidden bg-[var(--color-bg-subtle)] cursor-pointer transition-all duration-200 hover:shadow-[0_2px_8px_rgba(214,92,140,0.2)] hover:scale-[1.02]"
+  [class.ring-2]="isSelected()"
+  [class.ring-[var(--color-pink)]]="isSelected()"
+  (click)="onClick()"
+  [attr.aria-expanded]="isSelected()"
+  [attr.aria-label]="contestant().dragName"
+>
+  @if (imageUrl()) {
+    <img
+      [ngSrc]="imageUrl()"
+      [alt]="contestant().dragName"
+      width="80"
+      height="80"
+      class="w-full h-full object-cover block"
+    />
+  } @else {
+    <span class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"></span>
+  }
+</button>

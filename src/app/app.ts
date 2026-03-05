@@ -1,12 +1,18 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LangService } from './core/lang.service';
+import { LangSelectorComponent } from './components/lang-selector/lang-selector.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, LangSelectorComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('drag-race-pokedex');
+  private readonly langService = inject(LangService);
+
+  constructor() {
+    this.langService.initLang();
+  }
 }

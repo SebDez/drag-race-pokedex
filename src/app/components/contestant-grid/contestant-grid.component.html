@@ -1,0 +1,13 @@
+<div class="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2 sm:gap-3 m-0 p-0 list-none">
+  @for (contestant of contestants(); track trackByDragName($index, contestant)) {
+    <app-contestant-cell
+      [contestant]="contestant"
+      [imageUrl]="getGridImageUrl(contestant)"
+      [isSelected]="isExpanded(contestant.dragName)"
+      (cellClick)="toggleExpand($event)"
+    />
+    @if (isExpanded(contestant.dragName)) {
+      <app-contestant-detail [contestant]="contestant" />
+    }
+  }
+</div>
