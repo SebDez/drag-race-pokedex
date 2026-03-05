@@ -15,6 +15,14 @@
     </div>
   } @else {
     <p class="text-sm text-[var(--color-text-muted)] mb-4">{{ 'home.contestantsCount' | translate : { count: store.count() } }}</p>
-    <app-contestant-grid [contestants]="store.contestants()" />
+    <app-contestant-grid [contestants]="visibleContestants()" />
+    @if (hasMore()) {
+      <div
+        appObserveVisible
+        (visible)="loadMore()"
+        class="h-4 w-full"
+        aria-hidden="true"
+      ></div>
+    }
   }
 </div>
