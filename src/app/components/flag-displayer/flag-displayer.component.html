@@ -1,0 +1,20 @@
+@if (countryCode(); as code) {
+  <span
+    [attr.class]="sizeClass() + ' inline-flex items-center shrink-0'"
+    role="img"
+    [attr.aria-label]="title()"
+  >
+    @switch (code) {
+      @case ('US') {
+        <app-usa-flag-icon />
+      }
+      @case ('FR') {
+        <app-france-flag-icon />
+      }
+      @case ('ES') {
+        <app-spain-flag-icon />
+      }
+      @default {}
+    }
+  </span>
+}

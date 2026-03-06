@@ -12,9 +12,9 @@ export class LangService {
 
   /** Langues supportées (emoji drapeau + code en fallback pour navigateurs sans support emoji). */
   readonly supported: { code: SupportedLang; label: string }[] = [
-    { code: 'fr', label: '🇫🇷 FR' },
-    { code: 'en', label: '🇬🇧 EN' },
-    { code: 'es', label: '🇪🇸 ES' },
+    { code: 'fr', label: 'Français' },
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
   ];
 
   /** Initialise la langue au démarrage : localStorage > navigateur > défaut. */

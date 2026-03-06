@@ -1,16 +1,43 @@
-<div class="fixed top-3 right-3 z-[100]">
-  <label for="lang-select" class="sr-only">
-    {{ 'aria.language' | translate }}
-  </label>
-  <select
-    id="lang-select"
-    class="appearance-none px-2.5 py-1.5 text-sm font-semibold text-[var(--color-gold-dark)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg cursor-pointer shadow-sm hover:border-[var(--color-pink-light)] focus:outline-2 focus:outline-[var(--color-pink)] focus:outline-offset-2"
-    [value]="current()"
-    (change)="selectLang($any($event.target).value)"
+<div
+  class="fixed top-3 right-3 z-[100]"
+  role="combobox"
+  [attr.aria-expanded]="open()"
+  [attr.aria-haspopup]="'listbox'"
+  [attr.aria-label]="'aria.language' | translate"
+>
+  <button
+    type="button"
+    class="flex items-center justify-center gap-2 px-2.5 py-1.5 text-sm font-semibold text-[var(--color-gold-dark)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg cursor-pointer shadow-sm hover:border-[var(--color-pink-light)] focus:outline-2 focus:outline-[var(--color-pink)] focus:outline-offset-2"
+    (click)="toggle()"
     [attr.aria-label]="'aria.language' | translate"
   >
-    @for (opt of options(); track opt.code) {
-      <option [value]="opt.code">{{ opt.label }}</option>
-    }
-  </select>
+    <app-flag-displayer
+      [countryCode]="currentCountryCode()"
+      [title]="'aria.language' | translate"
+      sizeClass="size-6"
+    />
+  </button>
+  @if (open()) {
+    <ul
+      class="absolute right-0 top-full mt-1 min-w-[8rem] py-1 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-lg"
+      role="listbox"
+    >
+      @for (opt of options(); track opt.code) {
+        <li role="option" [attr.aria-selected]="current() === opt.code">
+          <button
+            type="button"
+            class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-[var(--color-gold-dark)] hover:bg-[var(--color-pink-light)]/20 focus:bg-[var(--color-pink-light)]/20 focus:outline-none"
+            (click)="selectLang(opt.code)"
+          >
+            <app-flag-displayer
+              [countryCode]="getCountryCode(opt.code)"
+              [title]="opt.label"
+              sizeClass="size-6"
+            />
+            <span>{{ opt.label }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
 </div>
