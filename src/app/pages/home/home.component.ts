@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ContestantsStore } from '../../store/contestants.store';
-import { ContestantGridComponent } from '../../components/contestant-grid/contestant-grid.component';
+import { ContestantListComponent } from '../../components/contestant-list/contestant-list.component';
 import { ObserveVisibleDirective } from '../../shared/observe-visible.directive';
 
 const PAGE_SIZE = 96;
@@ -9,7 +9,7 @@ const PAGE_SIZE = 96;
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TranslateModule, ContestantGridComponent, ObserveVisibleDirective],
+  imports: [TranslateModule, ContestantListComponent, ObserveVisibleDirective],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {

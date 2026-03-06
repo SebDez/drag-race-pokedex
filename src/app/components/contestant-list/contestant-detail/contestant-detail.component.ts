@@ -8,10 +8,11 @@ import { Contestant } from '../../../contestants/models/contestant';
   standalone: true,
   imports: [NgOptimizedImage, TranslateModule],
   templateUrl: './contestant-detail.component.html',
-  host: { class: 'col-span-full' },
+  styleUrl: './contestant-detail.component.css',
 })
 export class ContestantDetailComponent {
   readonly contestant = input.required<Contestant>();
+  readonly isClosing = input<boolean>(false);
 
   /** Image détail : imageUrl en priorité, sinon miniPromoImageUrl. */
   protected getDetailImageUrl(c: Contestant): string {

@@ -1,0 +1,43 @@
+@let c = contestant();
+<button
+  type="button"
+  class="w-full flex items-center gap-3 sm:gap-4 p-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-left transition-colors hover:border-[var(--color-pink-light)] hover:bg-[var(--color-bg-subtle)]"
+  [class.ring-2]="isExpanded()"
+  [class.ring-[var(--color-pink)]]="isExpanded()"
+  (click)="onClick()"
+  [attr.aria-expanded]="isExpanded()"
+  [attr.aria-label]="c.dragName"
+>
+  <!-- Image à gauche -->
+  <div class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]">
+    @if (getCardImageUrl(c)) {
+      <img
+        [ngSrc]="getCardImageUrl(c)"
+        [alt]=""
+        width="64"
+        height="64"
+        class="w-full h-full object-cover"
+      />
+    } @else {
+      <span class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"></span>
+    }
+  </div>
+  <!-- Nom au centre -->
+  <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{ c.dragName }}</span>
+  <!-- Badges et franchise à droite -->
+  <div class="shrink-0 flex items-center gap-2 flex-wrap justify-end">
+    @if (c.totalChallengeWins > 0) {
+      <span class="text-[10px] font-semibold uppercase tracking-wider py-0.5 px-2 rounded-md bg-[var(--color-gold-light)] text-[var(--color-gold-dark)]">
+        {{ 'common.wins' | translate : { count: c.totalChallengeWins } }}
+      </span>
+    }
+    @if (c.isWinner) {
+      <span class="text-[10px] font-semibold uppercase tracking-wider py-0.5 px-2 rounded-md bg-[var(--color-pink-light)] text-[var(--color-pink)]">
+        {{ 'common.winner' | translate }}
+      </span>
+    }
+    <span class="text-xs text-[var(--color-text-muted)] truncate max-w-[120px] sm:max-w-[160px]" [title]="c.firstFranchise">
+      {{ c.firstFranchise }}
+    </span>
+  </div>
+</button>
