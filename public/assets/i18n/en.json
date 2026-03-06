@@ -6,7 +6,8 @@
     "contestantsCount": "{{count}} contestants"
   },
   "common": {
-    "wins": "{{count}} win(s)",
+    "win": "1 win",
+    "wins": "{{count}} wins",
     "winner": "Winner"
   },
   "detail": {

@@ -23,19 +23,13 @@
     <!-- Colonne droite : infos + saisons -->
     <div class="min-w-0 flex-1 flex flex-col">
       <h2 class="text-xl font-bold text-[var(--color-text)] mb-1 leading-tight">{{ c.dragName }}</h2>
-      <p class="text-sm text-[var(--color-text-muted)] mb-2">
-        {{ c.firstFranchise }}
-        <span class="mx-1 opacity-70">·</span>
-        {{ c.firstFranchiseCountry }}
-      </p>
-      @if (c.totalChallengeWins > 0) {
-        <span class="inline-block text-[10px] font-semibold uppercase tracking-wider py-0.5 px-2 rounded-md mt-0 mr-1.5 mb-2 bg-[var(--color-gold-light)] text-[var(--color-gold-dark)]">{{
-          'common.wins' | translate : { count: c.totalChallengeWins }
-        }}</span>
-      }
-      @if (c.isWinner) {
-        <span class="inline-block text-[10px] font-semibold uppercase tracking-wider py-0.5 px-2 rounded-md mt-0 mr-1.5 mb-2 bg-[var(--color-pink-light)] text-[var(--color-pink)]">{{ 'common.winner' | translate }}</span>
-      }
+      <div class="text-sm text-[var(--color-text-muted)] mb-2">
+        <app-franchise-badge [franchiseName]="c.firstFranchise" [country]="c.firstFranchiseCountry" />
+      </div>
+      <div class="flex flex-wrap gap-2 mt-0 mb-2">
+        <app-wins-badge [count]="c.totalChallengeWins" />
+        <app-winner-badge [show]="c.isWinner" />
+      </div>
       @if (c.wikiUrl) {
         <a
           [href]="c.wikiUrl"

@@ -6,7 +6,8 @@
     "contestantsCount": "{{count}} contestants"
   },
   "common": {
-    "wins": "{{count}} win(s)",
+    "win": "1 victoria",
+    "wins": "{{count}} victorias",
     "winner": "Ganadora"
   },
   "detail": {
