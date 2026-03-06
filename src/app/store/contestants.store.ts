@@ -37,7 +37,7 @@ export class ContestantsStore {
             error: null,
           }));
         }),
-        catchError((err) => {
+        catchError(() => {
           this.state.update((s) => ({
             ...s,
             loading: false,
