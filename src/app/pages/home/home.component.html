@@ -31,8 +31,5 @@
       {{ 'home.contestantsCount' | translate: { count: store.count() } }}
     </p>
     <app-contestant-list [contestants]="visibleContestants()" />
-    @if (hasMore()) {
-      <div appObserveVisible (visible)="loadMore()" class="h-4 w-full" aria-hidden="true"></div>
-    }
   }
 </div>
