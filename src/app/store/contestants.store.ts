@@ -2,11 +2,12 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { CONTESTANTS_DATA_PROVIDER } from '../contestants/contestants-data-provider';
 import { Contestant } from '../contestants/models/contestant';
 import { tap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, type Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ContestantsStore {
   private readonly provider = inject(CONTESTANTS_DATA_PROVIDER);
+  private loadSub: Subscription | null = null;
 
   private readonly state = signal<{
     contestants: Contestant[];
@@ -24,9 +25,10 @@ export class ContestantsStore {
   readonly count = computed(() => this.state().contestants.length);
 
   loadContestants(): void {
+    this.loadSub?.unsubscribe();
     this.state.update((s) => ({ ...s, loading: true, error: null }));
 
-    this.provider
+    this.loadSub = this.provider
       .getContestants()
       .pipe(
         tap((contestants) => {

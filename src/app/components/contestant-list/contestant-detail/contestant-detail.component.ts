@@ -23,7 +23,6 @@ import { PlaceOrdinalPipe } from '../../../core/pipes/place-ordinal.pipe';
 export class ContestantDetailComponent {
   readonly contestant = input.required<Contestant>();
 
-  /** Image détail : imageUrl en priorité, sinon miniPromoImageUrl. */
   protected getDetailImageUrl(c: Contestant): string {
     const url = c.imageUrl?.trim() || c.miniPromoImageUrl?.trim() || '';
     return url;

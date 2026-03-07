@@ -11,7 +11,7 @@
     [attr.aria-expanded]="isExpanded()"
     [attr.aria-label]="c.dragName"
   >
-    <!-- Image à gauche -->
+    <!-- IMAGE -->
     <div
       class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]"
     >
@@ -29,17 +29,18 @@
         ></span>
       }
     </div>
-    <!-- Nom au centre -->
+    <!-- NAME -->
     <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{
       c.dragName
     }}</span>
-    <!-- Badges et franchise à droite -->
+    <!-- BADGES -->
     <div class="shrink-0 flex items-stretch gap-1 flex-wrap justify-end h-8">
       <app-winner-badge [show]="c.isWinner" />
       <app-wins-badge [count]="c.totalChallengeWins" />
       <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
     </div>
   </button>
+  <!-- DETAIL -->
   <div
     class="grid transition-[grid-template-rows] duration-300 ease-out"
     [class.grid-rows-[0fr]]="!isExpanded()"

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-phillippines-flag-icon',
+  selector: 'app-philippines-flag-icon',
   standalone: true,
   imports: [],
   host: { class: 'block w-full h-full' },
@@ -27,4 +27,4 @@ import { Component } from '@angular/core';
     ></path>
   </svg>`,
 })
-export class PhillippinesFlagIconComponent {}
+export class PhilippinesFlagIconComponent {}

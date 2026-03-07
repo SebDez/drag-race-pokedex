@@ -7,7 +7,7 @@ import { ThailandFlagIconComponent } from '../icons/thailand-flag-icon.component
 import { UkFlagIconComponent } from '../icons/uk-flag-icon.component';
 import { CanadaFlagIconComponent } from '../icons/canada-flag-icon.component';
 import { NetherlandsFlagIconComponent } from '../icons/netherlands-flag-icon.component';
-import { PhillippinesFlagIconComponent } from '../icons/phillippines-flag-icon.component';
+import { PhilippinesFlagIconComponent } from '../icons/philippines-flag-icon.component';
 import { SwedenFlagIconComponent } from '../icons/sweden-flag-icon.component';
 import { MexicoFlagIconComponent } from '../icons/mexico-flag-icon.component';
 import { BrasilFlagIconComponent } from '../icons/brasil-flag-icon.component';
@@ -26,7 +26,7 @@ import { BelgiumFlagIconComponent } from '../icons/belgium-flag-icon.component';
     UkFlagIconComponent,
     CanadaFlagIconComponent,
     NetherlandsFlagIconComponent,
-    PhillippinesFlagIconComponent,
+    PhilippinesFlagIconComponent,
     SwedenFlagIconComponent,
     MexicoFlagIconComponent,
     BrasilFlagIconComponent,

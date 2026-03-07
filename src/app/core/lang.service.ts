@@ -10,14 +10,12 @@ const STORAGE_KEY = 'drag-race-pokedex-lang';
 export class LangService {
   private readonly translate = inject(TranslateService);
 
-  /** Langues supportées (emoji drapeau + code en fallback pour navigateurs sans support emoji). */
   readonly supported: { code: SupportedLang; label: string }[] = [
     { code: 'fr', label: 'Français' },
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
   ];
 
-  /** Initialise la langue au démarrage : localStorage > navigateur > défaut. */
   initLang(): void {
     this.translate.addLangs([...SUPPORTED_LANGS]);
     const stored = localStorage.getItem(STORAGE_KEY) as SupportedLang | null;
