@@ -40,7 +40,13 @@
       <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
     </div>
   </button>
-  @if (isExpanded()) {
-    <app-contestant-detail [contestant]="contestant()" />
-  }
+  <div
+    class="grid transition-[grid-template-rows] duration-300 ease-out"
+    [class.grid-rows-[0fr]]="!isExpanded()"
+    [class.grid-rows-[1fr]]="isExpanded()"
+  >
+    <div class="min-h-0 overflow-hidden">
+      <app-contestant-detail [contestant]="contestant()" />
+    </div>
+  </div>
 </div>
