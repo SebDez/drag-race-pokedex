@@ -8,7 +8,6 @@ import {
   HostListener,
   ElementRef,
 } from '@angular/core';
-import { UpperCasePipe } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LangService, type SupportedLang } from '../../core/lang.service';
 import { Subscription } from 'rxjs';
@@ -24,7 +23,7 @@ const LANG_TO_COUNTRY: Record<SupportedLang, string> = {
 @Component({
   selector: 'app-lang-selector',
   standalone: true,
-  imports: [TranslateModule, UpperCasePipe, FlagDisplayerComponent],
+  imports: [TranslateModule, FlagDisplayerComponent],
   templateUrl: './lang-selector.component.html',
 })
 export class LangSelectorComponent implements OnInit, OnDestroy {

@@ -26,7 +26,7 @@ export class ContestantCardComponent {
 
   /** Image carte : imageUrl en priorité, sinon miniPromoImageUrl. */
   protected getCardImageUrl(c: Contestant): string {
-    return c.imageUrl?.trim() || c.miniPromoImageUrl?.trim() || '';
+    return c.miniPromoImageUrl?.trim() || c.imageUrl?.trim() || '';
   }
 
   protected onClick(): void {
