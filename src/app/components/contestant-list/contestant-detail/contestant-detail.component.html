@@ -24,11 +24,12 @@
       <h2 class="text-xl font-bold text-[var(--color-text)] mb-1 leading-tight">
         {{ c.dragName }}
       </h2>
-      <div class="text-sm text-[var(--color-text-muted)] mb-2">
+      <div class="text-sm text-[var(--color-text-muted)] mb-2 flex items-center gap-2">
         <app-franchise-badge
           [franchiseName]="c.firstFranchise"
           [country]="c.firstFranchiseCountry"
         />
+        {{ c.firstFranchise }}
       </div>
       <div class="flex flex-wrap gap-2 mt-0 mb-2">
         <app-wins-badge [count]="c.totalChallengeWins" />
@@ -57,13 +58,14 @@
                 class="text-sm text-[var(--color-text)] py-1.5 border-b border-[var(--color-border)] last:border-b-0"
               >
                 <span class="font-semibold block">{{ season.franchise }} S{{ season.season }}</span>
-                <span class="text-xs text-[var(--color-text-muted)]">
-                  {{ 'detail.place' | translate }} {{ season.rawPlace }}
-                  @if (season.challengeWins > 0) {
-                    · {{ 'detail.challengeWins' | translate }} {{ season.challengeWins }}
-                  }
+                <span class="text-xs text-[var(--color-text-muted)] flex items-center gap-2">
                   @if (season.isWinner) {
-                    · {{ 'common.winner' | translate }}
+                    <app-winner-badge [show]="c.isWinner" />
+                  } @else {
+                    {{ 'detail.place' | translate }} {{ season.rawPlace | placeOrdinal }}
+                  }
+                  @if (season.challengeWins > 0) {
+                    <app-wins-badge [count]="season.challengeWins" />
                   }
                 </span>
               </li>

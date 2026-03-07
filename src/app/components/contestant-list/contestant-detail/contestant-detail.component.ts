@@ -5,6 +5,7 @@ import { Contestant } from '../../../contestants/models/contestant';
 import { WinsBadgeComponent } from '../../badges/wins-badge/wins-badge.component';
 import { WinnerBadgeComponent } from '../../badges/winner-badge/winner-badge.component';
 import { FranchiseBadgeComponent } from '../../badges/franchise-badge/franchise-badge.component';
+import { PlaceOrdinalPipe } from '../../../core/pipes/place-ordinal.pipe';
 
 @Component({
   selector: 'app-contestant-detail',
@@ -15,9 +16,9 @@ import { FranchiseBadgeComponent } from '../../badges/franchise-badge/franchise-
     WinsBadgeComponent,
     WinnerBadgeComponent,
     FranchiseBadgeComponent,
+    PlaceOrdinalPipe,
   ],
   templateUrl: './contestant-detail.component.html',
-  styleUrl: './contestant-detail.component.css',
 })
 export class ContestantDetailComponent {
   readonly contestant = input.required<Contestant>();

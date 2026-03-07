@@ -6,10 +6,9 @@ import { TrophyIconComponent } from '../../icons/trophy-icon.component';
   selector: 'app-wins-badge',
   standalone: true,
   imports: [TranslateModule, TrophyIconComponent],
-  host: { class: 'inline-flex h-full' },
   template: `@if (count() > 0) {
     <span
-      class="inline-flex items-center justify-center gap-1 h-full text-md font-semibold uppercase tracking-wider py-0 px-2 rounded-md bg-[var(--color-pink-light)] text-[var(--color-pink)]"
+      class="h-8 inline-flex items-center justify-center gap-1 text-md font-semibold uppercase tracking-wider py-0 px-2 rounded-md bg-[var(--color-pink-light)] text-[var(--color-pink)]"
       [attr.title]="(count() === 1 ? 'common.win' : 'common.wins') | translate: { count: count() }"
     >
       {{ count() }}
