@@ -1,32 +1,3 @@
-/* Accordéon : animation d'entrée */
 :host {
   display: block;
-  animation: detailEnter 0.28s ease-out;
-}
-
-@keyframes detailEnter {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Animation de sortie */
-.contestant-detail-panel--closing {
-  animation: detailLeave 0.2s ease-in forwards;
-}
-
-@keyframes detailLeave {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
 }

@@ -21,7 +21,6 @@ import { FranchiseBadgeComponent } from '../../badges/franchise-badge/franchise-
 })
 export class ContestantDetailComponent {
   readonly contestant = input.required<Contestant>();
-  readonly isClosing = input<boolean>(false);
 
   /** Image détail : imageUrl en priorité, sinon miniPromoImageUrl. */
   protected getDetailImageUrl(c: Contestant): string {

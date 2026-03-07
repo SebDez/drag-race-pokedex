@@ -1,39 +1,46 @@
 @let c = contestant();
-<button
-  type="button"
-  class="w-full flex items-center gap-3 sm:gap-4 p-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-left transition-colors hover:border-[var(--color-pink-light)] hover:bg-[var(--color-bg-subtle)]"
+<div
+  class="flex flex-col gap-0 border border-[var(--color-border)] rounded-xl overflow-hidden transition-[box-shadow]"
   [class.ring-2]="isExpanded()"
   [class.ring-[var(--color-pink)]]="isExpanded()"
-  (click)="onClick()"
-  [attr.aria-expanded]="isExpanded()"
-  [attr.aria-label]="c.dragName"
 >
-  <!-- Image à gauche -->
-  <div
-    class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]"
+  <button
+    type="button"
+    class="cursor-pointer w-full flex items-center gap-3 sm:gap-4 p-3 bg-[var(--color-surface)] text-left transition-colors hover:bg-[var(--color-bg-subtle)]"
+    (click)="onClick()"
+    [attr.aria-expanded]="isExpanded()"
+    [attr.aria-label]="c.dragName"
   >
-    @if (getCardImageUrl(c)) {
-      <img
-        [ngSrc]="getCardImageUrl(c)"
-        [alt]=""
-        width="64"
-        height="64"
-        class="w-full h-full object-cover"
-      />
-    } @else {
-      <span
-        class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
-      ></span>
-    }
-  </div>
-  <!-- Nom au centre -->
-  <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{
-    c.dragName
-  }}</span>
-  <!-- Badges et franchise à droite -->
-  <div class="shrink-0 flex items-stretch gap-1 flex-wrap justify-end h-8">
-    <app-winner-badge [show]="c.isWinner" />
-    <app-wins-badge [count]="c.totalChallengeWins" />
-    <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
-  </div>
-</button>
+    <!-- Image à gauche -->
+    <div
+      class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]"
+    >
+      @if (getCardImageUrl(c)) {
+        <img
+          [ngSrc]="getCardImageUrl(c)"
+          [alt]=""
+          width="64"
+          height="64"
+          class="w-full h-full object-cover"
+        />
+      } @else {
+        <span
+          class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
+        ></span>
+      }
+    </div>
+    <!-- Nom au centre -->
+    <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{
+      c.dragName
+    }}</span>
+    <!-- Badges et franchise à droite -->
+    <div class="shrink-0 flex items-stretch gap-1 flex-wrap justify-end h-8">
+      <app-winner-badge [show]="c.isWinner" />
+      <app-wins-badge [count]="c.totalChallengeWins" />
+      <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
+    </div>
+  </button>
+  @if (isExpanded()) {
+    <app-contestant-detail [contestant]="contestant()" />
+  }
+</div>

@@ -15,7 +15,6 @@ const PAGE_SIZE = 96;
 export class HomeComponent implements OnInit {
   protected readonly store = inject(ContestantsStore);
 
-  /** Nombre de contestants affichés (chargement progressif). */
   private readonly contestantsVisibleCount = signal(PAGE_SIZE);
 
   protected readonly visibleContestants = computed(() =>
