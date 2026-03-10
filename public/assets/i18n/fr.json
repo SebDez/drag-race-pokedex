@@ -28,5 +28,10 @@
     "all": "Toutes",
     "alphabetical": "Alphabétique",
     "franchise": "Franchise"
+  },
+  "sortBy": {
+    "label": "Trier par",
+    "dragNameAsc": "Nom",
+    "challengeWinsDesc": "Victoires aux défis"
   }
 }

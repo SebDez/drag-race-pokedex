@@ -3,6 +3,7 @@ import { CONTESTANTS_DATA_PROVIDER } from '../../contestants/contestants-data-pr
 import { Contestant } from '../../contestants/models/contestant';
 import { FRANCHISE_NAMES } from '../../contestants/constants/franchises';
 import { GroupMode, type ContestantGroupMode } from '../../contestants/constants/group-mode';
+import { SortMode, type ContestantSortMode } from '../../contestants/constants/sort-mode';
 import { tap, catchError } from 'rxjs/operators';
 import { of, type Subscription } from 'rxjs';
 import { ContestantsViewModel } from './types';
@@ -15,23 +16,38 @@ export class ContestantsStore implements OnDestroy {
   private readonly state = signal<{
     contestants: Contestant[];
     groupMode: ContestantGroupMode;
+    sortMode: ContestantSortMode;
     loading: boolean;
     error: string | null;
   }>({
     contestants: [],
     groupMode: GroupMode.All,
+    sortMode: SortMode.DragNameAsc,
     loading: false,
     error: null,
   });
 
   readonly contestants = computed(() => this.state().contestants);
   readonly groupMode = computed(() => this.state().groupMode);
+  readonly sortMode = computed(() => this.state().sortMode);
+
+  private readonly sortedContestants = computed(() => {
+    const list = this.contestants();
+    const mode = this.sortMode();
+    const copy = [...list];
+    if (mode === SortMode.DragNameAsc) {
+      return copy.sort((a, b) =>
+        (a.dragName?.trim() ?? '').localeCompare(b.dragName?.trim() ?? '', undefined, { sensitivity: 'base' })
+      );
+    }
+    return copy.sort((a, b) => (b.totalChallengeWins ?? 0) - (a.totalChallengeWins ?? 0));
+  });
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
   readonly count = computed(() => this.state().contestants.length);
 
   private readonly groupedByLetter = computed(() => {
-    const all = this.contestants();
+    const all = this.sortedContestants();
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     return letters
       .map((letter) => ({
@@ -42,7 +58,7 @@ export class ContestantsStore implements OnDestroy {
   });
 
   private readonly groupedByFranchise = computed(() => {
-    const all = this.contestants();
+    const all = this.sortedContestants();
     return FRANCHISE_NAMES.map((franchise) => ({
       key: franchise,
       contestants: all.filter((c) => c.firstFranchise === franchise),
@@ -51,7 +67,7 @@ export class ContestantsStore implements OnDestroy {
 
   readonly viewModel = computed<ContestantsViewModel>(() => {
     const mode = this.groupMode();
-    const list = this.contestants();
+    const list = this.sortedContestants();
     if (mode === GroupMode.All) {
       return { mode: GroupMode.All, list, sections: null };
     }
@@ -63,6 +79,10 @@ export class ContestantsStore implements OnDestroy {
 
   setGroupMode(mode: ContestantGroupMode): void {
     this.state.update((s) => ({ ...s, groupMode: mode }));
+  }
+
+  setSortMode(mode: ContestantSortMode): void {
+    this.state.update((s) => ({ ...s, sortMode: mode }));
   }
 
   loadContestants(): void {

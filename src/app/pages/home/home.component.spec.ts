@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { ContestantsStore } from '../../store/contestants/contestants.store';
 import { GroupMode } from '../../contestants/constants/group-mode';
+import { SortMode } from '../../contestants/constants/sort-mode';
 import { provideTranslateMock } from '../../testing/translate-mock';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
@@ -13,11 +14,13 @@ describe('HomeComponent', () => {
     const store = {
       contestants: signal([]),
       groupMode: signal(GroupMode.All),
+      sortMode: signal(SortMode.DragNameAsc),
       loading: signal(false),
       error: signal(null as string | null),
       count: signal(0),
       viewModel: signal({ mode: GroupMode.All, list: [] as unknown[], sections: null }),
       setGroupMode: () => {},
+      setSortMode: () => {},
       loadContestants: () => {},
     };
     loadContestantsSpy = vi.spyOn(store, 'loadContestants');
@@ -46,6 +49,7 @@ describe('HomeComponent', () => {
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
+      sortMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
@@ -54,6 +58,7 @@ describe('HomeComponent', () => {
     store.error = signal(null);
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
+    store.sortMode = signal(SortMode.DragNameAsc);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
 
@@ -70,6 +75,7 @@ describe('HomeComponent', () => {
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
+      sortMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
@@ -78,6 +84,7 @@ describe('HomeComponent', () => {
     store.error = signal('errors.loadFailed');
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
+    store.sortMode = signal(SortMode.DragNameAsc);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
 
@@ -93,6 +100,7 @@ describe('HomeComponent', () => {
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
+      sortMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
@@ -101,6 +109,7 @@ describe('HomeComponent', () => {
     store.error = signal(null);
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
+    store.sortMode = signal(SortMode.DragNameAsc);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(42);
 

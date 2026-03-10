@@ -16,9 +16,15 @@ import { TranslateModule } from '@ngx-translate/core';
         [value]="mode()"
         (change)="onChange($event)"
       >
-        <option [value]="GroupMode.All">{{ 'groupBy.all' | translate }}</option>
-        <option [value]="GroupMode.Alphabetical">{{ 'groupBy.alphabetical' | translate }}</option>
-        <option [value]="GroupMode.Franchise">{{ 'groupBy.franchise' | translate }}</option>
+        <option [value]="GroupMode.All" [selected]="mode() === GroupMode.All">
+          {{ 'groupBy.all' | translate }}
+        </option>
+        <option [value]="GroupMode.Alphabetical" [selected]="mode() === GroupMode.Alphabetical">
+          {{ 'groupBy.alphabetical' | translate }}
+        </option>
+        <option [value]="GroupMode.Franchise" [selected]="mode() === GroupMode.Franchise">
+          {{ 'groupBy.franchise' | translate }}
+        </option>
       </select>
     </div>
   `,

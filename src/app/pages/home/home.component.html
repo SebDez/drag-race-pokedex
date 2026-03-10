@@ -20,7 +20,12 @@
       {{ 'home.contestantsCount' | translate: { count: store.count() } }}
     </p>
     <!-- Filters -->
-    <app-contestant-list-filters [mode]="store.groupMode()" (modeChange)="onGroupModeChange($event)" />
+    <app-contestant-list-filters
+      [groupMode]="store.groupMode()"
+      (groupModeChange)="onGroupModeChange($event)"
+      [sortMode]="store.sortMode()"
+      (sortModeChange)="onSortModeChange($event)"
+    />
     <!-- List -->
     @if (store.loading()) {
       <div
