@@ -1,5 +1,5 @@
 import { Component, input, signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage, NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '../../../contestants/models/contestant';
 import { WinsBadgeComponent } from '../../badges/wins-badge/wins-badge.component';
@@ -12,6 +12,7 @@ import { ContestantDetailComponent } from '../contestant-detail/contestant-detai
   standalone: true,
   imports: [
     NgOptimizedImage,
+    NgClass,
     TranslateModule,
     WinsBadgeComponent,
     WinnerBadgeComponent,

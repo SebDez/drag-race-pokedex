@@ -1,11 +1,11 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
 import { CONTESTANTS_DATA_PROVIDER } from '../contestants/contestants-data-provider';
 import { Contestant } from '../contestants/models/contestant';
 import { tap, catchError } from 'rxjs/operators';
 import { of, type Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ContestantsStore {
+export class ContestantsStore implements OnDestroy {
   private readonly provider = inject(CONTESTANTS_DATA_PROVIDER);
   private loadSub: Subscription | null = null;
 
@@ -49,5 +49,9 @@ export class ContestantsStore {
         }),
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.loadSub?.unsubscribe();
   }
 }

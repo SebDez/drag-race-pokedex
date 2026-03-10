@@ -18,7 +18,10 @@ export class LangService {
 
   initLang(): void {
     this.translate.addLangs([...SUPPORTED_LANGS]);
-    const stored = localStorage.getItem(STORAGE_KEY) as SupportedLang | null;
+    const stored =
+      typeof localStorage !== 'undefined'
+        ? (localStorage.getItem(STORAGE_KEY) as SupportedLang | null)
+        : null;
     if (stored && SUPPORTED_LANGS.includes(stored)) {
       this.translate.use(stored);
       return;
@@ -35,7 +38,9 @@ export class LangService {
 
   setLang(lang: SupportedLang): void {
     this.translate.use(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, lang);
+    }
   }
 
   private getBrowserLang(): SupportedLang {

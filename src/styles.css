@@ -1,9 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  /* Thème Drag Race : rose, or, blanc — mobile first, moderne et léger */
   --color-pink: #c85a8c;
   --color-pink-light: #e8b4ce;
   --color-pink-dark: #9e4069;
@@ -18,7 +17,11 @@
   --color-text: #2d2420;
   --color-text-muted: #6b5d55;
   --color-error: #c53030;
-  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  font-family:
+    'DM Sans',
+    system-ui,
+    -apple-system,
+    sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;

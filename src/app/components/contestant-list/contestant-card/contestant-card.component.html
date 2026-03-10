@@ -1,8 +1,7 @@
 @let c = contestant();
 <div
   class="flex flex-col gap-0 border border-[var(--color-border)] rounded-xl overflow-hidden transition-[box-shadow]"
-  [class.ring-2]="isExpanded()"
-  [class.ring-[var(--color-pink)]]="isExpanded()"
+  [ngClass]="{ 'ring-2 ring-[var(--color-pink)]': isExpanded() }"
 >
   <button
     type="button"
