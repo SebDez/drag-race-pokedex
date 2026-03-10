@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { ContestantGroupMode } from '../contestant-group-mode';
+import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -16,15 +16,16 @@ import { TranslateModule } from '@ngx-translate/core';
         [value]="mode()"
         (change)="onChange($event)"
       >
-        <option value="all">{{ 'groupBy.all' | translate }}</option>
-        <option value="alphabetical">{{ 'groupBy.alphabetical' | translate }}</option>
-        <option value="franchise">{{ 'groupBy.franchise' | translate }}</option>
+        <option [value]="GroupMode.All">{{ 'groupBy.all' | translate }}</option>
+        <option [value]="GroupMode.Alphabetical">{{ 'groupBy.alphabetical' | translate }}</option>
+        <option [value]="GroupMode.Franchise">{{ 'groupBy.franchise' | translate }}</option>
       </select>
     </div>
   `,
 })
 export class ContestantListGroupBySelectorComponent {
-  readonly mode = input<ContestantGroupMode>('all');
+  protected readonly GroupMode = GroupMode;
+  readonly mode = input<ContestantGroupMode>(GroupMode.All);
   readonly modeChange = output<ContestantGroupMode>();
 
   protected onSelect(mode: ContestantGroupMode): void {

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { ContestantListGroupBySelectorComponent } from './contestant-list-group-by-selector.component';
-import { ContestantGroupMode } from '../contestant-group-mode';
+import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 
 @Component({
   selector: 'app-contestant-list-filters',
@@ -17,7 +17,7 @@ import { ContestantGroupMode } from '../contestant-group-mode';
   `,
 })
 export class ContestantListFiltersComponent {
-  readonly mode = input<ContestantGroupMode>('all');
+  readonly mode = input<ContestantGroupMode>(GroupMode.All);
   readonly modeChange = output<ContestantGroupMode>();
 
   protected onGroupModeChange(mode: ContestantGroupMode): void {

@@ -20,9 +20,9 @@
       {{ 'home.contestantsCount' | translate: { count: store.count() } }}
     </p>
     <!-- Filters -->
-    <app-contestant-list-filters [mode]="groupMode()" (modeChange)="onGroupModeChange($event)" />
+    <app-contestant-list-filters [mode]="store.groupMode()" (modeChange)="onGroupModeChange($event)" />
     <!-- List -->
-    @if (store.loading() || isRefreshing()) {
+    @if (store.loading()) {
       <div
         class="flex items-center justify-center gap-3 py-8 text-[15px] text-[var(--color-text-muted)]"
         role="status"
@@ -34,7 +34,7 @@
         <span>{{ 'home.loading' | translate }}</span>
       </div>
     } @else {
-      <app-contestant-list [contestants]="visibleContestants()" [groupMode]="groupMode()" />
+      <app-contestant-list [viewModel]="store.viewModel()" />
     }
   }
 </div>

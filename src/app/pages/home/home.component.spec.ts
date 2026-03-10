@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
-import { ContestantsStore } from '../../store/contestants.store';
+import { ContestantsStore } from '../../store/contestants/contestants.store';
+import { GroupMode } from '../../contestants/constants/group-mode';
 import { provideTranslateMock } from '../../testing/translate-mock';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
@@ -11,9 +12,12 @@ describe('HomeComponent', () => {
   beforeEach(async () => {
     const store = {
       contestants: signal([]),
+      groupMode: signal(GroupMode.All),
       loading: signal(false),
       error: signal(null as string | null),
       count: signal(0),
+      viewModel: signal({ mode: GroupMode.All, list: [] as unknown[], sections: null }),
+      setGroupMode: () => {},
       loadContestants: () => {},
     };
     loadContestantsSpy = vi.spyOn(store, 'loadContestants');
@@ -41,12 +45,16 @@ describe('HomeComponent', () => {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
+      groupMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(true);
     store.error = signal(null);
     store.contestants = signal([]);
+    store.groupMode = signal(GroupMode.All);
+    store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
@@ -61,12 +69,16 @@ describe('HomeComponent', () => {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
+      groupMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(false);
     store.error = signal('errors.loadFailed');
     store.contestants = signal([]);
+    store.groupMode = signal(GroupMode.All);
+    store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
@@ -80,12 +92,16 @@ describe('HomeComponent', () => {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
       contestants: ReturnType<typeof signal>;
+      groupMode: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(false);
     store.error = signal(null);
     store.contestants = signal([]);
+    store.groupMode = signal(GroupMode.All);
+    store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(42);
 
     const fixture = TestBed.createComponent(HomeComponent);
