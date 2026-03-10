@@ -3,7 +3,7 @@
     "title": "Drag Race Pokédex",
     "subtitle": "Parce que vous connaissez la reine, mais vous ne vous souvenez pas dans quelle saison elle était...",
     "loading": "Chargement des contestants…",
-    "contestantsCount": "{{count}} Queens"
+    "contestantsCount": "{{count}} Reines"
   },
   "common": {
     "win": "1 victoire",
