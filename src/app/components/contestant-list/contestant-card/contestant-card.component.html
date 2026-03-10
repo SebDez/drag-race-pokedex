@@ -1,0 +1,52 @@
+@let c = contestant();
+<div
+  class="flex flex-col gap-0 border border-[var(--color-border)] rounded-xl overflow-hidden transition-[box-shadow]"
+  [ngClass]="{ 'ring-2 ring-[var(--color-pink)]': isExpanded() }"
+>
+  <button
+    type="button"
+    class="cursor-pointer w-full flex items-center gap-3 sm:gap-4 p-3 bg-[var(--color-surface)] text-left transition-colors hover:bg-[var(--color-bg-subtle)]"
+    (click)="onClick()"
+    [attr.aria-expanded]="isExpanded()"
+    [attr.aria-label]="c.dragName"
+  >
+    <!-- IMAGE -->
+    <div
+      class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]"
+    >
+      @if (getCardImageUrl(c)) {
+        <img
+          [ngSrc]="getCardImageUrl(c)"
+          [alt]=""
+          width="64"
+          height="64"
+          class="w-full h-full object-cover"
+        />
+      } @else {
+        <span
+          class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
+        ></span>
+      }
+    </div>
+    <!-- NAME -->
+    <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{
+      c.dragName
+    }}</span>
+    <!-- BADGES -->
+    <div class="shrink-0 flex items-stretch gap-1 flex-wrap justify-end h-8">
+      <app-winner-badge [show]="c.isWinner" />
+      <app-wins-badge [count]="c.totalChallengeWins" />
+      <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
+    </div>
+  </button>
+  <!-- DETAIL -->
+  <div
+    class="grid transition-[grid-template-rows] duration-300 ease-out"
+    [class.grid-rows-[0fr]]="!isExpanded()"
+    [class.grid-rows-[1fr]]="isExpanded()"
+  >
+    <div class="min-h-0 overflow-hidden">
+      <app-contestant-detail [contestant]="contestant()" />
+    </div>
+  </div>
+</div>

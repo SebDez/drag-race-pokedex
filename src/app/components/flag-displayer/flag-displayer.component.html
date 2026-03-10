@@ -1,0 +1,59 @@
+@if (countryCode(); as code) {
+  <span
+    [attr.class]="sizeClass() + ' inline-flex items-center shrink-0'"
+    role="img"
+    [attr.aria-label]="title()"
+  >
+    @switch (code) {
+      @case ('US') {
+        <app-usa-flag-icon />
+      }
+      @case ('FR') {
+        <app-france-flag-icon />
+      }
+      @case ('ES') {
+        <app-spain-flag-icon />
+      }
+      @case ('AU') {
+        <app-australia-flag-icon />
+      }
+      @case ('TH') {
+        <app-thailand-flag-icon />
+      }
+      @case ('GB') {
+        <app-uk-flag-icon />
+      }
+      @case ('CA') {
+        <app-canada-flag-icon />
+      }
+      @case ('NL') {
+        <app-netherlands-flag-icon />
+      }
+      @case ('PH') {
+        <app-philippines-flag-icon />
+      }
+      @case ('SE') {
+        <app-sweden-flag-icon />
+      }
+      @case ('MX') {
+        <app-mexico-flag-icon />
+      }
+      @case ('BR') {
+        <app-brasil-flag-icon />
+      }
+      @case ('DE') {
+        <app-germany-flag-icon />
+      }
+      @case ('IT') {
+        <app-italy-flag-icon />
+      }
+      @case ('BE') {
+        <app-belgium-flag-icon />
+      }
+      @case ('UK') {
+        <app-uk-flag-icon />
+      }
+      @default {}
+    }
+  </span>
+}

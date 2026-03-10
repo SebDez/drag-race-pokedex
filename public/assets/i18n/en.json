@@ -1,0 +1,26 @@
+{
+  "home": {
+    "title": "Drag Race Pokédex",
+    "subtitle": "Because you know the queen… but you can't remember which season she was on...",
+    "loading": "Loading contestants…",
+    "contestantsCount": "{{count}} Queens"
+  },
+  "common": {
+    "win": "1 win",
+    "wins": "{{count}} wins",
+    "winner": "Winner"
+  },
+  "detail": {
+    "seasons": "Seasons",
+    "place": "Place",
+    "challengeWins": "Wins",
+    "wikiLink": "Wiki page"
+  },
+  "errors": {
+    "loadFailed": "Error loading contestants"
+  },
+  "aria": {
+    "loading": "Loading",
+    "language": "Language"
+  }
+}

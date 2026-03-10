@@ -1,0 +1,5 @@
+<div class="flex flex-col gap-2 list-none m-0 p-0">
+  @for (contestant of contestants(); track trackByDragName($index, contestant)) {
+    <app-contestant-card [contestant]="contestant" />
+  }
+</div>
