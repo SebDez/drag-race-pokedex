@@ -1,5 +1,26 @@
-<div class="flex flex-col gap-2 list-none m-0 p-0">
-  @for (contestant of contestants(); track trackByDragName($index, contestant)) {
-    <app-contestant-card [contestant]="contestant" />
-  }
-</div>
+@if (groupMode() === 'all') {
+  <div class="flex flex-col gap-2 list-none m-0 p-0">
+    @for (contestant of contestants(); track trackByDragName($index, contestant)) {
+      <app-contestant-card [contestant]="contestant" />
+    }
+  </div>
+} @else if (groupMode() === 'alphabetical') {
+  <div class="flex flex-col gap-5">
+    @for (group of groupedByLetter(); track group.key) {
+      <app-contestant-group-section
+        [title]="group.key"
+        [contestants]="group.contestants"
+      />
+    }
+  </div>
+} @else if (groupMode() === 'franchise') {
+  <div class="flex flex-col gap-5">
+    @for (group of groupedByFranchise(); track group.key) {
+      <app-contestant-group-section
+        [title]="group.key"
+        [contestants]="group.contestants"
+      />
+    }
+  </div>
+}
+
