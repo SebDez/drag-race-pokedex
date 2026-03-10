@@ -1,10 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { provideRouter } from '@angular/router';
+import { provideTranslateMock } from './testing/translate-mock';
+import { LangService } from './core/lang.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        provideRouter([]),
+        LangService,
+        provideTranslateMock(),
+      ],
     }).compileComponents();
   });
 
@@ -14,10 +22,12 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render router-outlet and lang selector', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
+    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, drag-race-pokedex');
+    expect(compiled.querySelector('app-lang-selector')).toBeTruthy();
+    expect(compiled.querySelector('main.app-main')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });
