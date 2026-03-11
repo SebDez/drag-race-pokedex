@@ -17,7 +17,7 @@
     </div>
   } @else {
     <p class="text-sm text-[var(--color-text-muted)] mb-4">
-      {{ 'home.contestantsCount' | translate: { count: store.count() } }}
+      {{ 'home.contestantsCount' | translate: { count: store.viewModel().list?.length || 0 } }}
     </p>
     <!-- Filters -->
     <app-contestant-list-filters
