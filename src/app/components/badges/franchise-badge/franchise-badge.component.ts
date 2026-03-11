@@ -46,13 +46,13 @@ export class FranchiseBadgeComponent {
   readonly country = input<string>();
   readonly truncate = input<boolean>(false);
 
-  private readonly resolvedCountry = computed(() => {
+  private readonly resolvedCountry = computed<string | null>(() => {
     const countryInput = this.country();
     if (countryInput) return countryInput;
     return this.franchiseName() ? (FRANCHISE_COUNTRY_MAP[this.franchiseName()!] ?? null) : null;
   });
 
-  readonly countryIsoCode = computed(() => {
+  readonly countryIsoCode = computed<string | null>(() => {
     const country = this.resolvedCountry();
     if (!country) return null;
     return COUNTRY_ISO_MAP[country] ?? null;

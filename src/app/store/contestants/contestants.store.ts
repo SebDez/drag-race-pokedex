@@ -1,12 +1,12 @@
 import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
 import { CONTESTANTS_DATA_PROVIDER } from '../../contestants/contestants-data-provider';
 import { Contestant } from '../../contestants/models/contestant';
-import { FRANCHISE_NAMES } from '../../contestants/constants/franchises';
+import { FRANCHISE_NAMES, SEASONS_PER_FRANCHISE } from '../../contestants/constants/franchises';
 import { GroupMode, type ContestantGroupMode } from '../../contestants/constants/group-mode';
 import { SortMode, type ContestantSortMode } from '../../contestants/constants/sort-mode';
 import { tap, catchError } from 'rxjs/operators';
 import { of, type Subscription } from 'rxjs';
-import { ContestantsViewModel } from './types';
+import { ContestantSection, ContestantsViewModel } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class ContestantsStore implements OnDestroy {
@@ -27,26 +27,28 @@ export class ContestantsStore implements OnDestroy {
     error: null,
   });
 
-  readonly contestants = computed(() => this.state().contestants);
-  readonly groupMode = computed(() => this.state().groupMode);
-  readonly sortMode = computed(() => this.state().sortMode);
+  readonly contestants = computed<Contestant[]>(() => this.state().contestants);
+  readonly groupMode = computed<ContestantGroupMode>(() => this.state().groupMode);
+  readonly sortMode = computed<ContestantSortMode>(() => this.state().sortMode);
 
-  private readonly sortedContestants = computed(() => {
+  private readonly sortedContestants = computed<Contestant[]>(() => {
     const list = this.contestants();
     const mode = this.sortMode();
     const copy = [...list];
     if (mode === SortMode.DragNameAsc) {
       return copy.sort((a, b) =>
-        (a.dragName?.trim() ?? '').localeCompare(b.dragName?.trim() ?? '', undefined, { sensitivity: 'base' })
+        (a.dragName?.trim() ?? '').localeCompare(b.dragName?.trim() ?? '', undefined, {
+          sensitivity: 'base',
+        }),
       );
     }
     return copy.sort((a, b) => (b.totalChallengeWins ?? 0) - (a.totalChallengeWins ?? 0));
   });
-  readonly loading = computed(() => this.state().loading);
-  readonly error = computed(() => this.state().error);
-  readonly count = computed(() => this.state().contestants.length);
+  readonly loading = computed<boolean>(() => this.state().loading);
+  readonly error = computed<string | null>(() => this.state().error);
+  readonly count = computed<number>(() => this.state().contestants.length);
 
-  private readonly groupedByLetter = computed(() => {
+  private readonly groupedByLetter = computed<ContestantSection[]>(() => {
     const all = this.sortedContestants();
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     return letters
@@ -57,12 +59,34 @@ export class ContestantsStore implements OnDestroy {
       .filter((group) => group.contestants.length > 0);
   });
 
-  private readonly groupedByFranchise = computed(() => {
+  private readonly groupedByFranchise = computed<ContestantSection[]>(() => {
     const all = this.sortedContestants();
     return FRANCHISE_NAMES.map((franchise) => ({
       key: franchise,
       contestants: all.filter((c) => c.firstFranchise === franchise),
     })).filter((group) => group.contestants.length > 0);
+  });
+
+  private readonly groupedBySeasons = computed<ContestantSection[]>(() => {
+    const all = this.sortedContestants();
+    const sections = [];
+
+    for (const franchise of FRANCHISE_NAMES) {
+      const totalSeasons = SEASONS_PER_FRANCHISE[franchise] ?? 0;
+
+      for (let seasonNumber = 1; seasonNumber <= totalSeasons; seasonNumber++) {
+        const key = `${franchise} (S${seasonNumber})`;
+        const contestants = all.filter((c) =>
+          c.seasons.some((s) => s.franchise === franchise && s.season === String(seasonNumber)),
+        );
+
+        if (contestants.length > 0) {
+          sections.push({ key, contestants, season: { franchise, season: String(seasonNumber) } });
+        }
+      }
+    }
+
+    return sections;
   });
 
   readonly viewModel = computed<ContestantsViewModel>(() => {
@@ -74,7 +98,17 @@ export class ContestantsStore implements OnDestroy {
     if (mode === GroupMode.Alphabetical) {
       return { mode: GroupMode.Alphabetical, list: null, sections: this.groupedByLetter() };
     }
-    return { mode: GroupMode.Franchise, list: null, sections: this.groupedByFranchise() };
+    if (mode === GroupMode.Franchise) {
+      return { mode: GroupMode.Franchise, list: null, sections: this.groupedByFranchise() };
+    }
+    if (mode === GroupMode.Seasons) {
+      return {
+        mode: GroupMode.Seasons,
+        list: null,
+        sections: this.groupedBySeasons(),
+      };
+    }
+    return { mode: GroupMode.All, list, sections: null };
   });
 
   setGroupMode(mode: ContestantGroupMode): void {

@@ -32,11 +32,15 @@ export class LangSelectorComponent implements OnInit, OnDestroy {
   private readonly el = inject(ElementRef<HTMLElement>);
   private sub?: Subscription;
   protected readonly current = signal<SupportedLang>('en');
-  protected readonly options = computed(() => this.langService.supported);
-  protected readonly open = signal(false);
+  protected readonly options = computed<{ code: SupportedLang; label: string }[]>(
+    () => this.langService.supported,
+  );
+  protected readonly open = signal<boolean>(false);
 
   /** Country code for the current language (for flag display). */
-  protected readonly currentCountryCode = computed(() => LANG_TO_COUNTRY[this.current()]);
+  protected readonly currentCountryCode = computed<string | null>(
+    () => LANG_TO_COUNTRY[this.current()],
+  );
 
   protected getCountryCode(lang: SupportedLang): string {
     return LANG_TO_COUNTRY[lang];

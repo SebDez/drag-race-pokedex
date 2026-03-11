@@ -27,3 +27,31 @@ export const FRANCHISE_COUNTRY_MAP: Record<string, string> = {
 };
 
 export const FRANCHISE_NAMES = Object.keys(FRANCHISE_COUNTRY_MAP) as string[];
+
+export const SEASONS_PER_FRANCHISE: Record<string, number> = {
+  "RuPaul's Drag Race": 18,
+  "RuPaul's Drag Race All Stars": 10,
+  'Drag Race Thailand': 3,
+  "RuPaul's Drag Race UK": 7,
+  "Canada's Drag Race": 6,
+  'Drag Race Holland': 2,
+  'Drag Race Down Under': 4,
+  'Drag Race España': 5,
+  'Drag Race Italia': 3,
+  "RuPaul's Drag Race UK vs The World": 3,
+  'Drag Race France': 3,
+  'Drag Race Philippines': 3,
+  "Canada's Drag Race: Canada vs The World": 2,
+  'Drag Race Belgique': 2,
+  'Drag Race Sverige': 1,
+  'Drag Race México': 2,
+  'Drag Race Brasil': 2,
+  'Drag Race Germany': 1,
+  'Drag Race España: All Stars': 1,
+  "RuPaul's Drag Race Global All Stars": 1,
+  'Drag Race France All Stars': 1,
+  'Drag Race Philippines: Slaysian Royale': 1,
+  'Drag Race Down Under vs The World': 1,
+  'Drag Race México: Latina Royale': 1,
+  "Canada's Drag Race: All Stars": 1,
+};

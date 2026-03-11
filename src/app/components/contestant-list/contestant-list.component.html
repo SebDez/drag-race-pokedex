@@ -11,8 +11,9 @@
       <app-contestant-group-section
         [title]="group.key"
         [contestants]="group.contestants"
+        [groupMode]="vm.mode"
+        [displayedSeason]="group.season"
       />
     }
   </div>
 }
-

@@ -25,6 +25,9 @@ import { TranslateModule } from '@ngx-translate/core';
         <option [value]="GroupMode.Franchise" [selected]="mode() === GroupMode.Franchise">
           {{ 'groupBy.franchise' | translate }}
         </option>
+        <option [value]="GroupMode.Seasons" [selected]="mode() === GroupMode.Seasons">
+          {{ 'groupBy.franchiseAndSeasons' | translate }}
+        </option>
       </select>
     </div>
   `,

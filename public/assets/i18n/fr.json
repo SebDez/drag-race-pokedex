@@ -27,7 +27,8 @@
     "label": "Grouper par",
     "all": "Toutes",
     "alphabetical": "Alphabétique",
-    "franchise": "Franchise"
+    "franchise": "Franchise",
+    "franchiseAndSeasons": "Saisons"
   },
   "sortBy": {
     "label": "Trier par",
