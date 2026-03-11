@@ -8,18 +8,7 @@
     <p class="mt-1 text-[15px] text-[var(--color-text-muted)]">{{ 'home.subtitle' | translate }}</p>
   </header>
 
-  @if (store.loading()) {
-    <div
-      class="flex items-center justify-center gap-3 py-8 text-[15px] text-[var(--color-text-muted)]"
-      role="status"
-      [attr.aria-label]="'aria.loading' | translate"
-    >
-      <span
-        class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
-      ></span>
-      <span>{{ 'home.loading' | translate }}</span>
-    </div>
-  } @else if (store.error()) {
+  @if (store.error()) {
     <div
       class="flex items-center justify-center gap-3 py-8 text-[15px] text-[var(--color-error)]"
       role="alert"
@@ -30,6 +19,27 @@
     <p class="text-sm text-[var(--color-text-muted)] mb-4">
       {{ 'home.contestantsCount' | translate: { count: store.count() } }}
     </p>
-    <app-contestant-list [contestants]="visibleContestants()" />
+    <!-- Filters -->
+    <app-contestant-list-filters
+      [groupMode]="store.groupMode()"
+      (groupModeChange)="onGroupModeChange($event)"
+      [sortMode]="store.sortMode()"
+      (sortModeChange)="onSortModeChange($event)"
+    />
+    <!-- List -->
+    @if (store.loading()) {
+      <div
+        class="flex items-center justify-center gap-3 py-8 text-[15px] text-[var(--color-text-muted)]"
+        role="status"
+        [attr.aria-label]="'aria.loading' | translate"
+      >
+        <span
+          class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
+        ></span>
+        <span>{{ 'home.loading' | translate }}</span>
+      </div>
+    } @else {
+      <app-contestant-list [viewModel]="store.viewModel()" />
+    }
   }
 </div>

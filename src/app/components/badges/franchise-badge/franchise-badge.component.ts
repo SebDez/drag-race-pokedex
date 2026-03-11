@@ -1,33 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { FlagDisplayerComponent } from '../../flag-displayer/flag-displayer.component';
-
-const FRANCHISE_COUNTRY_MAP: Record<string, string> = {
-  "RuPaul's Drag Race": 'United States',
-  "RuPaul's Drag Race All Stars": 'United States',
-  'Drag Race Thailand': 'Thailand',
-  "RuPaul's Drag Race UK": 'United Kingdom',
-  "Canada's Drag Race": 'Canada',
-  'Drag Race Holland': 'Netherlands',
-  'Drag Race Down Under': 'Australia',
-  'Drag Race España': 'Spain',
-  'Drag Race Italia': 'Italy',
-  "RuPaul's Drag Race UK vs The World": 'United Kingdom',
-  'Drag Race France': 'France',
-  'Drag Race Philippines': 'Philippines',
-  "Canada's Drag Race: Canada vs The World": 'Canada',
-  'Drag Race Belgique': 'Belgium',
-  'Drag Race Sverige': 'Sweden',
-  'Drag Race México': 'Mexico',
-  'Drag Race Brasil': 'Brasil',
-  'Drag Race Germany': 'Germany',
-  'Drag Race España: All Stars': 'Spain',
-  "RuPaul's Drag Race Global All Stars": 'United States',
-  'Drag Race France All Stars': 'France',
-  'Drag Race Philippines: Slaysian Royale': 'Philippines',
-  'Drag Race Down Under vs The World': 'Australia',
-  'Drag Race México: Latina Royale': 'Mexico',
-  "Canada's Drag Race: All Stars": 'Canada',
-};
+import { FRANCHISE_COUNTRY_MAP } from '../../../contestants/constants/franchises';
 
 const COUNTRY_ISO_MAP: Record<string, string> = {
   'United States': 'US',
@@ -71,13 +44,13 @@ export class FranchiseBadgeComponent {
   readonly country = input<string>();
   readonly truncate = input<boolean>(false);
 
-  private readonly resolvedCountry = computed(() => {
+  private readonly resolvedCountry = computed<string | null>(() => {
     const countryInput = this.country();
     if (countryInput) return countryInput;
     return this.franchiseName() ? (FRANCHISE_COUNTRY_MAP[this.franchiseName()!] ?? null) : null;
   });
 
-  readonly countryIsoCode = computed(() => {
+  readonly countryIsoCode = computed<string | null>(() => {
     const country = this.resolvedCountry();
     if (!country) return null;
     return COUNTRY_ISO_MAP[country] ?? null;

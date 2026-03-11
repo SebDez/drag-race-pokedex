@@ -2,13 +2,14 @@
   "home": {
     "title": "Drag Race Pokédex",
     "subtitle": "Because you know the queen… but you can't remember which season she was on...",
-    "loading": "Loading contestants…",
+    "loading": "Loading Queens…",
     "contestantsCount": "{{count}} Queens"
   },
   "common": {
     "win": "1 win",
     "wins": "{{count}} wins",
-    "winner": "Winner"
+    "winner": "Winner",
+    "noResults": "No results"
   },
   "detail": {
     "seasons": "Seasons",
@@ -22,5 +23,17 @@
   "aria": {
     "loading": "Loading",
     "language": "Language"
+  },
+  "groupBy": {
+    "label": "Group by",
+    "all": "All",
+    "alphabetical": "Alphabetical",
+    "franchise": "Franchise",
+    "franchiseAndSeasons": "Seasons"
+  },
+  "sortBy": {
+    "label": "Sort by",
+    "dragNameAsc": "Name",
+    "challengeWinsDesc": "Challenge wins"
   }
 }

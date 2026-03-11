@@ -2,13 +2,14 @@
   "home": {
     "title": "Drag Race Pokédex",
     "subtitle": "Porque sabes a quién estás hablando, pero no recuerdas en qué temporada estuvo...",
-    "loading": "Cargando contestants…",
+    "loading": "Cargando reinas...",
     "contestantsCount": "{{count}} Reinas"
   },
   "common": {
     "win": "1 victoria",
     "wins": "{{count}} victorias",
-    "winner": "Ganadora"
+    "winner": "Ganadora",
+    "noResults": "Sin resultados"
   },
   "detail": {
     "seasons": "Temporadas",
@@ -22,5 +23,17 @@
   "aria": {
     "loading": "Cargando",
     "language": "Idioma"
+  },
+  "groupBy": {
+    "label": "Agrupar por",
+    "all": "Todas",
+    "alphabetical": "Alfabético",
+    "franchise": "Franquicia",
+    "franchiseAndSeasons": "Temporadas"
+  },
+  "sortBy": {
+    "label": "Ordenar por",
+    "dragNameAsc": "Nombre",
+    "challengeWinsDesc": "Victorias en desafíos"
   }
 }
