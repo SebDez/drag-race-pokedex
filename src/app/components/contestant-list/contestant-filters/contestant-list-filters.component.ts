@@ -1,6 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { ContestantListGroupBySelectorComponent } from './contestant-list-group-by-selector.component';
 import { ContestantListSortBySelectorComponent } from './contestant-list-sort-by-selector.component';
+import { ContestantListSearchBarComponent } from './contestant-list-search-bar.component';
 import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { SortMode, type ContestantSortMode } from '../../../contestants/constants/sort-mode';
 import { ContestantListAdvancedFiltersComponent } from './contestant-list-advanced-filters.component';
@@ -10,6 +11,7 @@ import { type ContestantFilters } from '../../../store/contestants/types';
   selector: 'app-contestant-list-filters',
   standalone: true,
   imports: [
+    ContestantListSearchBarComponent,
     ContestantListGroupBySelectorComponent,
     ContestantListSortBySelectorComponent,
     ContestantListAdvancedFiltersComponent,
@@ -31,6 +33,11 @@ import { type ContestantFilters } from '../../../store/contestants/types';
         [filters]="filters()"
         (filtersChange)="onFiltersChange($event)"
       />
+      <app-contestant-list-search-bar
+        class="col-span-3"
+        [value]="filters().searchQuery ?? ''"
+        (valueChange)="onSearchChange($event)"
+      />
     </div>
   `,
 })
@@ -44,6 +51,11 @@ export class ContestantListFiltersComponent {
     franchiseSeasonKeys: [],
   });
   readonly filtersChange = output<ContestantFilters>();
+
+  protected onSearchChange(query: string): void {
+    const current = this.filters();
+    this.filtersChange.emit({ ...current, searchQuery: query });
+  }
 
   protected onGroupModeChange(mode: ContestantGroupMode): void {
     this.groupModeChange.emit(mode);

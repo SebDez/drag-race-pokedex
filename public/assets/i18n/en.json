@@ -28,6 +28,8 @@
     "label": "Filters",
     "openDialog": "Open filters",
     "close": "Close",
+    "searchPlaceholder": "Search a queen…",
+    "searchLabel": "Search by drag name",
     "winnersOnly": "Winners only",
     "allFranchises": "All franchises",
     "franchiseTreeHint": "Select one or more franchises and seasons",

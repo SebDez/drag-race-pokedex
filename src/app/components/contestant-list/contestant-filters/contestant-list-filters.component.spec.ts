@@ -34,14 +34,32 @@ describe('ContestantListFiltersComponent', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render group-by, sort-by and advanced-filters', () => {
+  it('should render search bar, group-by, sort-by and advanced-filters', () => {
     const fixture = TestBed.createComponent(ContestantListFiltersComponent);
     setFilterInputs(fixture);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-contestant-list-search-bar')).toBeTruthy();
     expect(el.querySelector('app-contestant-list-group-by-selector')).toBeTruthy();
     expect(el.querySelector('app-contestant-list-sort-by-selector')).toBeTruthy();
     expect(el.querySelector('app-contestant-list-advanced-filters')).toBeTruthy();
+  });
+
+  it('should emit filtersChange with searchQuery when search input changes', () => {
+    const fixture = TestBed.createComponent(ContestantListFiltersComponent);
+    setFilterInputs(fixture);
+    fixture.detectChanges();
+    const emitted: ContestantFilters[] = [];
+    fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
+    const searchEl = (fixture.nativeElement as HTMLElement).querySelector(
+      'app-contestant-list-search-bar input[type="search"]',
+    ) as HTMLInputElement;
+    expect(searchEl).toBeTruthy();
+    searchEl.value = 'Raja';
+    searchEl.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(emitted.length).toBe(1);
+    expect(emitted[0].searchQuery).toBe('Raja');
   });
 
   it('should pass groupMode to group-by selector', () => {

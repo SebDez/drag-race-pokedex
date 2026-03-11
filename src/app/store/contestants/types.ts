@@ -9,6 +9,8 @@ export interface ContestantFilters {
    * - Season: "season::<franchiseName>::<seasonNumber>"
    */
   franchiseSeasonKeys: string[];
+  /** Filter by name: display queens whose name contains this string (case insensitive). */
+  searchQuery?: string;
 }
 
 export interface ContestantSectionSeason {

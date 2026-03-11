@@ -28,6 +28,8 @@
     "label": "Filtros",
     "openDialog": "Abrir filtros",
     "close": "Cerrar",
+    "searchPlaceholder": "Buscar una reina…",
+    "searchLabel": "Buscar por nombre artístico",
     "winnersOnly": "Sólo ganadoras",
     "allFranchises": "Todas las franquicias",
     "franchiseTreeHint": "Selecciona una o varias franquicias y temporadas",

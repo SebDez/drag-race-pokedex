@@ -29,6 +29,7 @@ export class ContestantsStore implements OnDestroy {
     filters: {
       winnersOnly: false,
       franchiseSeasonKeys: [],
+      searchQuery: '',
     },
   });
 
@@ -40,19 +41,27 @@ export class ContestantsStore implements OnDestroy {
   private readonly filteredContestants = computed<Contestant[]>(() => {
     const { contestants, filters } = this.state();
     const keys = filters.franchiseSeasonKeys ?? [];
+    const search = (filters.searchQuery ?? '').trim().toLowerCase();
+
+    let list = contestants;
+    if (search) {
+      list = list.filter((c) =>
+        (c.dragName?.trim() ?? '').toLowerCase().includes(search),
+      );
+    }
 
     if (filters.winnersOnly && keys.length > 0) {
-      return contestants.filter((c) =>
+      return list.filter((c) =>
         this.matchesFranchiseSeasonFiltersAndWonInSelection(c, keys),
       );
     }
     if (filters.winnersOnly) {
-      return contestants.filter((c) => c.isWinner);
+      return list.filter((c) => c.isWinner);
     }
     if (!keys.length) {
-      return contestants;
+      return list;
     }
-    return contestants.filter((c) => this.matchesFranchiseSeasonFilters(c, keys));
+    return list.filter((c) => this.matchesFranchiseSeasonFilters(c, keys));
   });
 
   private readonly sortedContestants = computed<Contestant[]>(() => {
