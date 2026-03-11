@@ -1,6 +1,16 @@
 import { Contestant } from '../../contestants/models/contestant';
 import { GroupMode } from '../../contestants/constants/group-mode';
 
+export interface ContestantFilters {
+  winnersOnly: boolean;
+  /**
+   * Keys representing selected franchises and seasons.
+   * - Franchise: "franchise::<franchiseName>"
+   * - Season: "season::<franchiseName>::<seasonNumber>"
+   */
+  franchiseSeasonKeys: string[];
+}
+
 export interface ContestantSectionSeason {
   franchise: string;
   season: string;

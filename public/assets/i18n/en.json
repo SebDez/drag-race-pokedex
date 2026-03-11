@@ -24,6 +24,15 @@
     "loading": "Loading",
     "language": "Language"
   },
+  "filters": {
+    "label": "Filters",
+    "openDialog": "Open filters",
+    "close": "Close",
+    "winnersOnly": "Winners only",
+    "allFranchises": "All franchises",
+    "franchiseTreeHint": "Select one or more franchises and seasons",
+    "seasonShort": "S{{season}}"
+  },
   "groupBy": {
     "label": "Group by",
     "all": "All",

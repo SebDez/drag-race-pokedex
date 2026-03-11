@@ -25,6 +25,8 @@
       (groupModeChange)="onGroupModeChange($event)"
       [sortMode]="store.sortMode()"
       (sortModeChange)="onSortModeChange($event)"
+      [filters]="store.filters()"
+      (filtersChange)="onFiltersChange($event)"
     />
     <!-- List -->
     @if (store.loading()) {
