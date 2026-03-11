@@ -3,11 +3,13 @@ import { ContestantListGroupBySelectorComponent } from './contestant-list-group-
 import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { provideTranslateMock } from '../../../testing/translate-mock';
 
+const groupByTranslations = { 'groupBy.label': 'Group by' };
+
 describe('ContestantListGroupBySelectorComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ContestantListGroupBySelectorComponent],
-      providers: [provideTranslateMock()],
+      providers: [provideTranslateMock(groupByTranslations)],
     }).compileComponents();
   });
 
@@ -24,7 +26,7 @@ describe('ContestantListGroupBySelectorComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const label = el.querySelector('label');
-    expect(label?.textContent?.trim()).toBe('groupBy.label');
+    expect(label?.textContent?.trim()).toBe('Group by');
   });
 
   it('should render select with current mode value', () => {

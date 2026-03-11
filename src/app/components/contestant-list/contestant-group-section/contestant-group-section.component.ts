@@ -3,7 +3,7 @@ import { Contestant } from '../../../contestants/models/contestant';
 import { ContestantCardComponent } from '../contestant-card/contestant-card.component';
 import { ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { GroupMode } from '../../../contestants/constants/group-mode';
-import { ContestantSectionSeaon } from '../../../store/contestants/types';
+import { ContestantSectionSeason } from '../../../store/contestants/types';
 
 @Component({
   selector: 'app-contestant-group-section',
@@ -12,7 +12,7 @@ import { ContestantSectionSeaon } from '../../../store/contestants/types';
   template: `
     <section class="flex flex-col gap-3">
       <h2
-        class="text-sm sm:text-base font-semibold uppercase tracking-[0.18em] text-(--color-text) border-b border-(--color-border) pb-1.5"
+        class="text-sm sm:text-base font-semibold uppercase tracking-[0.18em] text-[var(--color-text)] border-b border-[var(--color-border)] pb-1.5"
       >
         {{ title() }}
       </h2>
@@ -32,7 +32,7 @@ export class ContestantGroupSectionComponent {
   readonly title = input.required<string>();
   readonly contestants = input.required<Contestant[]>();
   readonly groupMode = input.required<ContestantGroupMode>();
-  readonly displayedSeason = input<ContestantSectionSeaon | undefined>();
+  readonly displayedSeason = input<ContestantSectionSeason | undefined>();
 
   protected shouldShowOnlySeasonWinner(): boolean {
     return !!this.groupMode() && !!this.displayedSeason() && this.groupMode() === GroupMode.Seasons;

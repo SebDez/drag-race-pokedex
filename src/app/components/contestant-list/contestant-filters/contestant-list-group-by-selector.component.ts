@@ -8,26 +8,18 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
   template: `
     <div class="mb-4 text-sm flex flex-col gap-3">
-      <label class="text-(--color-text) font-semibold">
+      <label class="text-[var(--color-text)] font-semibold">
         {{ 'groupBy.label' | translate }}
       </label>
       <select
-        class="cursor-pointer rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+        class="cursor-pointer rounded-full border border-[var(--color-pink)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-surface)]"
         [value]="mode()"
         (change)="onChange($event)"
       >
-        <option [value]="GroupMode.All" [selected]="mode() === GroupMode.All">
-          {{ 'groupBy.all' | translate }}
-        </option>
-        <option [value]="GroupMode.Alphabetical" [selected]="mode() === GroupMode.Alphabetical">
-          {{ 'groupBy.alphabetical' | translate }}
-        </option>
-        <option [value]="GroupMode.Franchise" [selected]="mode() === GroupMode.Franchise">
-          {{ 'groupBy.franchise' | translate }}
-        </option>
-        <option [value]="GroupMode.Seasons" [selected]="mode() === GroupMode.Seasons">
-          {{ 'groupBy.franchiseAndSeasons' | translate }}
-        </option>
+        <option [value]="GroupMode.All" [selected]="mode() === GroupMode.All">{{ 'groupBy.all' | translate }}</option>
+        <option [value]="GroupMode.Alphabetical" [selected]="mode() === GroupMode.Alphabetical">{{ 'groupBy.alphabetical' | translate }}</option>
+        <option [value]="GroupMode.Franchise" [selected]="mode() === GroupMode.Franchise">{{ 'groupBy.franchise' | translate }}</option>
+        <option [value]="GroupMode.Seasons" [selected]="mode() === GroupMode.Seasons">{{ 'groupBy.franchiseAndSeasons' | translate }}</option>
       </select>
     </div>
   `,

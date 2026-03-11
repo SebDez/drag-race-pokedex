@@ -3,11 +3,13 @@ import { ContestantListSortBySelectorComponent } from './contestant-list-sort-by
 import { SortMode, type ContestantSortMode } from '../../../contestants/constants/sort-mode';
 import { provideTranslateMock } from '../../../testing/translate-mock';
 
+const sortByTranslations = { 'sortBy.label': 'Sort by' };
+
 describe('ContestantListSortBySelectorComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ContestantListSortBySelectorComponent],
-      providers: [provideTranslateMock()],
+      providers: [provideTranslateMock(sortByTranslations)],
     }).compileComponents();
   });
 
@@ -24,7 +26,7 @@ describe('ContestantListSortBySelectorComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const label = el.querySelector('label');
-    expect(label?.textContent?.trim()).toBe('sortBy.label');
+    expect(label?.textContent?.trim()).toBe('Sort by');
   });
 
   it('should render select with current mode value', () => {

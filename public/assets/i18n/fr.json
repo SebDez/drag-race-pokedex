@@ -8,7 +8,8 @@
   "common": {
     "win": "1 victoire",
     "wins": "{{count}} victoires",
-    "winner": "Gagnante"
+    "winner": "Gagnante",
+    "noResults": "Aucun résultat"
   },
   "detail": {
     "seasons": "Saisons",

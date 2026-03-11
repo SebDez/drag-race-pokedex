@@ -1,14 +1,14 @@
 import { Contestant } from '../../contestants/models/contestant';
 import { GroupMode } from '../../contestants/constants/group-mode';
 
-export interface ContestantSectionSeaon {
+export interface ContestantSectionSeason {
   franchise: string;
   season: string;
 }
 export interface ContestantSection {
   key: string;
   contestants: Contestant[];
-  season?: ContestantSectionSeaon;
+  season?: ContestantSectionSeason;
 }
 
 export type ContestantsViewModel =

@@ -2,8 +2,6 @@ import { Component, computed, input } from '@angular/core';
 import { FlagDisplayerComponent } from '../../flag-displayer/flag-displayer.component';
 import { FRANCHISE_COUNTRY_MAP } from '../../../contestants/constants/franchises';
 
-export { FRANCHISE_COUNTRY_MAP };
-
 const COUNTRY_ISO_MAP: Record<string, string> = {
   'United States': 'US',
   Thailand: 'TH',
@@ -29,7 +27,7 @@ const COUNTRY_ISO_MAP: Record<string, string> = {
   host: { class: 'inline-flex h-full items-center' },
   template: `@if (franchiseName(); as name) {
     <span
-      class="inline-flex items-center text-xs text-(--color-text-muted)"
+      class="inline-flex items-center text-xs text-[var(--color-text-muted)]"
       [class.truncate]="truncate()"
       [class.max-w-[120px]]="truncate()"
       [class.sm:max-w-[160px]]="truncate()"

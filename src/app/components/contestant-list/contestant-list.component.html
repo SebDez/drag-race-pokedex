@@ -5,7 +5,7 @@
       <app-contestant-card [contestant]="contestant" />
     }
   </div>
-} @else if (vm.sections) {
+} @else if (vm.sections.length) {
   <div class="flex flex-col gap-5">
     @for (group of vm.sections; track group.key) {
       <app-contestant-group-section
@@ -16,4 +16,6 @@
       />
     }
   </div>
+} @else if (vm.sections !== null) {
+  <p class="text-sm text-[var(--color-text-muted)] py-4">{{ 'common.noResults' | translate }}</p>
 }

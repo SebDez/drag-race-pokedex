@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '../../contestants/models/contestant';
 import { GroupMode } from '../../contestants/constants/group-mode';
 import { ContestantCardComponent } from './contestant-card/contestant-card.component';
@@ -8,7 +9,7 @@ import { type ContestantsViewModel } from '../../store/contestants/types';
 @Component({
   selector: 'app-contestant-list',
   standalone: true,
-  imports: [ContestantCardComponent, ContestantGroupSectionComponent],
+  imports: [ContestantCardComponent, ContestantGroupSectionComponent, TranslateModule],
   templateUrl: './contestant-list.component.html',
 })
 export class ContestantListComponent {

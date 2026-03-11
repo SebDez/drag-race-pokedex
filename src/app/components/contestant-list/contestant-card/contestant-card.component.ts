@@ -6,7 +6,7 @@ import { WinsBadgeComponent } from '../../badges/wins-badge/wins-badge.component
 import { WinnerBadgeComponent } from '../../badges/winner-badge/winner-badge.component';
 import { FranchiseBadgeComponent } from '../../badges/franchise-badge/franchise-badge.component';
 import { ContestantDetailComponent } from '../contestant-detail/contestant-detail.component';
-import { ContestantSectionSeaon } from '../../../store/contestants/types';
+import { ContestantSectionSeason } from '../../../store/contestants/types';
 
 @Component({
   selector: 'app-contestant-card',
@@ -25,7 +25,7 @@ import { ContestantSectionSeaon } from '../../../store/contestants/types';
 export class ContestantCardComponent {
   readonly contestant = input.required<Contestant>();
   readonly showOnlySeasonWinner = input<boolean>(false);
-  readonly displayedSeason = input<ContestantSectionSeaon | undefined>();
+  readonly displayedSeason = input<ContestantSectionSeason | undefined>();
 
   readonly isExpanded = signal<boolean>(false);
 

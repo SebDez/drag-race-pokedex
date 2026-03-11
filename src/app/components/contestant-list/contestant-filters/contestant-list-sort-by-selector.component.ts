@@ -8,23 +8,16 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
   template: `
     <div class="mb-4 text-sm flex flex-col gap-3">
-      <label class="text-(--color-text) font-semibold">
+      <label class="text-[var(--color-text)] font-semibold">
         {{ 'sortBy.label' | translate }}
       </label>
       <select
-        class="cursor-pointer rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+        class="cursor-pointer rounded-full border border-[var(--color-pink)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-surface)]"
         [value]="mode()"
         (change)="onChange($event)"
       >
-        <option [value]="SortMode.DragNameAsc" [selected]="mode() === SortMode.DragNameAsc">
-          {{ 'sortBy.dragNameAsc' | translate }}
-        </option>
-        <option
-          [value]="SortMode.ChallengeWinsDesc"
-          [selected]="mode() === SortMode.ChallengeWinsDesc"
-        >
-          {{ 'sortBy.challengeWinsDesc' | translate }}
-        </option>
+        <option [value]="SortMode.DragNameAsc" [selected]="mode() === SortMode.DragNameAsc">{{ 'sortBy.dragNameAsc' | translate }}</option>
+        <option [value]="SortMode.ChallengeWinsDesc" [selected]="mode() === SortMode.ChallengeWinsDesc">{{ 'sortBy.challengeWinsDesc' | translate }}</option>
       </select>
     </div>
   `,

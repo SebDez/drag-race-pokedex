@@ -69,7 +69,7 @@ export class ContestantsStore implements OnDestroy {
 
   private readonly groupedBySeasons = computed<ContestantSection[]>(() => {
     const all = this.sortedContestants();
-    const sections = [];
+    const sections: ContestantSection[] = [];
 
     for (const franchise of FRANCHISE_NAMES) {
       const totalSeasons = SEASONS_PER_FRANCHISE[franchise] ?? 0;
