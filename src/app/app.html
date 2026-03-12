@@ -1,4 +1,30 @@
 <app-lang-selector />
-<main class="app-main">
-  <router-outlet />
-</main>
+
+<div class="min-h-screen flex flex-col bg-(--color-bg) text-(--color-text)">
+  <main class="flex-1">
+    <router-outlet />
+  </main>
+
+  <nav
+    class="sticky bottom-0 flex gap-2 px-4 py-3 border-t border-(--color-border) bg-(--color-surface)"
+  >
+    <button
+      class="cursor-pointer flex-1 flex flex-col items-center justify-center gap-1 rounded-full bg-(--color-bg-subtle) text-(--color-text) text-[11px] font-medium uppercase tracking-[0.15em] px-3 py-2 hover:bg-(--color-gold-light) hover:text-(--color-text) active:scale-[0.97] transition"
+      type="button"
+      routerLink="/"
+      routerLinkActive="bg-(--color-gold-light) text-(--color-text) shadow-sm"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <app-crown-icon class="w-8 h-8 text-(--color-gold)" />
+    </button>
+
+    <button
+      class="cursor-pointer flex-1 flex flex-col items-center justify-center gap-1 rounded-full bg-(--color-bg-subtle) text-(--color-text) text-[11px] font-medium uppercase tracking-[0.15em] px-3 py-2 hover:bg-(--color-gold-light) hover:text-(--color-text) active:scale-[0.97] transition"
+      type="button"
+      routerLink="/quiz"
+      routerLinkActive="bg-(--color-gold-light) text-(--color-text) shadow-sm"
+    >
+      <app-trophy-icon class="w-8 h-8 text-(--color-gold)" />
+    </button>
+  </nav>
+</div>

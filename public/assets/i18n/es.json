@@ -46,5 +46,55 @@
     "label": "Ordenar por",
     "dragNameAsc": "Nombre",
     "challengeWinsDesc": "Victorias en desafíos"
+  },
+  "quiz": {
+    "title": "Quiz",
+    "ctaBack": "Volver a la lista",
+    "ctaPlay": "Jugar",
+    "intro": {
+      "headline": "¡Bienvenide al Quiz de Drag Race!",
+      "lead": "¿Crees que conoces a tus reinas? Es hora de demostrarlo. 💅",
+      "description": "Cada partida consiste en 10 preguntas generadas aleatoriamente sobre contestants del universo Drag Race.",
+      "questionsTitle": "Las preguntas pueden ser, por ejemplo:",
+      "questionsList": {
+        "whoIsThisQueen": "¿Quién es esta queen? (identificar a una contestant a partir de su foto)",
+        "whichFranchise": "¿De qué franquicia es esta queen?",
+        "whoWonSeason": "¿Quién ganó la temporada 3 de la franquicia USA?",
+        "otherTrivia": "Y otro tipo de trivia sobre Drag Race…"
+      },
+      "everyGameDifferent": "Cada partida es diferente, así que no hay dos sesiones exactamente iguales."
+    },
+    "scoring": {
+      "title": "🧠 Puntuación",
+      "totalPoints": "Cada quiz vale 100 puntos en total.",
+      "confidenceIntro": "Antes de responder a una pregunta, eliges tu nivel de confianza seleccionando un modo de dificultad. Cuanto más difícil el modo, más puntos puedes ganar."
+    },
+    "modes": {
+      "square": {
+        "label": "💅 Cuadrado — 5 puntos",
+        "description": "Tienes 4 respuestas posibles. Sólo una es correcta, las otras tres son falsas. Un test de opción múltiple clásico: seguro, pero no el que da más puntos.",
+        "reward": "Respuesta correcta: +5 puntos"
+      },
+      "duo": {
+        "label": "✌️ Modo Dúo — 2 puntos",
+        "description": "Tienes 2 respuestas posibles. Una es correcta y la otra es falsa. Es un 50/50 — la forma más segura de asegurar algunos puntos.",
+        "reward": "Respuesta correcta: +2 puntos"
+      },
+      "cash": {
+        "label": "👑 Modo Cash — 10 puntos",
+        "description": "Sin opciones. Sin red de seguridad. Tienes que escribir la respuesta tú misme. Para ayudarte, el campo de entrada tiene sugerencias de autocompletado mientras escribes. Alto riesgo, alta recompensa.",
+        "reward": "Respuesta correcta: +10 puntos"
+      }
+    },
+    "howToWin": {
+      "title": "👑 Cómo ganar",
+      "steps": {
+        "answerQuestions": "Responde a las 10 preguntas",
+        "chooseRisk": "Elige bien tu nivel de riesgo",
+        "scorePoints": "Consigue la mayor puntuación posible sobre 100"
+      },
+      "safeOrRisk": "¿Juegas a lo seguro… o lo apuestas todo como una verdadera superestrella de Drag Race?",
+      "goodLuck": "Buena suerte… y no la c*gues. 💄"
+    }
   }
 }

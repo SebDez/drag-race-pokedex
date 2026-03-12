@@ -46,5 +46,64 @@
     "label": "Sort by",
     "dragNameAsc": "Name",
     "challengeWinsDesc": "Challenge wins"
+  },
+  "quiz": {
+    "title": "Quiz",
+    "ctaBack": "Back to list",
+    "ctaPlay": "Play",
+    "intro": {
+      "headline": "Welcome to the Drag Race Quiz!",
+      "lead": "Think you know your queens? Time to prove it. 💅",
+      "description": "Each game consists of 10 randomly generated questions about contestants from the Drag Race universe.",
+      "questionsTitle": "Questions can include things like:",
+      "questionsList": {
+        "whoIsThisQueen": "Who is this queen? (identify a contestant from their photo)",
+        "whichFranchise": "Which franchise is this queen from?",
+        "whoWonSeason": "Who won season 3 of the USA franchise?",
+        "otherTrivia": "And other Drag Race trivia…"
+      },
+      "everyGameDifferent": "Every game is different, so no two runs are exactly the same."
+    },
+    "scoring": {
+      "title": "🧠 Scoring",
+      "totalPoints": "Each quiz is worth 100 points total.",
+      "confidenceIntro": "Before answering a question, you choose how confident you feel by selecting a difficulty mode. The harder the mode, the more points you can win."
+    },
+    "modes": {
+      "duo": {
+        "label": "✌️ Duo Mode — 2 points",
+        "description": "You get 2 possible answers. One is correct, one is wrong. It’s a 50/50 guess — the safest way to secure a few points.",
+        "reward": "Correct answer: +2 points"
+      },
+      "square": {
+        "label": "💅 Mode — 5 points",
+        "description": "You get 4 possible answers. Only one is correct, the other three are wrong. A classic multiple-choice question — safe, but not the biggest score.",
+        "reward": "Correct answer: +5 points"
+      },
+      "cash": {
+        "label": "👑 Cash Mode — 10 points",
+        "description": "No options. No safety net. You must type the answer yourself. To help you, the input field includes auto-completion suggestions while you type. High risk, high reward.",
+        "reward": "Correct answer: +10 points"
+      }
+    },
+    "howToWin": {
+      "title": "👑 How to Win",
+      "steps": {
+        "answerQuestions": "Answer the 10 questions",
+        "chooseRisk": "Choose your risk level wisely",
+        "scorePoints": "Score as many points as possible out of 100"
+      },
+      "goodLuck": "Good luck… and don’t f*ck it up. 💄"
+    },
+    "feedback": {
+      "correct": "Correct! Werk!",
+      "wrong": "Not this time…",
+      "youAnswered": "You answered",
+      "correctWas": "The correct answer was",
+      "pointsWon": "You won {{points}} points on this question."
+    },
+    "result": {
+      "subtitle": "Your final score"
+    }
   }
 }

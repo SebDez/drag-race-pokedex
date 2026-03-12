@@ -1,0 +1,7 @@
+<button
+  type="button"
+  (click)="modeSelected.emit(mode())"
+  class="w-full cursor-pointer text-2xl rounded-full border border-(--color-pink) px-3 py-1 flex items-center justify-center gap-1 bg-(--color-bg-subtle) hover:text-white hover:bg-(--color-pink) transition"
+>
+  {{ 'quiz.play.modes.' + mode() | translate }}
+</button>

@@ -46,5 +46,72 @@
     "label": "Trier par",
     "dragNameAsc": "Nom",
     "challengeWinsDesc": "Victoires aux défis"
+  },
+  "quiz": {
+    "title": "Quizz",
+    "ctaBack": "Retour à la liste",
+    "ctaPlay": "Jouer",
+    "intro": {
+      "headline": "Bienvenue dans le Quizz Drag Race !",
+      "lead": "Tu penses tout connaître de tes queens ? Il est temps de le prouver. 💅",
+      "description": "Chaque partie se compose de 10 questions générées aléatoirement sur les contestants de l’univers Drag Race.",
+      "questionsTitle": "Les questions peuvent porter par exemple sur :",
+      "questionsList": {
+        "whoIsThisQueen": "Qui est cette queen ? (identifier une contestant à partir de sa photo)",
+        "whichFranchise": "De quelle franchise vient cette queen ?",
+        "whoWonSeason": "Qui a gagné la saison 3 de la franchise USA ?",
+        "otherTrivia": "Et d’autres questions sur l’univers de Drag Race…"
+      },
+      "everyGameDifferent": "Chaque partie est différente, donc aucune session ne se ressemble vraiment."
+    },
+    "scoring": {
+      "title": "🧠 Score",
+      "totalPoints": "Chaque quizz vaut 100 points au total.",
+      "confidenceIntro": "Avant de répondre à une question, tu choisis ton niveau de confiance en sélectionnant un mode de difficulté. Plus le mode est risqué, plus tu peux gagner de points."
+    },
+    "modes": {
+      "square": {
+        "label": "💅​ Carré — 5 points",
+        "description": "Tu as 4 réponses possibles. Une seule est correcte, les trois autres sont fausses. Un QCM classique : sûr, mais pas le plus rentable.",
+        "reward": "Bonne réponse : +5 points"
+      },
+      "duo": {
+        "label": "✌️ Duo — 2 points",
+        "description": "Tu as 2 réponses possibles. L’une est correcte, l’autre est fausse. C’est un 50/50 — la façon la plus sûre de sécuriser quelques points.",
+        "reward": "Bonne réponse : +2 points"
+      },
+      "cash": {
+        "label": "👑​ Cash — 10 points",
+        "description": "Aucune proposition. Aucun filet de sécurité. Tu dois taper la réponse toi‑même. Pour t’aider, le champ de saisie propose de l’auto‑complétion pendant que tu écris. Gros risque, grosse récompense.",
+        "reward": "Bonne réponse : +10 points"
+      }
+    },
+    "howToWin": {
+      "title": "👑 Comment gagner",
+      "steps": {
+        "answerQuestions": "Réponds aux 10 questions",
+        "chooseRisk": "Choisis bien ton niveau de risque",
+        "scorePoints": "Marque un maximum de points sur 100"
+      },
+      "goodLuck": "Bonne chance… et ne foire pas tout. 💄"
+    },
+    "feedback": {
+      "correct": "Correct ! Werk !",
+      "wrong": "Pas cette fois…",
+      "youAnswered": "Tu as répondu",
+      "correctWas": "La bonne réponse était",
+      "pointsWon": "Tu as gagné {{points}} points sur cette question."
+    },
+    "result": {
+      "subtitle": "Ton score final"
+    },
+    "play": {
+      "points": "points",
+      "modes": {
+        "square": "💅​ Carré",
+        "duo": "✌️ Duo",
+        "cash": "👑​ Cash"
+      }
+    }
   }
 }
