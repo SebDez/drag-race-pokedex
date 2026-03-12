@@ -1,0 +1,134 @@
+<section class="space-y-4 text-sm leading-relaxed text-(--color-text) mb-8">
+  <div class="flex items-center justify-between text-[13px] text-(--color-text-muted)">
+    <span> Question {{ store.currentIndex() + 1 }} / {{ store.totalQuestions() }} </span>
+    <span> Score: {{ store.score() }} / 100 </span>
+  </div>
+
+  <div class="rounded-2xl bg-(--color-bg-subtle) border border-(--color-border) p-4 space-y-3">
+    <!-- QUESTION -->
+    @switch (currentQuestion?.type) {
+      @case (quizQuestionType.WhoIsThisQueen) {
+        <p class="font-semibold">
+          {{ 'quiz.intro.questionsList.whoIsThisQueen' | translate }}
+        </p>
+        <div class="flex justify-center my-3">
+          <img
+            [src]="currentQuestion?.contestant?.imageUrl"
+            [alt]="'quiz.intro.questionsList.whoIsThisQueen' | translate"
+            class="h-40 w-40 object-cover rounded-xl border border-(--color-border) shadow-sm"
+          />
+        </div>
+      }
+      @case (quizQuestionType.FromWhichFranchise) {
+        <p class="font-semibold">
+          TODO: {{ 'quiz.intro.questionsList.whichFranchise' | translate }}
+        </p>
+        <p class="text-(--color-text-muted)">
+          {{ currentQuestion?.contestant?.dragName }}
+        </p>
+      }
+      @case (quizQuestionType.WhoWonSeason) {
+        <p class="font-semibold">TODO: {{ 'quiz.intro.questionsList.whoWonSeason' | translate }}</p>
+        <p class="text-(--color-text-muted)">
+          {{ currentQuestion?.franchise }} — S{{ currentQuestion?.season }}
+        </p>
+      }
+    }
+
+    <!-- SELECT MODE -->
+    Comment voulez-vous répondre à la question ?
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
+      <app-quiz-mode-cta [mode]="quizAnswerMode.Duo" (modeSelected)="(onSelectMode)" />
+      <app-quiz-mode-cta [mode]="quizAnswerMode.Square" (modeSelected)="(onSelectMode)" />
+      <app-quiz-mode-cta [mode]="quizAnswerMode.Cash" (modeSelected)="(onSelectMode)" />
+    </div>
+
+    <!-- FORM ANSWER -->
+    <!--@if (answerMode) {
+      <div class="mt-3 space-y-2">
+        <ng-container [ngSwitch]="mode">
+          <ng-container *ngSwitchCase="'cash'">
+            <label class="block text-[12px] text-(--color-text-muted) mb-1">
+              {{ 'quiz.modes.cash.label' | translate }}
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="cashValue"
+              class="w-full rounded-full border border-(--color-border) px-4 py-2 text-[14px] bg-(--color-surface) outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+              autocomplete="off"
+            />
+            <p class="text-[11px] text-(--color-text-muted)">
+              {{ 'quiz.modes.cash.description' | translate }}
+            </p>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            <div class="grid gap-2" [ngClass]="{ 'md:grid-cols-2': mode === 'square' }">
+              <ng-container [ngSwitch]="currentQuestion?.type">
+                <ng-container *ngSwitchCase="'whichFranchise'">
+                  <button
+                    *ngFor="let option of currentQuestion?.options"
+                    type="button"
+                    (click)="onSelectOption(option)"
+                    [class.border-pink-500]="selectedOptionId === option"
+                    [class.bg-pink-50]="selectedOptionId === option"
+                    class="rounded-full border border-(--color-border) px-4 py-2 text-left text-[14px] bg-(--color-surface) hover:bg-(--color-bg-subtle) transition"
+                  >
+                    {{ option }}
+                  </button>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <button
+                    *ngFor="let option of currentQuestion?.options"
+                    type="button"
+                    (click)="onSelectOption(option.dragName)"
+                    [class.border-pink-500]="selectedOptionId === option.dragName"
+                    [class.bg-pink-50]="selectedOptionId === option.dragName"
+                    class="rounded-full border border-(--color-border) px-4 py-2 text-left text-[14px] bg-(--color-surface) hover:bg-(--color-bg-subtle) transition"
+                  >
+                    {{ option.dragName }}
+                  </button>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    }-->
+
+    <!-- SUBMIT ANSWER -->
+    <div class="flex justify-end mt-3">
+      <button
+        type="button"
+        (click)="onSubmit()"
+        class="rounded-full bg-linear-to-r from-pink-500 to-orange-400 text-white text-[14px] font-semibold px-5 py-2 shadow-sm hover:brightness-110 transition active:scale-[0.97]"
+      >
+        Valider
+      </button>
+    </div>
+  </div>
+
+  <!-- FEEDBACK ANSWER -->
+  <div
+    *ngIf="store.answers().length && store.answers()[store.answers().length - 1] as last"
+    class="mt-3 rounded-2xl border border-(--color-border) p-3 text-[13px]"
+    [ngClass]="last.isCorrect ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'"
+  >
+    <p class="font-semibold mb-1">
+      {{
+        last.isCorrect ? ('quiz.feedback.correct' | translate) : ('quiz.feedback.wrong' | translate)
+      }}
+    </p>
+    <p>
+      {{ 'quiz.feedback.youAnswered' | translate }}:
+      <span class="font-semibold">{{ last.userAnswerLabel }}</span>
+    </p>
+    <p>
+      {{ 'quiz.feedback.correctWas' | translate }}:
+      <span class="font-semibold">{{ last.correctAnswerLabel }}</span>
+    </p>
+    <p class="mt-1">
+      {{ 'quiz.feedback.pointsWon' | translate: { points: last.pointsWon } }}
+    </p>
+  </div>
+</section>

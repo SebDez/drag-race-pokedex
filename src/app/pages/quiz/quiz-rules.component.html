@@ -1,0 +1,90 @@
+<section class="space-y-6 text-sm leading-relaxed text-(--color-text) mb-8">
+  <div class="space-y-2">
+    <h2 class="text-base font-semibold text-(--color-text)">
+      {{ 'quiz.intro.headline' | translate }}
+    </h2>
+    <p>
+      {{ 'quiz.intro.description' | translate }}
+    </p>
+    <p class="font-medium">
+      {{ 'quiz.intro.questionsTitle' | translate }}
+    </p>
+    <ul class="list-disc pl-5 space-y-1 text-(--color-text-muted)">
+      <li>{{ 'quiz.intro.questionsList.whoIsThisQueen' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.whichFranchise' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.whoWonSeason' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.otherTrivia' | translate }}</li>
+    </ul>
+    <p class="text-(--color-text-muted)">
+      {{ 'quiz.intro.everyGameDifferent' | translate }}
+    </p>
+  </div>
+
+  <div class="space-y-2">
+    <h2 class="text-base font-semibold text-(--color-text)">
+      {{ 'quiz.scoring.title' | translate }}
+    </h2>
+    <p>{{ 'quiz.scoring.totalPoints' | translate }}</p>
+    <p class="text-(--color-text-muted)">
+      {{ 'quiz.scoring.confidenceIntro' | translate }}
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <article
+      class="rounded-2xl bg-(--color-bg-subtle) border border-(--color-border) p-4 space-y-2"
+    >
+      <h3 class="text-sm font-semibold">
+        {{ 'quiz.modes.duo.label' | translate }}
+      </h3>
+      <p class="text-[13px] text-(--color-text-muted)">
+        {{ 'quiz.modes.duo.description' | translate }}
+      </p>
+      <p class="text-[13px] font-semibold">
+        {{ 'quiz.modes.duo.reward' | translate }}
+      </p>
+    </article>
+
+    <article
+      class="rounded-2xl bg-(--color-bg-subtle) border border-(--color-border) p-4 space-y-2"
+    >
+      <h3 class="text-sm font-semibold">
+        {{ 'quiz.modes.square.label' | translate }}
+      </h3>
+      <p class="text-[13px] text-(--color-text-muted)">
+        {{ 'quiz.modes.square.description' | translate }}
+      </p>
+      <p class="text-[13px] font-semibold">
+        {{ 'quiz.modes.square.reward' | translate }}
+      </p>
+    </article>
+
+    <article
+      class="rounded-2xl bg-(--color-bg-subtle) border border-(--color-border) p-4 space-y-2"
+    >
+      <h3 class="text-sm font-semibold">
+        {{ 'quiz.modes.cash.label' | translate }}
+      </h3>
+      <p class="text-[13px] text-(--color-text-muted)">
+        {{ 'quiz.modes.cash.description' | translate }}
+      </p>
+      <p class="text-[13px] font-semibold">
+        {{ 'quiz.modes.cash.reward' | translate }}
+      </p>
+    </article>
+  </div>
+
+  <div class="space-y-2 border-t border-(--color-border) pt-4">
+    <h2 class="text-base font-semibold text-(--color-text)">
+      {{ 'quiz.howToWin.title' | translate }}
+    </h2>
+    <ul class="list-disc pl-5 space-y-1 text-(--color-text-muted)">
+      <li>{{ 'quiz.howToWin.steps.answerQuestions' | translate }}</li>
+      <li>{{ 'quiz.howToWin.steps.chooseRisk' | translate }}</li>
+      <li>{{ 'quiz.howToWin.steps.scorePoints' | translate }}</li>
+    </ul>
+    <p class="text-(--color-text) font-medium">
+      {{ 'quiz.howToWin.goodLuck' | translate }}
+    </p>
+  </div>
+</section>

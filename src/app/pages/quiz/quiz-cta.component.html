@@ -1,0 +1,18 @@
+@if (store.status() !== 'inProgress') {
+  <section class="flex gap-3">
+    <button
+      class="cursor-pointer flex-1 rounded-full bg-(--color-bg-subtle) text-(--color-text) text-[14px] font-semibold px-4 py-2.5 border border-(--color-border) hover:bg-(--color-gold-light) transition active:scale-[0.97]"
+      type="button"
+      routerLink="/"
+    >
+      {{ 'quiz.ctaBack' | translate }}
+    </button>
+    <button
+      class="cursor-pointer flex-1 rounded-full bg-linear-to-r from-pink-500 to-orange-400 text-white text-[14px] font-semibold px-4 py-2.5 shadow-sm hover:brightness-110 transition active:scale-[0.97]"
+      type="button"
+      (click)="onPlay()"
+    >
+      {{ 'quiz.ctaPlay' | translate }}
+    </button>
+  </section>
+}
