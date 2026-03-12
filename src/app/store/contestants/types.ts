@@ -1,6 +1,24 @@
 import { Contestant } from '../../contestants/models/contestant';
 import { GroupMode } from '../../contestants/constants/group-mode';
 
+export interface ContestantFilters {
+  winnersOnly: boolean;
+  /**
+   * Keys representing selected franchises and seasons.
+   * - Franchise: "franchise::<franchiseName>"
+   * - Season: "season::<franchiseName>::<seasonNumber>"
+   */
+  franchiseSeasonKeys: string[];
+  /** Filter by name: display queens whose name contains this string (case insensitive). */
+  searchQuery?: string;
+}
+
+export const DEFAULT_CONTESTANT_FILTERS: ContestantFilters = {
+  winnersOnly: false,
+  franchiseSeasonKeys: [],
+  searchQuery: '',
+};
+
 export interface ContestantSectionSeason {
   franchise: string;
   season: string;

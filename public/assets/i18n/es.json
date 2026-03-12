@@ -24,6 +24,17 @@
     "loading": "Cargando",
     "language": "Idioma"
   },
+  "filters": {
+    "label": "Filtros",
+    "openDialog": "Abrir filtros",
+    "close": "Cerrar",
+    "searchPlaceholder": "Buscar una reina…",
+    "searchLabel": "Buscar por nombre artístico",
+    "winnersOnly": "Sólo ganadoras",
+    "allFranchises": "Todas las franquicias",
+    "franchiseTreeHint": "Selecciona una o varias franquicias y temporadas",
+    "seasonShort": "T{{season}}"
+  },
   "groupBy": {
     "label": "Agrupar por",
     "all": "Todas",

@@ -5,6 +5,7 @@ import { ContestantListComponent } from '../../components/contestant-list/contes
 import { ContestantListFiltersComponent } from '../../components/contestant-list/contestant-filters/contestant-list-filters.component';
 import { type ContestantGroupMode } from '../../contestants/constants/group-mode';
 import { type ContestantSortMode } from '../../contestants/constants/sort-mode';
+import { type ContestantFilters } from '../../store/contestants/types';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,10 @@ export class HomeComponent implements OnInit {
 
   protected onSortModeChange(mode: ContestantSortMode): void {
     this.store.setSortMode(mode);
+  }
+
+  protected onFiltersChange(filters: ContestantFilters): void {
+    this.store.setFilters(filters);
   }
 
   ngOnInit(): void {

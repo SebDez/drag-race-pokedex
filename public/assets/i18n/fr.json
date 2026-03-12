@@ -24,6 +24,17 @@
     "loading": "Chargement",
     "language": "Langue"
   },
+  "filters": {
+    "label": "Filtres",
+    "openDialog": "Ouvrir les filtres",
+    "close": "Fermer",
+    "searchPlaceholder": "Rechercher une reine…",
+    "searchLabel": "Rechercher par nom de scène",
+    "winnersOnly": "Gagnantes uniquement",
+    "allFranchises": "Toutes les franchises",
+    "franchiseTreeHint": "Sélectionnez une ou plusieurs franchises et saisons",
+    "seasonShort": "S{{season}}"
+  },
   "groupBy": {
     "label": "Grouper par",
     "all": "Toutes",
