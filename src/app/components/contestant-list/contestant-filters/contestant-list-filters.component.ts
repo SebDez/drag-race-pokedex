@@ -5,7 +5,7 @@ import { ContestantListSearchBarComponent } from './contestant-list-search-bar.c
 import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { SortMode, type ContestantSortMode } from '../../../contestants/constants/sort-mode';
 import { ContestantListAdvancedFiltersComponent } from './contestant-list-advanced-filters.component';
-import { type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
 
 @Component({
   selector: 'app-contestant-list-filters',
@@ -46,10 +46,7 @@ export class ContestantListFiltersComponent {
   readonly groupModeChange = output<ContestantGroupMode>();
   readonly sortMode = input<ContestantSortMode>(SortMode.DragNameAsc);
   readonly sortModeChange = output<ContestantSortMode>();
-  readonly filters = input<ContestantFilters>({
-    winnersOnly: false,
-    franchiseSeasonKeys: [],
-  });
+  readonly filters = input<ContestantFilters>(DEFAULT_CONTESTANT_FILTERS);
   readonly filtersChange = output<ContestantFilters>();
 
   protected onSearchChange(query: string): void {

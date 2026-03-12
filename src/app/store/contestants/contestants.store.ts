@@ -6,7 +6,7 @@ import { GroupMode, type ContestantGroupMode } from '../../contestants/constants
 import { SortMode, type ContestantSortMode } from '../../contestants/constants/sort-mode';
 import { tap, catchError } from 'rxjs/operators';
 import { of, type Subscription } from 'rxjs';
-import { type ContestantFilters, ContestantSection, ContestantsViewModel } from './types';
+import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters, ContestantSection, ContestantsViewModel } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class ContestantsStore implements OnDestroy {
@@ -26,11 +26,7 @@ export class ContestantsStore implements OnDestroy {
     sortMode: SortMode.DragNameAsc,
     loading: false,
     error: null,
-    filters: {
-      winnersOnly: false,
-      franchiseSeasonKeys: [],
-      searchQuery: '',
-    },
+    filters: DEFAULT_CONTESTANT_FILTERS,
   });
 
   readonly contestants = computed<Contestant[]>(() => this.state().contestants);
@@ -80,6 +76,7 @@ export class ContestantsStore implements OnDestroy {
   readonly loading = computed<boolean>(() => this.state().loading);
   readonly error = computed<string | null>(() => this.state().error);
   readonly count = computed<number>(() => this.state().contestants.length);
+  readonly filteredCount = computed<number>(() => this.filteredContestants().length);
 
   private readonly groupedByLetter = computed<ContestantSection[]>(() => {
     const all = this.sortedContestants();
@@ -116,7 +113,7 @@ export class ContestantsStore implements OnDestroy {
       for (let seasonNumber = 1; seasonNumber <= totalSeasons; seasonNumber++) {
         const key = `${franchise} (S${seasonNumber})`;
         const contestants = all.filter((c) =>
-          c.seasons.some(
+          c.seasons?.some(
             (s) =>
               s.franchise === franchise &&
               s.season === String(seasonNumber) &&

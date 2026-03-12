@@ -6,8 +6,7 @@ import { SortMode } from '../../contestants/constants/sort-mode';
 import { provideTranslateMock } from '../../testing/translate-mock';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-
-const defaultFilters = { winnersOnly: false, franchiseSeasonKeys: [] };
+import { DEFAULT_CONTESTANT_FILTERS } from '../../store/contestants/types';
 
 describe('HomeComponent', () => {
   let loadContestantsSpy: unknown;
@@ -17,10 +16,11 @@ describe('HomeComponent', () => {
       contestants: signal([]),
       groupMode: signal(GroupMode.All),
       sortMode: signal(SortMode.DragNameAsc),
-      filters: signal(defaultFilters),
+      filters: signal(DEFAULT_CONTESTANT_FILTERS),
       loading: signal(false),
       error: signal(null as string | null),
       count: signal(0),
+      filteredCount: signal(0),
       viewModel: signal({ mode: GroupMode.All, list: [] as unknown[], sections: null }),
       setGroupMode: () => {},
       setSortMode: () => {},
@@ -56,6 +56,7 @@ describe('HomeComponent', () => {
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
@@ -64,9 +65,10 @@ describe('HomeComponent', () => {
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
-    store.filters = signal(defaultFilters);
+    store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
+    store.filteredCount = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();
@@ -84,6 +86,7 @@ describe('HomeComponent', () => {
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
@@ -92,9 +95,10 @@ describe('HomeComponent', () => {
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
-    store.filters = signal(defaultFilters);
+    store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(0);
+    store.filteredCount = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();
@@ -111,6 +115,7 @@ describe('HomeComponent', () => {
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
       count: ReturnType<typeof signal>;
+      filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
@@ -119,9 +124,10 @@ describe('HomeComponent', () => {
     store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
-    store.filters = signal(defaultFilters);
+    store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
     store.count = signal(42);
+    store.filteredCount = signal(42);
 
     const fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();

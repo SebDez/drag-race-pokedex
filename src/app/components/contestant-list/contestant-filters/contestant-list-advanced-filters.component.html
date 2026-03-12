@@ -1,0 +1,139 @@
+<div class="h-full mb-4 text-sm flex flex-col justify-end gap-3 pb-4">
+  <button
+    #openFiltersBtn
+    type="button"
+    class="flex items-center gap-1.5 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) text-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+    (click)="openDialog()"
+    [attr.aria-label]="'filters.openDialog' | translate"
+  >
+    <span class="inline-flex size-4 shrink-0" aria-hidden="true">
+      <svg
+        class="size-full"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      </svg>
+    </span>
+    {{ 'filters.label' | translate }}
+    @if (hasActiveFilters()) {
+      <span
+        class="size-1.5 rounded-full bg-(--color-pink)"
+        aria-hidden="true"
+        data-testid="active-filters-dot"
+      ></span>
+    }
+  </button>
+</div>
+
+@if (dialogOpen()) {
+  <div
+    class="fixed inset-0 z-40 flex items-center justify-center p-4"
+    role="dialog"
+    [attr.aria-modal]="true"
+    [attr.aria-labelledby]="dialogTitleId"
+  >
+    <div
+      class="absolute inset-0 bg-black/50"
+      data-testid="dialog-backdrop"
+      (click)="closeDialog()"
+    ></div>
+    <div
+      [id]="dialogTitleId"
+      class="relative z-50 w-full max-w-md max-h-[85vh] flex flex-col rounded-xl border border-(--color-pink)/30 bg-(--color-surface) shadow-xl"
+    >
+      <div
+        class="flex items-center justify-between shrink-0 border-b border-(--color-pink)/20 px-4 py-3"
+      >
+        <h2 class="text-base font-semibold text-(--color-text) m-0">
+          {{ 'filters.label' | translate }}
+        </h2>
+        <button
+          type="button"
+          class="rounded-full p-1.5 text-(--color-text-muted) hover:bg-(--color-pink)/10 hover:text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+          (click)="closeDialog()"
+          [attr.aria-label]="'filters.close' | translate"
+        >
+          <span class="size-5 block" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto p-4 flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+              [checked]="filters().winnersOnly"
+              (change)="onToggleWinners($event)"
+            />
+            <span class="text-(--color-text)">{{ 'filters.winnersOnly' | translate }}</span>
+          </label>
+
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+              [checked]="allFranchisesSelected()"
+              (change)="onToggleAllFranchises($event)"
+            />
+            <span class="text-(--color-text)">{{ 'filters.allFranchises' | translate }}</span>
+          </label>
+        </div>
+
+        <div
+          class="rounded-lg border border-(--color-pink)/40 bg-(--color-surface-elevated) max-h-64 overflow-auto px-3 py-2"
+          data-testid="franchise-tree"
+        >
+          <p class="text-[11px] text-(--color-text-muted) mb-2">
+            {{ 'filters.franchiseTreeHint' | translate }}
+          </p>
+          <div class="flex flex-col gap-1">
+            @for (franchise of franchiseNames(); track franchise) {
+              <div class="flex flex-col gap-1">
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+                    [checked]="isFranchiseSelected(franchise)"
+                    (change)="onToggleFranchise(franchise, $event)"
+                  />
+                  <span class="text-[13px] text-(--color-text)">{{ franchise }}</span>
+                </label>
+
+                <div class="ml-6 flex flex-col gap-0.5">
+                  @for (season of seasonsForFranchise(franchise); track season) {
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        class="h-3.5 w-3.5 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+                        [checked]="isSeasonSelected(franchise, season)"
+                        (change)="onToggleSeason(franchise, season, $event)"
+                      />
+                      <span class="text-[12px] text-(--color-text-muted)">
+                        {{ 'filters.seasonShort' | translate: { season: season } }}
+                      </span>
+                    </label>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="shrink-0 border-t border-(--color-pink)/20 px-4 py-3">
+        <button
+          type="button"
+          class="w-full rounded-full border border-(--color-pink) bg-(--color-pink)/10 px-4 py-2 text-sm font-medium text-(--color-text) hover:bg-(--color-pink)/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+          (click)="closeDialog()"
+        >
+          {{ 'filters.close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -13,6 +13,12 @@ export interface ContestantFilters {
   searchQuery?: string;
 }
 
+export const DEFAULT_CONTESTANT_FILTERS: ContestantFilters = {
+  winnersOnly: false,
+  franchiseSeasonKeys: [],
+  searchQuery: '',
+};
+
 export interface ContestantSectionSeason {
   franchise: string;
   season: string;

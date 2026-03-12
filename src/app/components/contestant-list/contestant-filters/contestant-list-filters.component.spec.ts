@@ -2,13 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { ContestantListFiltersComponent } from './contestant-list-filters.component';
 import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { SortMode, type ContestantSortMode } from '../../../contestants/constants/sort-mode';
-import { type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
 import { provideTranslateMock } from '../../../testing/translate-mock';
-
-const defaultFilters: ContestantFilters = {
-  winnersOnly: false,
-  franchiseSeasonKeys: [],
-};
 
 function setFilterInputs(
   fixture: { componentRef: { setInput: (name: string, value: unknown) => void } },
@@ -16,7 +11,7 @@ function setFilterInputs(
 ): void {
   fixture.componentRef.setInput('groupMode', overrides.groupMode ?? GroupMode.All);
   fixture.componentRef.setInput('sortMode', overrides.sortMode ?? SortMode.DragNameAsc);
-  fixture.componentRef.setInput('filters', overrides.filters ?? defaultFilters);
+  fixture.componentRef.setInput('filters', overrides.filters ?? DEFAULT_CONTESTANT_FILTERS);
 }
 
 describe('ContestantListFiltersComponent', () => {

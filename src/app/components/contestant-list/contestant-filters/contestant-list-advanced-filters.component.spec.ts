@@ -1,13 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ContestantListAdvancedFiltersComponent } from './contestant-list-advanced-filters.component';
-import { type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
 import { provideTranslateMock } from '../../../testing/translate-mock';
 import { FRANCHISE_NAMES } from '../../../contestants/constants/franchises';
-
-const defaultFilters: ContestantFilters = {
-  winnersOnly: false,
-  franchiseSeasonKeys: [],
-};
 
 describe('ContestantListAdvancedFiltersComponent', () => {
   beforeEach(async () => {
@@ -19,14 +14,14 @@ describe('ContestantListAdvancedFiltersComponent', () => {
 
   it('should create', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('should display filters button with translation label', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const btn = el.querySelector('button');
@@ -35,37 +30,37 @@ describe('ContestantListAdvancedFiltersComponent', () => {
 
   it('should not show active filter dot when no filters are active', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const dot = el.querySelector('.rounded-full.bg-\\(--color-pink\\)');
+    const dot = el.querySelector('[data-testid="active-filters-dot"]');
     expect(dot).toBeFalsy();
   });
 
   it('should show active filter dot when winnersOnly is true', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', { ...defaultFilters, winnersOnly: true });
+    fixture.componentRef.setInput('filters', { ...DEFAULT_CONTESTANT_FILTERS, winnersOnly: true });
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const dot = el.querySelector('.rounded-full.bg-\\(--color-pink\\)');
+    const dot = el.querySelector('[data-testid="active-filters-dot"]');
     expect(dot).toBeTruthy();
   });
 
   it('should show active filter dot when franchiseSeasonKeys has entries', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', {
-      ...defaultFilters,
+      ...DEFAULT_CONTESTANT_FILTERS,
       franchiseSeasonKeys: ['franchise::Drag Race France'],
     });
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const dot = el.querySelector('.rounded-full.bg-\\(--color-pink\\)');
+    const dot = el.querySelector('[data-testid="active-filters-dot"]');
     expect(dot).toBeTruthy();
   });
 
   it('should open dialog on button click', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('[role="dialog"]')).toBeFalsy();
@@ -77,21 +72,34 @@ describe('ContestantListAdvancedFiltersComponent', () => {
 
   it('should close dialog when backdrop is clicked', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     el.querySelector('button')?.click();
     fixture.detectChanges();
     expect(el.querySelector('[role="dialog"]')).toBeTruthy();
-    const backdrop = el.querySelector('.absolute.inset-0.bg-black\\/50');
+    const backdrop = el.querySelector('[data-testid="dialog-backdrop"]');
     (backdrop as HTMLElement)?.click();
+    fixture.detectChanges();
+    expect(el.querySelector('[role="dialog"]')).toBeFalsy();
+  });
+
+  it('should close dialog when Escape key is pressed', () => {
+    const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    el.querySelector('button')?.click();
+    fixture.detectChanges();
+    expect(el.querySelector('[role="dialog"]')).toBeTruthy();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     fixture.detectChanges();
     expect(el.querySelector('[role="dialog"]')).toBeFalsy();
   });
 
   it('should close dialog when close button is clicked', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     el.querySelector('button')?.click();
@@ -105,7 +113,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
 
   it('should emit filtersChange with winnersOnly true when winners checkbox is toggled', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
@@ -125,7 +133,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
 
   it('should render franchise list in dialog', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
     fixture.detectChanges();
@@ -137,14 +145,14 @@ describe('ContestantListAdvancedFiltersComponent', () => {
   it('should emit filtersChange with franchise key when franchise checkbox is toggled', () => {
     const franchise = FRANCHISE_NAMES[0];
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
-    fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
     (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const scrollArea = el.querySelector('.max-h-64.overflow-auto');
+    const scrollArea = el.querySelector('[data-testid="franchise-tree"]');
     const franchiseLabel = Array.from(scrollArea?.querySelectorAll('label') ?? []).find(
       (l) => l.textContent?.trim() === franchise,
     );
