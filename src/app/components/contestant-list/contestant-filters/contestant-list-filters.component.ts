@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ContestantListGroupBySelectorComponent } from './contestant-list-group-by-selector.component';
 import { ContestantListSortBySelectorComponent } from './contestant-list-sort-by-selector.component';
 import { ContestantListSearchBarComponent } from './contestant-list-search-bar.component';
@@ -12,6 +13,7 @@ import { ContestantFilters } from '../../../contestants/models/query';
   selector: 'app-contestant-list-filters',
   standalone: true,
   imports: [
+    TranslateModule,
     ContestantListSearchBarComponent,
     ContestantListGroupBySelectorComponent,
     ContestantListSortBySelectorComponent,
@@ -33,12 +35,25 @@ import { ContestantFilters } from '../../../contestants/models/query';
         class="col-span-1"
         [filters]="filters()"
         (filtersChange)="onFiltersChange($event)"
+        (resetAllFilters)="onResetAllFromAdvanced()"
       />
       <app-contestant-list-search-bar
         class="col-span-3"
         [value]="filters().searchQuery ?? ''"
         (valueChange)="onSearchChange($event)"
       />
+      <div class="col-span-3 flex justify-end">
+        <button
+          type="button"
+          data-testid="reset-all-filters-toolbar"
+          class="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-pink)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)] rounded px-1 disabled:opacity-40 disabled:no-underline disabled:cursor-not-allowed"
+          [disabled]="isDefaultState()"
+          (click)="onResetAllClick()"
+          [attr.aria-label]="'filters.resetAll' | translate"
+        >
+          {{ 'filters.resetAll' | translate }}
+        </button>
+      </div>
     </div>
   `,
 })
@@ -49,6 +64,27 @@ export class ContestantListFiltersComponent {
   readonly sortModeChange = output<ContestantSortMode>();
   readonly filters = input<ContestantFilters>(DEFAULT_CONTESTANT_FILTERS);
   readonly filtersChange = output<ContestantFilters>();
+  readonly resetAllFilters = output<void>();
+
+  protected isDefaultState(): boolean {
+    const f = this.filters();
+    const search = (f.searchQuery ?? '').trim();
+    return (
+      this.groupMode() === GroupMode.All &&
+      this.sortMode() === SortMode.DragNameAsc &&
+      !f.winnersOnly &&
+      (f.franchiseSeasonKeys?.length ?? 0) === 0 &&
+      search === ''
+    );
+  }
+
+  protected onResetAllClick(): void {
+    this.resetAllFilters.emit();
+  }
+
+  protected onResetAllFromAdvanced(): void {
+    this.resetAllFilters.emit();
+  }
 
   protected onSearchChange(query: string): void {
     const current = this.filters();

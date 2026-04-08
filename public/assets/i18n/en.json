@@ -35,7 +35,8 @@
     "winnersOnly": "Winners only",
     "allFranchises": "All franchises",
     "franchiseTreeHint": "Select one or more franchises and seasons",
-    "seasonShort": "S{{season}}"
+    "seasonShort": "S{{season}}",
+    "resetAll": "Reset all filters"
   },
   "groupBy": {
     "label": "Group by",

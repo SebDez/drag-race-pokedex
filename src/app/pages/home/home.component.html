@@ -27,6 +27,7 @@
       (sortModeChange)="onSortModeChange($event)"
       [filters]="store.filters()"
       (filtersChange)="onFiltersChange($event)"
+      (resetAllFilters)="onResetAllFilters()"
     />
     <!-- List -->
     @if (store.loading()) {

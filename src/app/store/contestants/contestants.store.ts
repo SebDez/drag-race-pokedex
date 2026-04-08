@@ -91,6 +91,16 @@ export class ContestantsStore implements OnDestroy {
     this.reload();
   }
 
+  resetAllFilters(): void {
+    this.state.update((s) => ({
+      ...s,
+      filters: DEFAULT_CONTESTANT_FILTERS,
+      groupMode: GroupMode.All,
+      sortMode: SortMode.DragNameAsc,
+    }));
+    this.reload();
+  }
+
   loadContestants(): void {
     this.reload();
   }

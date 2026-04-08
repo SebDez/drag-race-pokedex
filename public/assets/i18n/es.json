@@ -35,7 +35,8 @@
     "winnersOnly": "Sólo ganadoras",
     "allFranchises": "Todas las franquicias",
     "franchiseTreeHint": "Selecciona una o varias franquicias y temporadas",
-    "seasonShort": "T{{season}}"
+    "seasonShort": "T{{season}}",
+    "resetAll": "Restablecer filtros"
   },
   "groupBy": {
     "label": "Agrupar por",

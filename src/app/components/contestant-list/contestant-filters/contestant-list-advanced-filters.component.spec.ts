@@ -24,7 +24,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const btn = el.querySelector('button');
+    const btn = el.querySelector('[data-testid="open-advanced-filters-btn"]');
     expect(btn?.textContent?.trim()).toContain('filters.label');
   });
 
@@ -64,7 +64,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('[role="dialog"]')).toBeFalsy();
-    const btn = el.querySelector('button');
+    const btn = el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null;
     btn?.click();
     fixture.detectChanges();
     expect(el.querySelector('[role="dialog"]')).toBeTruthy();
@@ -75,7 +75,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    el.querySelector('button')?.click();
+    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
     fixture.detectChanges();
     expect(el.querySelector('[role="dialog"]')).toBeTruthy();
     const backdrop = el.querySelector('[data-testid="dialog-backdrop"]');
@@ -89,7 +89,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    el.querySelector('button')?.click();
+    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
     fixture.detectChanges();
     expect(el.querySelector('[role="dialog"]')).toBeTruthy();
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
@@ -102,7 +102,7 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    el.querySelector('button')?.click();
+    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
     fixture.detectChanges();
     const dialog = el.querySelector('[role="dialog"]');
     const closeBtn = dialog?.querySelector('button[aria-label="filters.close"]');
@@ -117,7 +117,9 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
-    const btn = (fixture.nativeElement as HTMLElement).querySelector('button');
+    const btn = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="open-advanced-filters-btn"]',
+    ) as HTMLElement | null;
     btn?.click();
     fixture.detectChanges();
     const winnersCheckbox = (fixture.nativeElement as HTMLElement).querySelector(
@@ -135,7 +137,11 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
+    (
+      (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="open-advanced-filters-btn"]',
+      ) as HTMLElement | null
+    )?.click();
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const firstFranchise = FRANCHISE_NAMES[0];
@@ -149,7 +155,11 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
-    (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
+    (
+      (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="open-advanced-filters-btn"]',
+      ) as HTMLElement | null
+    )?.click();
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const scrollArea = el.querySelector('[data-testid="franchise-tree"]');
@@ -166,5 +176,26 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     fixture.detectChanges();
     expect(emitted.length).toBe(1);
     expect(emitted[0].franchiseSeasonKeys).toContain(`franchise::${franchise}`);
+  });
+
+  it('should emit resetAllFilters and close dialog when reset all is clicked', () => {
+    const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
+    fixture.detectChanges();
+    const emitted: unknown[] = [];
+    fixture.componentInstance.resetAllFilters.subscribe(() => emitted.push(true));
+    (
+      (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="open-advanced-filters-btn"]',
+      ) as HTMLElement | null
+    )?.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeTruthy();
+    (fixture.nativeElement as HTMLElement)
+      .querySelector('[data-testid="reset-all-filters-dialog"]')
+      ?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+    expect(emitted.length).toBe(1);
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeFalsy();
   });
 });

@@ -103,7 +103,9 @@ describe('ContestantListFiltersComponent', () => {
     const advancedEl = (fixture.nativeElement as HTMLElement).querySelector(
       'app-contestant-list-advanced-filters',
     );
-    const openBtn = advancedEl?.querySelector('button');
+    const openBtn = advancedEl?.querySelector(
+      '[data-testid="open-advanced-filters-btn"]',
+    ) as HTMLElement | null;
     openBtn?.click();
     fixture.detectChanges();
     const winnersCheckbox = (fixture.nativeElement as HTMLElement).querySelector(
@@ -131,5 +133,31 @@ describe('ContestantListFiltersComponent', () => {
     (select as HTMLSelectElement).dispatchEvent(new Event('change'));
     fixture.detectChanges();
     expect(emitted).toEqual([SortMode.ChallengeWinsDesc]);
+  });
+
+  it('should emit resetAllFilters when toolbar reset is clicked', () => {
+    const fixture = TestBed.createComponent(ContestantListFiltersComponent);
+    setFilterInputs(fixture, {
+      filters: { ...DEFAULT_CONTESTANT_FILTERS, searchQuery: 'test' },
+    });
+    fixture.detectChanges();
+    const emitted: unknown[] = [];
+    fixture.componentInstance.resetAllFilters.subscribe(() => emitted.push(true));
+    const btn = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="reset-all-filters-toolbar"]',
+    );
+    expect(btn).toBeTruthy();
+    (btn as HTMLButtonElement).click();
+    expect(emitted.length).toBe(1);
+  });
+
+  it('should disable toolbar reset when already at default state', () => {
+    const fixture = TestBed.createComponent(ContestantListFiltersComponent);
+    setFilterInputs(fixture);
+    fixture.detectChanges();
+    const btn = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="reset-all-filters-toolbar"]',
+    ) as HTMLButtonElement;
+    expect(btn.disabled).toBe(true);
   });
 });

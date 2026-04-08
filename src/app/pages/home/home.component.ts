@@ -30,6 +30,10 @@ export class HomeComponent implements OnInit {
     this.store.setFilters(filters);
   }
 
+  protected onResetAllFilters(): void {
+    this.store.resetAllFilters();
+  }
+
   ngOnInit(): void {
     this.store.loadContestants();
   }
