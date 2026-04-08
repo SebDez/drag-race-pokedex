@@ -17,6 +17,8 @@ describe('HomeComponent', () => {
       sortMode: signal(SortMode.DragNameAsc),
       filters: signal(DEFAULT_CONTESTANT_FILTERS),
       loading: signal(false),
+      loadingMore: signal(false),
+      hasMore: signal(false),
       error: signal(null as string | null),
       filteredCount: signal(0),
       viewModel: signal({ mode: GroupMode.All, list: [] as unknown[], sections: null }),
@@ -24,6 +26,7 @@ describe('HomeComponent', () => {
       setSortMode: () => {},
       setFilters: () => {},
       loadContestants: () => {},
+      loadMore: () => {},
     };
     loadContestantsSpy = vi.spyOn(store, 'loadContestants');
 

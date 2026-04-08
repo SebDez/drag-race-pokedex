@@ -3,6 +3,7 @@
     "title": "Drag Race Pokédex",
     "subtitle": "Because you know the queen… but you can't remember which season she was on...",
     "loading": "Loading Queens…",
+    "loadingMore": "Loading more…",
     "contestantsCount": "{{count}} Queens"
   },
   "common": {
@@ -22,6 +23,7 @@
   },
   "aria": {
     "loading": "Loading",
+    "loadingMore": "Loading more",
     "language": "Language"
   },
   "filters": {

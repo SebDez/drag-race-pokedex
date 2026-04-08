@@ -3,6 +3,7 @@
     "title": "Drag Race Pokédex",
     "subtitle": "Parce que vous connaissez la reine, mais vous ne vous souvenez pas dans quelle saison elle était...",
     "loading": "Chargement des reines...",
+    "loadingMore": "Chargement…",
     "contestantsCount": "{{count}} Reines"
   },
   "common": {
@@ -22,6 +23,7 @@
   },
   "aria": {
     "loading": "Chargement",
+    "loadingMore": "Chargement en cours",
     "language": "Langue"
   },
   "filters": {

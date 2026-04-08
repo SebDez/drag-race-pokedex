@@ -2,6 +2,8 @@ import { Contestant } from '../../contestants/models/contestant';
 import { GroupMode } from '../../contestants/constants/group-mode';
 import type { ContestantFilters } from '../../contestants/models/query';
 
+export type { ContestantFilters } from '../../contestants/models/query';
+
 export const DEFAULT_CONTESTANT_FILTERS: ContestantFilters = {
   winnersOnly: false,
   franchiseSeasonKeys: [],

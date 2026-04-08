@@ -3,6 +3,7 @@
     "title": "Drag Race Pokédex",
     "subtitle": "Porque sabes a quién estás hablando, pero no recuerdas en qué temporada estuvo...",
     "loading": "Cargando reinas...",
+    "loadingMore": "Cargando más…",
     "contestantsCount": "{{count}} Reinas"
   },
   "common": {
@@ -22,6 +23,7 @@
   },
   "aria": {
     "loading": "Cargando",
+    "loadingMore": "Cargando más",
     "language": "Idioma"
   },
   "filters": {
