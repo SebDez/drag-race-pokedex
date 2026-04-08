@@ -13,13 +13,11 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     const store = {
-      contestants: signal([]),
       groupMode: signal(GroupMode.All),
       sortMode: signal(SortMode.DragNameAsc),
       filters: signal(DEFAULT_CONTESTANT_FILTERS),
       loading: signal(false),
       error: signal(null as string | null),
-      count: signal(0),
       filteredCount: signal(0),
       viewModel: signal({ mode: GroupMode.All, list: [] as unknown[], sections: null }),
       setGroupMode: () => {},
@@ -51,23 +49,19 @@ describe('HomeComponent', () => {
     const store = TestBed.inject(ContestantsStore) as unknown as {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
-      contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
-      count: ReturnType<typeof signal>;
       filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(true);
     store.error = signal(null);
-    store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
     store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
-    store.count = signal(0);
     store.filteredCount = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
@@ -81,23 +75,19 @@ describe('HomeComponent', () => {
     const store = TestBed.inject(ContestantsStore) as unknown as {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
-      contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
-      count: ReturnType<typeof signal>;
       filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(false);
     store.error = signal('errors.loadFailed');
-    store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
     store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
-    store.count = signal(0);
     store.filteredCount = signal(0);
 
     const fixture = TestBed.createComponent(HomeComponent);
@@ -110,23 +100,19 @@ describe('HomeComponent', () => {
     const store = TestBed.inject(ContestantsStore) as unknown as {
       loading: ReturnType<typeof signal>;
       error: ReturnType<typeof signal>;
-      contestants: ReturnType<typeof signal>;
       groupMode: ReturnType<typeof signal>;
       sortMode: ReturnType<typeof signal>;
       filters: ReturnType<typeof signal>;
-      count: ReturnType<typeof signal>;
       filteredCount: ReturnType<typeof signal>;
       viewModel: ReturnType<typeof signal>;
       loadContestants: () => void;
     };
     store.loading = signal(false);
     store.error = signal(null);
-    store.contestants = signal([]);
     store.groupMode = signal(GroupMode.All);
     store.sortMode = signal(SortMode.DragNameAsc);
     store.filters = signal(DEFAULT_CONTESTANT_FILTERS);
     store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
-    store.count = signal(42);
     store.filteredCount = signal(42);
 
     const fixture = TestBed.createComponent(HomeComponent);

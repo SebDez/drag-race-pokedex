@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FRANCHISE_NAMES, SEASONS_PER_FRANCHISE } from '../../../contestants/constants/franchises';
-import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS } from '../../../store/contestants/types';
+import { ContestantFilters } from '../../../contestants/models/query';
 
 @Component({
   selector: 'app-contestant-list-advanced-filters',

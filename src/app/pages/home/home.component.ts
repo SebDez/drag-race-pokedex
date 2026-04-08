@@ -5,7 +5,7 @@ import { ContestantListComponent } from '../../components/contestant-list/contes
 import { ContestantListFiltersComponent } from '../../components/contestant-list/contestant-filters/contestant-list-filters.component';
 import { type ContestantGroupMode } from '../../contestants/constants/group-mode';
 import { type ContestantSortMode } from '../../contestants/constants/sort-mode';
-import { type ContestantFilters } from '../../store/contestants/types';
+import { type ContestantFilters } from '../../contestants/models/query';
 
 @Component({
   selector: 'app-home',

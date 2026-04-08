@@ -5,7 +5,8 @@ import { ContestantListSearchBarComponent } from './contestant-list-search-bar.c
 import { GroupMode, type ContestantGroupMode } from '../../../contestants/constants/group-mode';
 import { SortMode, type ContestantSortMode } from '../../../contestants/constants/sort-mode';
 import { ContestantListAdvancedFiltersComponent } from './contestant-list-advanced-filters.component';
-import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS } from '../../../store/contestants/types';
+import { ContestantFilters } from '../../../contestants/models/query';
 
 @Component({
   selector: 'app-contestant-list-filters',
