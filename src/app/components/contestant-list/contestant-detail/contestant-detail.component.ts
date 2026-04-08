@@ -1,17 +1,17 @@
 import { Component, input } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '../../../contestants/models/contestant';
 import { WinsBadgeComponent } from '../../badges/wins-badge/wins-badge.component';
 import { WinnerBadgeComponent } from '../../badges/winner-badge/winner-badge.component';
 import { FranchiseBadgeComponent } from '../../badges/franchise-badge/franchise-badge.component';
 import { PlaceOrdinalPipe } from '../../../core/pipes/place-ordinal.pipe';
+import { ContestantImageComponent } from '../../contestant-image/contestant-image.component';
 
 @Component({
   selector: 'app-contestant-detail',
   standalone: true,
   imports: [
-    NgOptimizedImage,
+    ContestantImageComponent,
     TranslateModule,
     WinsBadgeComponent,
     WinnerBadgeComponent,

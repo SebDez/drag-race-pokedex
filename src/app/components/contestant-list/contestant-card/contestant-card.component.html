@@ -14,19 +14,12 @@
     <div
       class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]"
     >
-      @if (getCardImageUrl(c)) {
-        <img
-          [ngSrc]="getCardImageUrl(c)"
-          [alt]=""
-          width="64"
-          height="64"
-          class="w-full h-full object-cover"
-        />
-      } @else {
-        <span
-          class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
-        ></span>
-      }
+      <app-contestant-image
+        [src]="getCardImageUrl(c)"
+        [alt]="''"
+        [width]="64"
+        [height]="64"
+      />
     </div>
     <!-- NAME -->
     <span class="flex-1 min-w-0 font-semibold text-[var(--color-text)] truncate">{{
