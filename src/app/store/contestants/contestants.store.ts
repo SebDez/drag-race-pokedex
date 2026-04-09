@@ -1,180 +1,208 @@
 import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
-import { CONTESTANTS_DATA_PROVIDER } from '../../contestants/contestants-data-provider';
-import { Contestant } from '../../contestants/models/contestant';
-import { FRANCHISE_NAMES, SEASONS_PER_FRANCHISE } from '../../contestants/constants/franchises';
 import { GroupMode, type ContestantGroupMode } from '../../contestants/constants/group-mode';
-import { SortMode, type ContestantSortMode } from '../../contestants/constants/sort-mode';
-import { tap, catchError } from 'rxjs/operators';
-import { of, type Subscription } from 'rxjs';
-import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters, ContestantSection, ContestantsViewModel } from './types';
+import type { ContestantSortMode } from '../../contestants/constants/sort-mode';
+import { SortMode } from '../../contestants/constants/sort-mode';
+import { tap, catchError, exhaustMap, takeUntil, finalize } from 'rxjs/operators';
+import { EMPTY, Subject, Subscription } from 'rxjs';
+import { DEFAULT_CONTESTANT_FILTERS, type ContestantsViewModel } from './types';
+import { ContestantsFetchService } from '../../contestants/contestants-fetch.service';
+import { ContestantFilters } from '../../contestants/models/query';
+import {
+  mergeContestantsViewModels,
+} from '../../contestants/utils/merge-contestants-view-model';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 24;
+
+const emptyViewModel: ContestantsViewModel = {
+  mode: GroupMode.All,
+  list: [],
+  sections: null,
+};
 
 @Injectable({ providedIn: 'root' })
 export class ContestantsStore implements OnDestroy {
-  private readonly provider = inject(CONTESTANTS_DATA_PROVIDER);
+  private readonly fetchService = inject(ContestantsFetchService);
   private loadSub: Subscription | null = null;
+  private readonly loadMoreRequests = new Subject<void>();
+  private readonly cancelPendingLoadMore = new Subject<void>();
+  private loadMorePipelineSub: Subscription | null = null;
 
   private readonly state = signal<{
-    contestants: Contestant[];
+    viewModel: ContestantsViewModel;
     groupMode: ContestantGroupMode;
     sortMode: ContestantSortMode;
     loading: boolean;
+    loadingMore: boolean;
     error: string | null;
     filters: ContestantFilters;
+    pageSize: number;
+    lastFetchedPage: number;
+    totalFiltered: number;
   }>({
-    contestants: [],
+    viewModel: emptyViewModel,
     groupMode: GroupMode.All,
     sortMode: SortMode.DragNameAsc,
     loading: false,
+    loadingMore: false,
     error: null,
     filters: DEFAULT_CONTESTANT_FILTERS,
+    pageSize: DEFAULT_PAGE_SIZE,
+    lastFetchedPage: 0,
+    totalFiltered: 0,
   });
 
-  readonly contestants = computed<Contestant[]>(() => this.state().contestants);
+  readonly viewModel = computed<ContestantsViewModel>(() => this.state().viewModel);
   readonly groupMode = computed<ContestantGroupMode>(() => this.state().groupMode);
   readonly sortMode = computed<ContestantSortMode>(() => this.state().sortMode);
   readonly filters = computed<ContestantFilters>(() => this.state().filters);
-
-  private readonly filteredContestants = computed<Contestant[]>(() => {
-    const { contestants, filters } = this.state();
-    const keys = filters.franchiseSeasonKeys ?? [];
-    const search = (filters.searchQuery ?? '').trim().toLowerCase();
-
-    let list = contestants;
-    if (search) {
-      list = list.filter((c) =>
-        (c.dragName?.trim() ?? '').toLowerCase().includes(search),
-      );
-    }
-
-    if (filters.winnersOnly && keys.length > 0) {
-      return list.filter((c) =>
-        this.matchesFranchiseSeasonFiltersAndWonInSelection(c, keys),
-      );
-    }
-    if (filters.winnersOnly) {
-      return list.filter((c) => c.isWinner);
-    }
-    if (!keys.length) {
-      return list;
-    }
-    return list.filter((c) => this.matchesFranchiseSeasonFilters(c, keys));
-  });
-
-  private readonly sortedContestants = computed<Contestant[]>(() => {
-    const list = this.filteredContestants();
-    const mode = this.sortMode();
-    const copy = [...list];
-    if (mode === SortMode.DragNameAsc) {
-      return copy.sort((a, b) =>
-        (a.dragName?.trim() ?? '').localeCompare(b.dragName?.trim() ?? '', undefined, {
-          sensitivity: 'base',
-        }),
-      );
-    }
-    return copy.sort((a, b) => (b.totalChallengeWins ?? 0) - (a.totalChallengeWins ?? 0));
-  });
+  readonly pageSize = computed<number>(() => this.state().pageSize);
+  readonly totalFiltered = computed<number>(() => this.state().totalFiltered);
   readonly loading = computed<boolean>(() => this.state().loading);
+  readonly loadingMore = computed<boolean>(() => this.state().loadingMore);
   readonly error = computed<string | null>(() => this.state().error);
-  readonly count = computed<number>(() => this.state().contestants.length);
-  readonly filteredCount = computed<number>(() => this.filteredContestants().length);
+  readonly filteredCount = computed<number>(() => this.state().totalFiltered);
 
-  private readonly groupedByLetter = computed<ContestantSection[]>(() => {
-    const all = this.sortedContestants();
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    return letters
-      .map((letter) => ({
-        key: letter,
-        contestants: all.filter((c) => c.dragName?.trim().toUpperCase().startsWith(letter)),
-      }))
-      .filter((group) => group.contestants.length > 0);
+  readonly hasMore = computed<boolean>(() => {
+    const s = this.state();
+    if (s.loading || s.loadingMore || s.totalFiltered <= 0) {
+      return false;
+    }
+    return s.lastFetchedPage * s.pageSize < s.totalFiltered;
   });
 
-  private readonly groupedByFranchise = computed<ContestantSection[]>(() => {
-    const all = this.sortedContestants();
-    const winnersOnly = this.filters().winnersOnly;
-    return FRANCHISE_NAMES.map((franchise) => ({
-      key: franchise,
-      contestants: all.filter((c) =>
-        winnersOnly
-          ? c.seasons?.some((s) => s.franchise === franchise && s.isWinner)
-          : c.firstFranchise === franchise,
-      ),
-    })).filter((group) => group.contestants.length > 0);
-  });
+  constructor() {
+    this.loadMorePipelineSub = this.loadMoreRequests
+      .pipe(
+        exhaustMap(() => {
+          const snapshot = this.state();
+          if (snapshot.loading || snapshot.loadingMore) {
+            return EMPTY;
+          }
+          if (snapshot.totalFiltered <= 0) {
+            return EMPTY;
+          }
+          if (snapshot.lastFetchedPage * snapshot.pageSize >= snapshot.totalFiltered) {
+            return EMPTY;
+          }
 
-  private readonly groupedBySeasons = computed<ContestantSection[]>(() => {
-    const all = this.sortedContestants();
-    const sections: ContestantSection[] = [];
-    const winnersOnly = this.filters().winnersOnly;
+          const nextPage = snapshot.lastFetchedPage + 1;
+          const { filters, sortMode, groupMode, pageSize } = snapshot;
 
-    for (const franchise of FRANCHISE_NAMES) {
-      const totalSeasons = SEASONS_PER_FRANCHISE[franchise] ?? 0;
+          this.state.update((prev) => ({ ...prev, loadingMore: true }));
 
-      for (let seasonNumber = 1; seasonNumber <= totalSeasons; seasonNumber++) {
-        const key = `${franchise} (S${seasonNumber})`;
-        const contestants = all.filter((c) =>
-          c.seasons?.some(
-            (s) =>
-              s.franchise === franchise &&
-              s.season === String(seasonNumber) &&
-              (!winnersOnly || s.isWinner),
-          ),
-        );
-
-        if (contestants.length > 0) {
-          sections.push({ key, contestants, season: { franchise, season: String(seasonNumber) } });
-        }
-      }
-    }
-
-    return sections;
-  });
-
-  readonly viewModel = computed<ContestantsViewModel>(() => {
-    const mode = this.groupMode();
-    const list = this.sortedContestants();
-    if (mode === GroupMode.All) {
-      return { mode: GroupMode.All, list, sections: null };
-    }
-    if (mode === GroupMode.Alphabetical) {
-      return { mode: GroupMode.Alphabetical, list: null, sections: this.groupedByLetter() };
-    }
-    if (mode === GroupMode.Franchise) {
-      return { mode: GroupMode.Franchise, list: null, sections: this.groupedByFranchise() };
-    }
-    if (mode === GroupMode.Seasons) {
-      return {
-        mode: GroupMode.Seasons,
-        list: null,
-        sections: this.groupedBySeasons(),
-      };
-    }
-    return { mode: GroupMode.All, list, sections: null };
-  });
+          return this.fetchService
+            .fetchContestants({
+              filters,
+              sortMode,
+              groupMode,
+              page: nextPage,
+              pageSize,
+            })
+            .pipe(
+              takeUntil(this.cancelPendingLoadMore),
+              tap((res) => {
+                this.state.update((prev) => {
+                  const merged = mergeContestantsViewModels(prev.viewModel, res.viewModel);
+                  return {
+                    ...prev,
+                    viewModel: merged,
+                    totalFiltered: res.totalFiltered,
+                    lastFetchedPage: nextPage,
+                    loadingMore: false,
+                    error: null,
+                  };
+                });
+              }),
+              catchError(() => EMPTY),
+              finalize(() => {
+                this.state.update((prev) =>
+                  prev.loadingMore ? { ...prev, loadingMore: false } : prev,
+                );
+              }),
+            );
+        }),
+      )
+      .subscribe();
+  }
 
   setFilters(filters: ContestantFilters): void {
     this.state.update((s) => ({ ...s, filters }));
+    this.reload();
   }
 
   setGroupMode(mode: ContestantGroupMode): void {
     this.state.update((s) => ({ ...s, groupMode: mode }));
+    this.reload();
   }
 
   setSortMode(mode: ContestantSortMode): void {
     this.state.update((s) => ({ ...s, sortMode: mode }));
+    this.reload();
+  }
+
+  setPageSize(pageSize: number): void {
+    const size = Math.max(1, Math.floor(pageSize));
+    this.state.update((s) => ({ ...s, pageSize: size }));
+    this.reload();
+  }
+
+  resetAllFilters(): void {
+    this.state.update((s) => ({
+      ...s,
+      filters: DEFAULT_CONTESTANT_FILTERS,
+      groupMode: GroupMode.All,
+      sortMode: SortMode.DragNameAsc,
+    }));
+    this.reload();
   }
 
   loadContestants(): void {
-    this.loadSub?.unsubscribe();
-    this.state.update((s) => ({ ...s, loading: true, error: null }));
+    this.reload();
+  }
 
-    this.loadSub = this.provider
-      .getContestants()
+  loadMore(): void {
+    const s = this.state();
+    if (s.loading || s.loadingMore) {
+      return;
+    }
+    if (s.totalFiltered <= 0) {
+      return;
+    }
+    if (s.lastFetchedPage * s.pageSize >= s.totalFiltered) {
+      return;
+    }
+    this.loadMoreRequests.next();
+  }
+
+  private reload(): void {
+    this.cancelPendingLoadMore.next();
+    this.loadSub?.unsubscribe();
+    this.state.update((s) => ({
+      ...s,
+      loading: true,
+      loadingMore: false,
+      error: null,
+      lastFetchedPage: 0,
+    }));
+
+    const { filters, sortMode, groupMode, pageSize } = this.state();
+
+    this.loadSub = this.fetchService
+      .fetchContestants({
+        filters,
+        sortMode,
+        groupMode,
+        page: DEFAULT_PAGE,
+        pageSize,
+      })
       .pipe(
-        tap((contestants) => {
+        tap((res) => {
           this.state.update((s) => ({
             ...s,
-            contestants,
+            viewModel: res.viewModel,
+            totalFiltered: res.totalFiltered,
+            lastFetchedPage: 1,
             loading: false,
             error: null,
           }));
@@ -184,66 +212,19 @@ export class ContestantsStore implements OnDestroy {
             ...s,
             loading: false,
             error: 'errors.loadFailed',
+            viewModel: emptyViewModel,
+            totalFiltered: 0,
+            lastFetchedPage: 0,
           }));
-          return of([]);
+          return EMPTY;
         }),
       )
       .subscribe();
   }
 
   ngOnDestroy(): void {
+    this.cancelPendingLoadMore.next();
     this.loadSub?.unsubscribe();
-  }
-
-  private matchesFranchiseSeasonFilters(contestant: Contestant, keys: string[]): boolean {
-    for (const key of keys) {
-      const [kind, franchise, season] = key.split('::');
-
-      if (kind === 'franchise' && franchise) {
-        if (contestant.firstFranchise === franchise) {
-          return true;
-        }
-      } else if (kind === 'season' && franchise && season) {
-        if (
-          contestant.seasons?.some(
-            (s) => s.franchise === franchise && String(s.season) === String(season),
-          )
-        ) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * True if the contestant has won in at least one of the selected franchise/season
-   * (i.e. has a season matching a key with season.isWinner === true).
-   */
-  private matchesFranchiseSeasonFiltersAndWonInSelection(
-    contestant: Contestant,
-    keys: string[],
-  ): boolean {
-    const seasons = contestant.seasons ?? [];
-    for (const key of keys) {
-      const [kind, franchise, seasonNum] = key.split('::');
-
-      if (kind === 'franchise' && franchise) {
-        const wonInFranchise = seasons.some(
-          (s) => s.franchise === franchise && s.isWinner,
-        );
-        if (wonInFranchise) return true;
-      } else if (kind === 'season' && franchise && seasonNum) {
-        const wonThisSeason = seasons.some(
-          (s) =>
-            s.franchise === franchise &&
-            String(s.season) === String(seasonNum) &&
-            s.isWinner,
-        );
-        if (wonThisSeason) return true;
-      }
-    }
-    return false;
+    this.loadMorePipelineSub?.unsubscribe();
   }
 }

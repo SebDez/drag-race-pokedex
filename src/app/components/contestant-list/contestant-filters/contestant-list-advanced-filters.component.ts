@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FRANCHISE_NAMES, SEASONS_PER_FRANCHISE } from '../../../contestants/constants/franchises';
-import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '../../../store/contestants/types';
+import { DEFAULT_CONTESTANT_FILTERS } from '../../../store/contestants/types';
+import { ContestantFilters } from '../../../contestants/models/query';
 
 @Component({
   selector: 'app-contestant-list-advanced-filters',
@@ -26,6 +27,7 @@ export class ContestantListAdvancedFiltersComponent {
 
   readonly filters = input<ContestantFilters>(DEFAULT_CONTESTANT_FILTERS);
   readonly filtersChange = output<ContestantFilters>();
+  readonly resetAllFilters = output<void>();
 
   protected readonly dialogOpen = signal(false);
   protected readonly dialogTitleId = 'contestant-filters-dialog-title';
@@ -60,6 +62,11 @@ export class ContestantListAdvancedFiltersComponent {
     this.dialogOpen.set(false);
     // Restore focus to the open button for accessibility
     setTimeout(() => this.openFiltersBtnRef()?.nativeElement?.focus(), 0);
+  }
+
+  protected onResetAllClick(): void {
+    this.resetAllFilters.emit();
+    this.closeDialog();
   }
 
   protected allFranchisesSelected(): boolean {

@@ -2,6 +2,7 @@
   <button
     #openFiltersBtn
     type="button"
+    data-testid="open-advanced-filters-btn"
     class="flex items-center gap-1.5 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) text-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
     (click)="openDialog()"
     [attr.aria-label]="'filters.openDialog' | translate"
@@ -125,7 +126,16 @@
           </div>
         </div>
       </div>
-      <div class="shrink-0 border-t border-(--color-pink)/20 px-4 py-3">
+      <div class="shrink-0 border-t border-(--color-pink)/20 px-4 py-3 flex flex-col gap-2">
+        <button
+          type="button"
+          data-testid="reset-all-filters-dialog"
+          class="w-full rounded-full border border-(--color-text-muted)/40 bg-transparent px-4 py-2 text-sm font-medium text-(--color-text) hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+          (click)="onResetAllClick()"
+          [attr.aria-label]="'filters.resetAll' | translate"
+        >
+          {{ 'filters.resetAll' | translate }}
+        </button>
         <button
           type="button"
           class="w-full rounded-full border border-(--color-pink) bg-(--color-pink)/10 px-4 py-2 text-sm font-medium text-(--color-text) hover:bg-(--color-pink)/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"

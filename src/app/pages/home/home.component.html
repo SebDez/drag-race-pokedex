@@ -27,6 +27,7 @@
       (sortModeChange)="onSortModeChange($event)"
       [filters]="store.filters()"
       (filtersChange)="onFiltersChange($event)"
+      (resetAllFilters)="onResetAllFilters()"
     />
     <!-- List -->
     @if (store.loading()) {
@@ -42,6 +43,18 @@
       </div>
     } @else {
       <app-contestant-list [viewModel]="store.viewModel()" />
+      @if (store.loadingMore()) {
+        <div
+          class="flex items-center justify-center gap-3 py-6 text-[15px] text-[var(--color-text-muted)]"
+          role="status"
+          [attr.aria-label]="'aria.loadingMore' | translate"
+        >
+          <span
+            class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
+          ></span>
+          <span>{{ 'home.loadingMore' | translate }}</span>
+        </div>
+      }
     }
   }
 </div>

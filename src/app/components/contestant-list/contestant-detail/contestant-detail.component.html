@@ -8,15 +8,12 @@
     <!-- LEFT COLUMN -->
     <aside class="shrink-0 w-28 sm:w-36 min-h-0" aria-hidden="true">
       <div class="h-full min-h-0 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]">
-        @if (getDetailImageUrl(c)) {
-          <img
-            [ngSrc]="getDetailImageUrl(c)"
-            [alt]="c.dragName"
-            width="200"
-            height="200"
-            class="w-full h-full object-cover"
-          />
-        }
+        <app-contestant-image
+          [src]="getDetailImageUrl(c)"
+          [alt]="c.dragName"
+          [width]="200"
+          [height]="200"
+        />
       </div>
     </aside>
     <!-- RIGHT COLUMN -->
@@ -33,7 +30,7 @@
       </div>
       <div class="flex flex-wrap gap-2 mt-0 mb-2">
         <app-wins-badge [count]="c.totalChallengeWins" />
-        <app-winner-badge [show]="c.isWinner" />
+        <app-winner-badge [show]="shouldShowWinnerBadge(c)" />
       </div>
       @if (c.wikiUrl) {
         <a
