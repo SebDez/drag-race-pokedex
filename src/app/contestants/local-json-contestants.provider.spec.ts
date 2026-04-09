@@ -7,25 +7,55 @@ import { LocalJsonContestantsProvider } from './local-json-contestants.provider'
 import { GroupMode } from './constants/group-mode';
 import { SortMode } from './constants/sort-mode';
 import { DEFAULT_CONTESTANT_FILTERS } from '../store/contestants/types';
-import type { Contestant } from './models/contestant';
+import type { Contestant, Season } from './models/contestant';
 
 const FR_US = "RuPaul's Drag Race";
 const FR_UK = "RuPaul's Drag Race UK";
 
+function winSeason(franchise: string): Season {
+  return {
+    franchise,
+    season: '1',
+    rawPlace: '',
+    places: [],
+    mainPlace: 1,
+    isWinner: true,
+    challengeWins: 0,
+  };
+}
+
+function seasonEntry(franchise: string, season: string, isWinner = false): Season {
+  return {
+    franchise,
+    season,
+    rawPlace: '',
+    places: [],
+    mainPlace: isWinner ? 1 : 2,
+    isWinner,
+    challengeWins: 0,
+  };
+}
+
 function makeContestant(
   dragName: string,
-  options: { firstFranchise?: string; totalChallengeWins?: number } = {},
+  options: {
+    firstFranchise?: string;
+    totalChallengeWins?: number;
+    seasons?: Season[];
+    wikiUrl?: string;
+    isWinner?: boolean;
+  } = {},
 ): Contestant {
   const firstFranchise = options.firstFranchise ?? FR_US;
   return {
     dragName,
     imageUrl: '',
-    wikiUrl: '',
-    seasons: [],
+    wikiUrl: options.wikiUrl ?? '',
+    seasons: options.seasons ?? [],
     firstFranchise,
     miniPromoImageUrl: '',
     totalChallengeWins: options.totalChallengeWins ?? 0,
-    isWinner: false,
+    isWinner: options.isWinner ?? false,
     firstFranchiseCountry: '',
   };
 }
@@ -98,6 +128,73 @@ describe('LocalJsonContestantsProvider', () => {
     }
   });
 
+  it('should paginate grouped alphabetical order by letter blocks then sort within letter (not global wins)', async () => {
+    const data: Contestant[] = [
+      makeContestant('Beth', { totalChallengeWins: 100 }),
+      makeContestant('Amy', { totalChallengeWins: 5 }),
+      makeContestant('Ada', { totalChallengeWins: 1 }),
+      makeContestant('Ana', { totalChallengeWins: 0 }),
+    ];
+
+    const promise = firstValueFrom(
+      provider.queryContestants({
+        filters: DEFAULT_CONTESTANT_FILTERS,
+        sortMode: SortMode.ChallengeWinsDesc,
+        groupMode: GroupMode.Alphabetical,
+        page: 1,
+        pageSize: 3,
+      }),
+    );
+
+    httpMock.expectOne('/data/contestants_extract.json').flush(data);
+    const result = await promise;
+
+    expect(result.totalFiltered).toBe(4);
+    expect(result.viewModel.mode).toBe(GroupMode.Alphabetical);
+    if (result.viewModel.mode === GroupMode.Alphabetical) {
+      const secA = result.viewModel.sections.find((s) => s.key === 'A');
+      expect(secA?.contestants.map((c) => c.dragName)).toEqual(['Amy', 'Ada', 'Ana']);
+    }
+  });
+
+  it('should dedupe a multi-franchise winner once in franchise order when winnersOnly', async () => {
+    const data: Contestant[] = [
+      makeContestant('DualWinner', {
+        seasons: [winSeason(FR_US), winSeason(FR_UK)],
+        wikiUrl: 'https://example.com/dual',
+        isWinner: true,
+      }),
+      makeContestant('UkOnly', {
+        firstFranchise: FR_UK,
+        seasons: [winSeason(FR_UK)],
+        wikiUrl: 'https://example.com/uk',
+        isWinner: true,
+      }),
+    ];
+
+    const promise = firstValueFrom(
+      provider.queryContestants({
+        filters: { ...DEFAULT_CONTESTANT_FILTERS, winnersOnly: true },
+        sortMode: SortMode.DragNameAsc,
+        groupMode: GroupMode.Franchise,
+        page: 1,
+        pageSize: 10,
+      }),
+    );
+
+    httpMock.expectOne('/data/contestants_extract.json').flush(data);
+    const result = await promise;
+
+    expect(result.totalFiltered).toBe(2);
+    expect(result.viewModel.mode).toBe(GroupMode.Franchise);
+    if (result.viewModel.mode === GroupMode.Franchise) {
+      const names = result.viewModel.sections.flatMap((s) =>
+        s.contestants.map((c) => c.dragName),
+      );
+      expect(names).toEqual(['DualWinner', 'UkOnly']);
+    }
+  });
+
   it('should group by franchise using page slice', async () => {
     const promise = firstValueFrom(
       provider.queryContestants({
@@ -118,6 +215,37 @@ describe('LocalJsonContestantsProvider', () => {
       const uk = result.viewModel.sections.find((s) => s.key === FR_UK);
       expect(us?.contestants.map((c) => c.dragName).sort()).toEqual(['Amy', 'Zara']);
       expect(uk?.contestants.map((c) => c.dragName).sort()).toEqual(['Bianca', 'Zoe']);
+    }
+  });
+
+  it('should not open late season sections before their turn in seasons pagination', async () => {
+    const data: Contestant[] = [
+      makeContestant('Alpha', {
+        seasons: [seasonEntry(FR_US, '1'), seasonEntry(FR_US, '14')],
+      }),
+      makeContestant('Beta', {
+        seasons: [seasonEntry(FR_US, '14')],
+      }),
+    ];
+
+    const promise = firstValueFrom(
+      provider.queryContestants({
+        filters: DEFAULT_CONTESTANT_FILTERS,
+        sortMode: SortMode.DragNameAsc,
+        groupMode: GroupMode.Seasons,
+        page: 1,
+        pageSize: 1,
+      }),
+    );
+
+    httpMock.expectOne('/data/contestants_extract.json').flush(data);
+    const result = await promise;
+
+    expect(result.viewModel.mode).toBe(GroupMode.Seasons);
+    if (result.viewModel.mode === GroupMode.Seasons) {
+      expect(result.viewModel.sections.length).toBe(1);
+      expect(result.viewModel.sections[0].key).toBe(`${FR_US} (S1)`);
+      expect(result.viewModel.sections[0].contestants.map((c) => c.dragName)).toEqual(['Alpha']);
     }
   });
 

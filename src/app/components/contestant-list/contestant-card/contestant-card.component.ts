@@ -25,7 +25,6 @@ import { ContestantImageComponent } from '../../contestant-image/contestant-imag
 })
 export class ContestantCardComponent {
   readonly contestant = input.required<Contestant>();
-  readonly showOnlySeasonWinner = input<boolean>(false);
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
 
   readonly isExpanded = signal<boolean>(false);
@@ -40,6 +39,10 @@ export class ContestantCardComponent {
     return c.seasons.some(
       (s) => s.season === season.season && s.franchise === season.franchise && s.isWinner,
     );
+  }
+
+  protected shouldShowWinnerBadge(c: Contestant): boolean {
+    return this.displayedSeason() ? this.isDisplayedSeasonWinner(c) : c.isWinner;
   }
 
   protected onClick(): void {

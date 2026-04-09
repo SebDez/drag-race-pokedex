@@ -112,11 +112,14 @@ function buildMergedSeasons(
     for (const sec of sections) {
       const existing = map.get(sec.key);
       if (existing) {
-        existing.contestants = [...existing.contestants, ...sec.contestants];
+        existing.contestants = dedupeContestants([
+          ...existing.contestants,
+          ...sec.contestants,
+        ]);
       } else {
         map.set(sec.key, {
           key: sec.key,
-          contestants: [...sec.contestants],
+          contestants: dedupeContestants([...sec.contestants]),
           ...(sec.season !== undefined ? { season: sec.season } : {}),
         });
       }
@@ -141,4 +144,28 @@ function buildMergedSeasons(
     list: null,
     sections,
   };
+}
+
+function dedupeContestants(contestants: ContestantSection['contestants']): ContestantSection['contestants'] {
+  const seen = new Set<string>();
+  const unique: ContestantSection['contestants'] = [];
+
+  for (const contestant of contestants) {
+    const id = contestantKey(contestant);
+    if (seen.has(id)) {
+      continue;
+    }
+    seen.add(id);
+    unique.push(contestant);
+  }
+
+  return unique;
+}
+
+function contestantKey(contestant: ContestantSection['contestants'][number]): string {
+  const url = (contestant.wikiUrl ?? '').trim();
+  if (url.length > 0) {
+    return url;
+  }
+  return (contestant.dragName ?? '').trim().toLowerCase();
 }

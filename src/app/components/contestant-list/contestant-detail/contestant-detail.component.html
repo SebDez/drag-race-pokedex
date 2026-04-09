@@ -30,7 +30,7 @@
       </div>
       <div class="flex flex-wrap gap-2 mt-0 mb-2">
         <app-wins-badge [count]="c.totalChallengeWins" />
-        <app-winner-badge [show]="c.isWinner" />
+        <app-winner-badge [show]="shouldShowWinnerBadge(c)" />
       </div>
       @if (c.wikiUrl) {
         <a

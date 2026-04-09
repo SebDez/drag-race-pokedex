@@ -33,7 +33,11 @@ describe('ContestantListComponent', () => {
       createContestant({ dragName: 'Queen B' }),
     ];
     const fixture = TestBed.createComponent(ContestantListComponent);
-    fixture.componentRef.setInput('viewModel', { mode: GroupMode.All, list: contestants, sections: null });
+    fixture.componentRef.setInput('viewModel', {
+      mode: GroupMode.All,
+      list: contestants,
+      sections: null,
+    });
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const cards = el.querySelectorAll('app-contestant-card');

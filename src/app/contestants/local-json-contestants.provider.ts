@@ -5,12 +5,18 @@ import { map, shareReplay } from 'rxjs/operators';
 import { ContestantsDataProvider } from './contestants-data-provider';
 import { Contestant } from './models/contestant';
 import { FRANCHISE_NAMES, SEASONS_PER_FRANCHISE } from './constants/franchises';
-import { GroupMode } from './constants/group-mode';
+import { GroupMode, type ContestantGroupMode } from './constants/group-mode';
 import type { ContestantSortMode } from './constants/sort-mode';
 import { SortMode } from './constants/sort-mode';
 import type { ContestantFilters, ContestantsQuery } from './models/query';
 import type { ContestantsFetchResult } from './models/fetch-results';
 import type { ContestantSection, ContestantsViewModel } from '../store/contestants/types';
+
+interface SeasonPageEntry {
+  contestant: Contestant;
+  franchise: string;
+  season: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class LocalJsonContestantsProvider extends ContestantsDataProvider {
@@ -37,17 +43,16 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
 
   private buildResult(all: Contestant[], query: ContestantsQuery): ContestantsFetchResult {
     const filtered = this.applyFilters(all, query.filters);
-    const sorted = this.applySort(filtered, query.sortMode);
-    const totalFiltered = sorted.length;
+    const { groupMode, filters, sortMode } = query;
 
     const page = Math.max(1, query.page);
     const pageSize = Math.max(1, query.pageSize);
     const start = (page - 1) * pageSize;
-    const pageSlice = sorted.slice(start, start + pageSize);
-
-    const { groupMode, filters } = query;
 
     if (groupMode === GroupMode.All) {
+      const sorted = this.applySort(filtered, sortMode);
+      const totalFiltered = sorted.length;
+      const pageSlice = sorted.slice(start, start + pageSize);
       return {
         viewModel: {
           mode: GroupMode.All,
@@ -58,8 +63,27 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
       };
     }
 
+    if (groupMode === GroupMode.Seasons) {
+      const orderedEntries = this.flattenSeasonEntriesForPagination(filtered, sortMode, filters);
+      const totalFiltered = orderedEntries.length;
+      const pageEntries = orderedEntries.slice(start, start + pageSize);
+      const sections = this.dedupeSectionContestants(this.buildGroupedBySeasonEntries(pageEntries));
+      return {
+        viewModel: {
+          mode: GroupMode.Seasons,
+          list: null,
+          sections,
+        } satisfies ContestantsViewModel,
+        totalFiltered,
+      };
+    }
+
+    const ordered = this.flattenForGroupedPagination(filtered, sortMode, groupMode, filters);
+    const totalFiltered = ordered.length;
+    const pageSlice = ordered.slice(start, start + pageSize);
+
     if (groupMode === GroupMode.Alphabetical) {
-      const sections = this.buildGroupedByLetter(pageSlice);
+      const sections = this.dedupeSectionContestants(this.buildGroupedByLetter(pageSlice));
       return {
         viewModel: {
           mode: GroupMode.Alphabetical,
@@ -71,7 +95,9 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
     }
 
     if (groupMode === GroupMode.Franchise) {
-      const sections = this.buildGroupedByFranchise(pageSlice, filters);
+      const sections = this.dedupeSectionContestants(
+        this.buildGroupedByFranchise(pageSlice, filters),
+      );
       return {
         viewModel: {
           mode: GroupMode.Franchise,
@@ -82,7 +108,7 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
       };
     }
 
-    const sections = this.buildGroupedBySeasons(pageSlice, filters);
+    const sections = this.dedupeSectionContestants(this.buildGroupedBySeasons(pageSlice, filters));
     return {
       viewModel: {
         mode: GroupMode.Seasons,
@@ -91,6 +117,57 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
       } satisfies ContestantsViewModel,
       totalFiltered,
     };
+  }
+
+  private flattenForGroupedPagination(
+    filtered: Contestant[],
+    sortMode: ContestantSortMode,
+    groupMode: Exclude<ContestantGroupMode, typeof GroupMode.All>,
+    filters: ContestantFilters,
+  ): Contestant[] {
+    if (groupMode === GroupMode.Alphabetical) {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const out: Contestant[] = [];
+      for (const letter of letters) {
+        const perLetter = filtered.filter((c) =>
+          c.dragName?.trim().toUpperCase().startsWith(letter),
+        );
+        out.push(...this.applySort(perLetter, sortMode));
+      }
+      return out;
+    }
+
+    if (groupMode === GroupMode.Franchise) {
+      const winnersOnly = filters.winnersOnly;
+      const out: Contestant[] = [];
+      const seen = winnersOnly ? new Set<string>() : null;
+      for (const franchise of FRANCHISE_NAMES) {
+        const perFranchise = filtered.filter((c) =>
+          winnersOnly
+            ? c.seasons?.some((s) => s.franchise === franchise && s.isWinner)
+            : c.firstFranchise === franchise,
+        );
+        for (const c of this.applySort(perFranchise, sortMode)) {
+          if (seen) {
+            const id = this.contestantIdentityKey(c);
+            if (seen.has(id)) {
+              continue;
+            }
+            seen.add(id);
+          }
+          out.push(c);
+        }
+      }
+      return out;
+    }
+
+    if (groupMode === GroupMode.Seasons) {
+      return this.flattenSeasonEntriesForPagination(filtered, sortMode, filters).map(
+        (entry) => entry.contestant,
+      );
+    }
+
+    return [];
   }
 
   private buildGroupedByLetter(sorted: Contestant[]): ContestantSection[] {
@@ -108,13 +185,28 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
     filters: ContestantFilters,
   ): ContestantSection[] {
     const winnersOnly = filters.winnersOnly;
+    if (!winnersOnly) {
+      return FRANCHISE_NAMES.map((franchise) => ({
+        key: franchise,
+        contestants: sorted.filter((c) => c.firstFranchise === franchise),
+      })).filter((group) => group.contestants.length > 0);
+    }
+
+    const seen = new Set<string>();
     return FRANCHISE_NAMES.map((franchise) => ({
       key: franchise,
-      contestants: sorted.filter((c) =>
-        winnersOnly
-          ? c.seasons?.some((s) => s.franchise === franchise && s.isWinner)
-          : c.firstFranchise === franchise,
-      ),
+      contestants: sorted.filter((c) => {
+        const wonHere = c.seasons?.some((s) => s.franchise === franchise && s.isWinner);
+        if (!wonHere) {
+          return false;
+        }
+        const id = this.contestantIdentityKey(c);
+        if (seen.has(id)) {
+          return false;
+        }
+        seen.add(id);
+        return true;
+      }),
     })).filter((group) => group.contestants.length > 0);
   }
 
@@ -148,6 +240,53 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
     return sections;
   }
 
+  private flattenSeasonEntriesForPagination(
+    filtered: Contestant[],
+    sortMode: ContestantSortMode,
+    filters: ContestantFilters,
+  ): SeasonPageEntry[] {
+    const out: SeasonPageEntry[] = [];
+    const winnersOnly = filters.winnersOnly;
+
+    for (const franchise of FRANCHISE_NAMES) {
+      const totalSeasons = SEASONS_PER_FRANCHISE[franchise] ?? 0;
+      for (let seasonNumber = 1; seasonNumber <= totalSeasons; seasonNumber++) {
+        const season = String(seasonNumber);
+        const perSeason = filtered.filter((c) =>
+          c.seasons?.some(
+            (s) => s.franchise === franchise && s.season === season && (!winnersOnly || s.isWinner),
+          ),
+        );
+        for (const contestant of this.applySort(perSeason, sortMode)) {
+          out.push({ contestant, franchise, season });
+        }
+      }
+    }
+
+    return out;
+  }
+
+  private buildGroupedBySeasonEntries(entries: SeasonPageEntry[]): ContestantSection[] {
+    const sections: ContestantSection[] = [];
+
+    for (const franchise of FRANCHISE_NAMES) {
+      const totalSeasons = SEASONS_PER_FRANCHISE[franchise] ?? 0;
+      for (let seasonNumber = 1; seasonNumber <= totalSeasons; seasonNumber++) {
+        const season = String(seasonNumber);
+        const key = `${franchise} (S${seasonNumber})`;
+        const contestants = entries
+          .filter((entry) => entry.franchise === franchise && entry.season === season)
+          .map((entry) => entry.contestant);
+
+        if (contestants.length > 0) {
+          sections.push({ key, contestants, season: { franchise, season } });
+        }
+      }
+    }
+
+    return sections;
+  }
+
   private applyFilters(contestants: Contestant[], filters: ContestantFilters): Contestant[] {
     const keys = filters.franchiseSeasonKeys ?? [];
     const search = (filters.searchQuery ?? '').trim().toLowerCase();
@@ -167,6 +306,35 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
       return list;
     }
     return list.filter((c) => this.matchesFranchiseSeasonFilters(c, keys));
+  }
+
+  private contestantIdentityKey(c: Contestant): string {
+    const url = (c.wikiUrl ?? '').trim();
+    if (url.length > 0) {
+      return url;
+    }
+    return (c.dragName ?? '').trim().toLowerCase();
+  }
+
+  private dedupeSectionContestants(sections: ContestantSection[]): ContestantSection[] {
+    return sections.map((section) => {
+      const seen = new Set<string>();
+      const uniqueContestants: Contestant[] = [];
+
+      for (const contestant of section.contestants) {
+        const id = this.contestantIdentityKey(contestant);
+        if (seen.has(id)) {
+          continue;
+        }
+        seen.add(id);
+        uniqueContestants.push(contestant);
+      }
+
+      return {
+        ...section,
+        contestants: uniqueContestants,
+      };
+    });
   }
 
   private applySort(list: Contestant[], sortMode: ContestantSortMode): Contestant[] {
