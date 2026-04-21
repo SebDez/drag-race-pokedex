@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export const SUPPORTED_LANGS = ['fr', 'en', 'es'] as const;
@@ -8,13 +8,13 @@ const STORAGE_KEY = 'drag-race-pokedex-lang';
 
 @Injectable({ providedIn: 'root' })
 export class LangService {
-  private readonly translate = inject(TranslateService);
-
   readonly supported: { code: SupportedLang; label: string }[] = [
     { code: 'fr', label: 'Français' },
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
   ];
+
+  constructor(private readonly translate: TranslateService) {}
 
   initLang(): void {
     this.translate.addLangs([...SUPPORTED_LANGS]);
