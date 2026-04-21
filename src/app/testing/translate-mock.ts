@@ -2,10 +2,6 @@ import { EventEmitter } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
-/**
- * Provides a mock TranslateService for unit tests.
- * By default returns the key as value; pass a map for custom translations.
- */
 export function provideTranslateMock(translations: Record<string, string> = {}): {
   provide: typeof TranslateService;
   useValue: Partial<TranslateService>;

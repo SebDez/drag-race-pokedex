@@ -1,12 +1,9 @@
-import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-/**
- * Convete ordinal numbers to the current language: inglés (1st, 2nd, 10th…), francés (1er, 2e, 10e), español (1.º, 2.º, 10.º).
- */
 @Pipe({ name: 'placeOrdinal', standalone: true, pure: false })
 export class PlaceOrdinalPipe implements PipeTransform {
-  private readonly translate = inject(TranslateService);
+  constructor(private readonly translate: TranslateService) {}
 
   transform(rawPlace: string | null | undefined): string {
     const value = rawPlace?.trim() ?? '';

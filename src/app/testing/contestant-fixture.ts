@@ -1,4 +1,4 @@
-import { Contestant } from '../contestants/models/contestant';
+import { Contestant } from '@app/core/contestants/models/contestant.model';
 
 export function createContestant(overrides: Partial<Contestant> = {}): Contestant {
   return {

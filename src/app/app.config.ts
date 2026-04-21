@@ -5,6 +5,8 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { CONTESTANTS_DATA_PROVIDER } from '@app/core/contestants/providers/contestants.provider';
+import { LocalJsonContestantsProvider } from '@app/core/contestants/providers/local-json-contestants.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,5 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideTranslateService({ defaultLanguage: 'en' }),
     provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
+    {
+      provide: CONTESTANTS_DATA_PROVIDER,
+      useClass: LocalJsonContestantsProvider,
+    },
   ],
 };
