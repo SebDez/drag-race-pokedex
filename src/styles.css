@@ -3,26 +3,33 @@
 @import 'tailwindcss';
 
 :root {
-  --color-pink: #c85a8c;
-  --color-pink-light: #e8b4ce;
-  --color-pink-dark: #9e4069;
-  --color-gold: #b8860b;
-  --color-gold-light: #f5e6c8;
-  --color-gold-dark: #7a5c08;
+  /* Hot pink runway */
+  --color-pink: #d94a8f;
+  --color-pink-light: #f3b6d2;
+  --color-pink-dark: #a8326a;
+  /* Champagne gold */
+  --color-gold: #8a6410;
+  --color-gold-light: #f7e7c0;
+  --color-gold-dark: #5c4506;
+  --color-gold-bright: #d4a017;
   --color-white: #ffffff;
-  --color-bg: #fefbf9;
-  --color-bg-subtle: #f8f4f0;
-  --color-surface: #ffffff;
-  --color-border: #f0e6dc;
-  --color-text: #2d2420;
-  --color-text-muted: #6b5d55;
+  /* Boudoir / runway atmosphere */
+  --color-bg: #fce7f0;
+  --color-bg-subtle: #f8d7e6;
+  --color-surface: #fff9fb;
+  --color-surface-elevated: #fffdfc;
+  --color-border: #efc5d7;
+  --color-border-gold: #e2c87a;
+  --color-text: #2a1c22;
+  --color-text-muted: #6e5560;
   --color-error: #c53030;
+  --shadow-card: 0 1px 0 rgba(138, 100, 16, 0.12), 0 8px 24px -12px rgba(168, 50, 106, 0.28);
+  --shadow-card-hover: 0 1px 0 rgba(138, 100, 16, 0.2), 0 12px 28px -10px rgba(168, 50, 106, 0.35);
   font-family:
     'DM Sans',
     system-ui,
     -apple-system,
     sans-serif;
-  background: var(--color-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
@@ -30,4 +37,117 @@
 body {
   margin: 0;
   min-height: 100vh;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 110% 70% at 50% -15%, rgba(217, 74, 143, 0.28), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 100% 8%, rgba(212, 160, 23, 0.16), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 0% 70%, rgba(200, 90, 140, 0.14), transparent 48%),
+    repeating-linear-gradient(
+      -18deg,
+      transparent 0,
+      transparent 46px,
+      rgba(212, 160, 23, 0.035) 46px,
+      rgba(212, 160, 23, 0.035) 47px
+    ),
+    linear-gradient(168deg, #fff5f8 0%, #fce7f0 38%, #f6ead8 100%);
+  background-attachment: fixed;
+}
+
+/* Soft glitter grain (fixed, non-interactive) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Ccircle cx='12' cy='20' r='0.8' fill='%23d4a017' opacity='0.55'/%3E%3Ccircle cx='68' cy='8' r='0.6' fill='%23fff' opacity='0.7'/%3E%3Ccircle cx='110' cy='42' r='0.9' fill='%23d94a8f' opacity='0.35'/%3E%3Ccircle cx='34' cy='88' r='0.7' fill='%23d4a017' opacity='0.45'/%3E%3Ccircle cx='98' cy='110' r='0.5' fill='%23fff' opacity='0.65'/%3E%3Ccircle cx='52' cy='54' r='0.6' fill='%23d94a8f' opacity='0.3'/%3E%3Ccircle cx='128' cy='76' r='0.7' fill='%23d4a017' opacity='0.4'/%3E%3Ccircle cx='18' cy='120' r='0.5' fill='%23fff' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+app-root {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 100vh;
+}
+
+.brand-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(
+    110deg,
+    var(--color-gold-dark) 0%,
+    var(--color-gold-bright) 28%,
+    var(--color-gold) 48%,
+    #f0d78c 62%,
+    var(--color-gold) 78%,
+    var(--color-gold-dark) 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gold-shimmer 7s ease-in-out infinite;
+}
+
+.brand-header {
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0 1rem;
+}
+
+.filters-panel {
+  background: linear-gradient(
+    145deg,
+    rgba(217, 74, 143, 0.16) 0%,
+    rgba(255, 249, 251, 0.75) 48%,
+    rgba(247, 231, 192, 0.28) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--color-pink) 28%, var(--color-border-gold));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 10px 28px -16px rgba(168, 50, 106, 0.35);
+}
+
+.queen-card {
+  border-color: color-mix(in srgb, var(--color-border) 70%, var(--color-border-gold));
+  box-shadow: var(--shadow-card);
+  background: var(--color-surface);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
+}
+
+.queen-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.queen-card--expanded {
+  outline: 2px solid var(--color-pink);
+  outline-offset: 2px;
+}
+
+.queen-card-btn:hover {
+  background: color-mix(in srgb, var(--color-bg-subtle) 70%, var(--color-surface));
+}
+
+@keyframes gold-shimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+@keyframes contestant-image-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-title {
+    animation: none;
+    background-position: 40% center;
+  }
 }

@@ -4,7 +4,7 @@ import type { Contestant } from '../models/contestant.model';
 import type {
   ContestantSection,
   ContestantsViewModel,
-} from '@app/core/contestants/store/contestant-view.model';
+} from '@app/core/contestants/models/contestant-view.model';
 import { ContestantsViewModelMerger } from './contestants-view-model-merger.util';
 
 const section = (key: string, names: string[]): ContestantSection => ({

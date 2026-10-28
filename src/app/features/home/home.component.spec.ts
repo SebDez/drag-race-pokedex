@@ -3,10 +3,10 @@ import { HomeComponent } from './home.component';
 import { ContestantsStore } from '@app/core/contestants/store/contestant.store';
 import { GroupMode } from '@app/core/contestants/constants/group-mode.constants';
 import { SortMode } from '@app/core/contestants/constants/sort-mode.constants';
-import { provideTranslateMock } from '../../testing/translate-mock';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-import { DEFAULT_CONTESTANT_FILTERS } from '@app/core/contestants/store/contestant-view.model';
+import { DEFAULT_CONTESTANT_FILTERS } from '@app/core/contestants/models/contestant-view.model';
 
 describe('HomeComponent', () => {
   let loadContestantsSpy: unknown;

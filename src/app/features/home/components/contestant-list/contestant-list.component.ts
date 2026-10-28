@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
 import { GroupMode } from '@app/core/contestants/constants/group-mode.constants';
@@ -11,6 +11,7 @@ import { type ContestantsViewModel } from '@app/core/contestants/models/contesta
   standalone: true,
   imports: [ContestantCardComponent, ContestantGroupSectionComponent, TranslateModule],
   templateUrl: './contestant-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContestantListComponent {
   protected readonly GroupMode = GroupMode;

@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ContestantListAdvancedFiltersComponent } from './contestant-list-advanced-filters.component';
-import { DEFAULT_CONTESTANT_FILTERS, type ContestantFilters } from '@app/core/contestants/store/contestant-view.model';
-import { provideTranslateMock } from '../../../testing/translate-mock';
-import { FRANCHISE_NAMES } from '@app/core/contestants/constants/franchises';
+import {
+  DEFAULT_CONTESTANT_FILTERS,
+  type ContestantFilters,
+} from '@app/core/contestants/models/contestant-view.model';
+import { provideTranslateMock } from '@app/testing/translate-mock';
+import { FRANCHISE_NAMES } from '@app/core/contestants/constants/franchises.constants';
+import type { ComponentFixture } from '@angular/core/testing';
 
 describe('ContestantListAdvancedFiltersComponent', () => {
   beforeEach(async () => {
@@ -11,6 +15,27 @@ describe('ContestantListAdvancedFiltersComponent', () => {
       providers: [provideTranslateMock()],
     }).compileComponents();
   });
+
+  afterEach(() => {
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+    document.querySelector('app-root')?.removeAttribute('inert');
+    document.body.style.overflow = '';
+  });
+
+  async function openDialog(
+    fixture: ComponentFixture<ContestantListAdvancedFiltersComponent>,
+  ): Promise<HTMLElement> {
+    const btn = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="open-advanced-filters-btn"]',
+    ) as HTMLElement | null;
+    btn?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const dialog = document.querySelector('[role="dialog"]') as HTMLElement | null;
+    expect(dialog).toBeTruthy();
+    return dialog!;
+  }
 
   it('should create', () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
@@ -58,73 +83,58 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     expect(dot).toBeTruthy();
   });
 
-  it('should open dialog on button click', () => {
+  it('should open dialog on button click', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelector('[role="dialog"]')).toBeFalsy();
-    const btn = el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null;
-    btn?.click();
-    fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeTruthy();
+    expect(document.querySelector('[role="dialog"]')).toBeFalsy();
+    await openDialog(fixture);
+    expect(document.querySelector('[role="dialog"]')).toBeTruthy();
   });
 
-  it('should close dialog when backdrop is clicked', () => {
+  it('should close dialog when backdrop is clicked', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
-    fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeTruthy();
-    const backdrop = el.querySelector('[data-testid="dialog-backdrop"]');
+    const dialog = await openDialog(fixture);
+    const backdrop = dialog.querySelector('[data-testid="dialog-backdrop"]');
     (backdrop as HTMLElement)?.click();
     fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeFalsy();
+    await fixture.whenStable();
+    expect(document.querySelector('[role="dialog"]')).toBeFalsy();
   });
 
-  it('should close dialog when Escape key is pressed', () => {
+  it('should close dialog when Escape key is pressed', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
-    fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeTruthy();
+    await openDialog(fixture);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeFalsy();
+    await fixture.whenStable();
+    expect(document.querySelector('[role="dialog"]')).toBeFalsy();
   });
 
-  it('should close dialog when close button is clicked', () => {
+  it('should close dialog when close button is clicked', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    (el.querySelector('[data-testid="open-advanced-filters-btn"]') as HTMLElement | null)?.click();
-    fixture.detectChanges();
-    const dialog = el.querySelector('[role="dialog"]');
-    const closeBtn = dialog?.querySelector('button[aria-label="filters.close"]');
+    const dialog = await openDialog(fixture);
+    const closeBtn = dialog.querySelector('button[aria-label="filters.close"]');
     (closeBtn as HTMLElement)?.click();
     fixture.detectChanges();
-    expect(el.querySelector('[role="dialog"]')).toBeFalsy();
+    await fixture.whenStable();
+    expect(document.querySelector('[role="dialog"]')).toBeFalsy();
   });
 
-  it('should emit filtersChange with winnersOnly true when winners checkbox is toggled', () => {
+  it('should emit filtersChange with winnersOnly true when winners checkbox is toggled', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
-    const btn = (fixture.nativeElement as HTMLElement).querySelector(
-      '[data-testid="open-advanced-filters-btn"]',
-    ) as HTMLElement | null;
-    btn?.click();
-    fixture.detectChanges();
-    const winnersCheckbox = (fixture.nativeElement as HTMLElement).querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
+    const dialog = await openDialog(fixture);
+    const winnersCheckbox = dialog.querySelector('input[type="checkbox"]') as HTMLInputElement;
     expect(winnersCheckbox).toBeTruthy();
     winnersCheckbox.checked = true;
     winnersCheckbox.dispatchEvent(new Event('change'));
@@ -133,36 +143,24 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     expect(emitted[0].winnersOnly).toBe(true);
   });
 
-  it('should render franchise list in dialog', () => {
+  it('should render franchise list in dialog', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
-    (
-      (fixture.nativeElement as HTMLElement).querySelector(
-        '[data-testid="open-advanced-filters-btn"]',
-      ) as HTMLElement | null
-    )?.click();
-    fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
+    const dialog = await openDialog(fixture);
     const firstFranchise = FRANCHISE_NAMES[0];
-    expect(el.textContent).toContain(firstFranchise);
+    expect(dialog.textContent).toContain(firstFranchise);
   });
 
-  it('should emit filtersChange with franchise key when franchise checkbox is toggled', () => {
+  it('should emit filtersChange with franchise key when franchise checkbox is toggled', async () => {
     const franchise = FRANCHISE_NAMES[0];
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const emitted: ContestantFilters[] = [];
     fixture.componentInstance.filtersChange.subscribe((f) => emitted.push(f));
-    (
-      (fixture.nativeElement as HTMLElement).querySelector(
-        '[data-testid="open-advanced-filters-btn"]',
-      ) as HTMLElement | null
-    )?.click();
-    fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    const scrollArea = el.querySelector('[data-testid="franchise-tree"]');
+    const dialog = await openDialog(fixture);
+    const scrollArea = dialog.querySelector('[data-testid="franchise-tree"]');
     const franchiseLabel = Array.from(scrollArea?.querySelectorAll('label') ?? []).find(
       (l) => l.textContent?.trim() === franchise,
     );
@@ -178,24 +176,19 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     expect(emitted[0].franchiseSeasonKeys).toContain(`franchise::${franchise}`);
   });
 
-  it('should emit resetAllFilters and close dialog when reset all is clicked', () => {
+  it('should emit resetAllFilters and close dialog when reset all is clicked', async () => {
     const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
     fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
     fixture.detectChanges();
     const emitted: unknown[] = [];
     fixture.componentInstance.resetAllFilters.subscribe(() => emitted.push(true));
-    (
-      (fixture.nativeElement as HTMLElement).querySelector(
-        '[data-testid="open-advanced-filters-btn"]',
-      ) as HTMLElement | null
-    )?.click();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeTruthy();
-    (fixture.nativeElement as HTMLElement)
+    const dialog = await openDialog(fixture);
+    dialog
       .querySelector('[data-testid="reset-all-filters-dialog"]')
       ?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     fixture.detectChanges();
+    await fixture.whenStable();
     expect(emitted.length).toBe(1);
-    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeFalsy();
+    expect(document.querySelector('[role="dialog"]')).toBeFalsy();
   });
 });

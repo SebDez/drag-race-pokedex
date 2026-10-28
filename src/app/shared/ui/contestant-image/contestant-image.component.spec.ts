@@ -45,7 +45,7 @@ describe('ContestantImageComponent', () => {
     const fixture = createFixture({ src: '' });
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('img')).toBeFalsy();
-    const placeholder = el.querySelector('span.block.w-full.h-full');
+    const placeholder = el.querySelector('span.absolute.inset-0');
     expect(placeholder).toBeTruthy();
   });
 
@@ -117,7 +117,7 @@ describe('ContestantImageComponent', () => {
     img.dispatchEvent(new Event('error'));
     fixture.detectChanges();
     expect(el.querySelector('img')).toBeFalsy();
-    const fallback = el.querySelector('span.absolute.inset-0.z-10');
+    const fallback = el.querySelector('span.absolute.inset-0');
     expect(fallback).toBeTruthy();
   });
 

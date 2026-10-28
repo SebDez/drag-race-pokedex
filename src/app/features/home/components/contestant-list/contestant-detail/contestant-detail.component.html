@@ -55,16 +55,18 @@
                 class="text-sm text-[var(--color-text)] py-1.5 border-b border-[var(--color-border)] last:border-b-0"
               >
                 <span class="font-semibold block">{{ season.franchise }} S{{ season.season }}</span>
-                <span class="text-xs text-[var(--color-text-muted)] flex items-center gap-2">
+                <div
+                  class="text-xs text-[var(--color-text-muted)] flex flex-wrap items-center gap-2 mt-0.5"
+                >
                   @if (season.isWinner) {
                     <app-winner-badge [show]="true" />
-                  } @else {
-                    {{ 'detail.place' | translate }} {{ season.rawPlace | placeOrdinal }}
+                  } @else if (season.rawPlace | placeOrdinal: lang(); as place) {
+                    <span>{{ 'detail.place' | translate }} {{ place }}</span>
                   }
                   @if (season.challengeWins > 0) {
                     <app-wins-badge [count]="season.challengeWins" />
                   }
-                </span>
+                </div>
               </li>
             }
           </ul>

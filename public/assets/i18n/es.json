@@ -4,13 +4,22 @@
     "subtitle": "Porque sabes a quién estás hablando, pero no recuerdas en qué temporada estuvo...",
     "loading": "Cargando reinas...",
     "loadingMore": "Cargando más…",
-    "contestantsCount": "{{count}} Reinas"
+    "contestantsCount": "{{count}} Reinas",
+    "contestantsCountPartial": "Mostrando {{shown}} de {{count}} reinas",
+    "scrollForMore": "Desplázate para ver más",
+    "endOfList": "Has llegado al final"
   },
   "common": {
     "win": "1 victoria",
     "wins": "{{count}} victorias",
     "winner": "Ganadora",
     "noResults": "Sin resultados"
+  },
+  "legend": {
+    "label": "Leyenda de insignias",
+    "winner": "Ganadora de temporada",
+    "challengeWins": "Victorias en desafíos",
+    "franchise": "Franquicia"
   },
   "detail": {
     "seasons": "Temporadas",
@@ -24,6 +33,7 @@
   "aria": {
     "loading": "Cargando",
     "loadingMore": "Cargando más",
+    "scrollForMore": "Desplázate para cargar más reinas",
     "language": "Idioma"
   },
   "filters": {
@@ -34,14 +44,15 @@
     "searchLabel": "Buscar por nombre artístico",
     "winnersOnly": "Sólo ganadoras",
     "allFranchises": "Todas las franquicias",
-    "franchiseTreeHint": "Selecciona una o varias franquicias y temporadas",
+    "showAllFranchises": "Mostrar todas las franquicias",
+    "franchiseTreeHint": "Sin selección = todas las franquicias. Marca opciones para acotar la lista.",
     "seasonShort": "T{{season}}",
     "resetAll": "Restablecer filtros"
   },
   "groupBy": {
     "label": "Agrupar por",
-    "all": "Todas",
-    "alphabetical": "Alfabético",
+    "all": "Sin agrupar",
+    "alphabetical": "Letra (A–Z)",
     "franchise": "Franquicia",
     "franchiseAndSeasons": "Temporadas"
   },

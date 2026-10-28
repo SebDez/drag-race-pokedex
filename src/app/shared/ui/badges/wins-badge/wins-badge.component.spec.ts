@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { WinsBadgeComponent } from './wins-badge.component';
-import { provideTranslateMock } from '../../../testing/translate-mock';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 describe('WinsBadgeComponent', () => {
   beforeEach(async () => {
@@ -36,11 +36,12 @@ describe('WinsBadgeComponent', () => {
     expect(el.querySelector('app-trophy-icon')).toBeTruthy();
   });
 
-  it('should set title from common.wins when count > 1', () => {
+  it('should set title and aria-label from common.wins when count > 1', () => {
     const fixture = TestBed.createComponent(WinsBadgeComponent);
     fixture.componentRef.setInput('count', 2);
     fixture.detectChanges();
     const span = (fixture.nativeElement as HTMLElement).querySelector('span');
     expect(span?.getAttribute('title')).toBeDefined();
+    expect(span?.getAttribute('aria-label')).toBeDefined();
   });
 });

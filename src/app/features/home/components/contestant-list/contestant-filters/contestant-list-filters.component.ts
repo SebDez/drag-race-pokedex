@@ -26,29 +26,31 @@ import { ContestantFilters } from '@app/core/contestants/models/query.model';
     ContestantListAdvancedFiltersComponent,
   ],
   template: `
-    <div class="grid grid-cols-3 gap-2 bg-[var(--color-pink)]/10 rounded-lg p-2 mb-2">
+    <div
+      class="filters-panel grid grid-cols-1 gap-3 rounded-xl p-3 mb-2 sm:grid-cols-3 sm:gap-2 sm:p-2.5"
+    >
       <app-contestant-list-group-by-selector
-        class="col-span-1"
+        class="min-w-0"
         [mode]="groupMode()"
         (modeChange)="onGroupModeChange($event)"
       />
       <app-contestant-list-sort-by-selector
-        class="col-span-1"
+        class="min-w-0"
         [mode]="sortMode()"
         (modeChange)="onSortModeChange($event)"
       />
       <app-contestant-list-advanced-filters
-        class="col-span-1"
+        class="min-w-0"
         [filters]="filters()"
         (filtersChange)="onFiltersChange($event)"
         (resetAllFilters)="onResetAllFromAdvanced()"
       />
       <app-contestant-list-search-bar
-        class="col-span-3"
+        class="sm:col-span-3"
         [value]="filters().searchQuery ?? ''"
         (valueChange)="onSearchChange($event)"
       />
-      <div class="col-span-3 flex justify-end">
+      <div class="flex justify-end sm:col-span-3">
         <button
           type="button"
           data-testid="reset-all-filters-toolbar"

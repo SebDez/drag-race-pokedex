@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ContestantListComponent } from './contestant-list.component';
 import { GroupMode } from '@app/core/contestants/constants/group-mode.constants';
-import { createContestant } from '../../testing/contestant-fixture';
-import { provideTranslateMock } from '../../testing/translate-mock';
+import { createContestant } from '@app/testing/contestant-fixture';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 describe('ContestantListComponent', () => {
   beforeEach(async () => {

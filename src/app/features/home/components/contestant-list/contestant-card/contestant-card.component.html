@@ -1,13 +1,14 @@
 @let c = contestant();
 <div
-  class="flex flex-col gap-0 border border-[var(--color-border)] rounded-xl overflow-hidden transition-[box-shadow]"
-  [ngClass]="{ 'ring-2 ring-[var(--color-pink)]': isExpanded() }"
+  class="queen-card flex flex-col gap-0 border rounded-xl overflow-hidden"
+  [ngClass]="{ 'queen-card--expanded': isExpanded() }"
 >
   <button
     type="button"
-    class="cursor-pointer w-full flex items-center gap-3 sm:gap-4 p-3 bg-[var(--color-surface)] text-left transition-colors hover:bg-[var(--color-bg-subtle)]"
+    class="queen-card-btn cursor-pointer w-full flex items-center gap-3 sm:gap-4 p-3 bg-[var(--color-surface)] text-left transition-colors"
     (click)="onClick()"
     [attr.aria-expanded]="isExpanded()"
+    [attr.aria-controls]="detailPanelId"
     [attr.aria-label]="c.dragName"
   >
     <!-- IMAGE -->
@@ -32,14 +33,28 @@
       <app-franchise-badge [franchiseName]="c.firstFranchise" [truncate]="true" />
     </div>
   </button>
-  <!-- DETAIL -->
-  <div
-    class="grid transition-[grid-template-rows] duration-300 ease-out"
-    [class.grid-rows-[0fr]]="!isExpanded()"
-    [class.grid-rows-[1fr]]="isExpanded()"
-  >
-    <div class="min-h-0 overflow-hidden">
-      <app-contestant-detail [contestant]="contestant()" [displayedSeason]="displayedSeason()" />
+  <!-- Defer + timer: paint expand chrome first, then lazy-load detail chunk -->
+  @if (isExpanded()) {
+    <div [id]="detailPanelId">
+      @defer (on timer(16ms)) {
+        <app-contestant-detail [contestant]="contestant()" [displayedSeason]="displayedSeason()" />
+      } @placeholder {
+        <div
+          class="border-t border-[var(--color-border)] p-4 sm:p-5"
+          aria-hidden="true"
+        >
+          <div class="flex gap-4 sm:gap-6">
+            <div
+              class="shrink-0 w-28 sm:w-36 aspect-square rounded-lg bg-gradient-to-br from-[var(--color-pink-light)]/60 to-[var(--color-gold-light)]/60 animate-pulse"
+            ></div>
+            <div class="flex-1 flex flex-col gap-2 py-1">
+              <div class="h-5 w-2/3 rounded-md bg-[var(--color-border)] animate-pulse"></div>
+              <div class="h-3 w-1/2 rounded-md bg-[var(--color-border)]/80 animate-pulse"></div>
+              <div class="h-8 w-24 rounded-md bg-[var(--color-pink-light)]/50 animate-pulse mt-1"></div>
+            </div>
+          </div>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>

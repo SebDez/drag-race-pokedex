@@ -4,7 +4,7 @@ import {
   SortMode,
   type ContestantSortMode,
 } from '@app/core/contestants/constants/sort-mode.constants';
-import { provideTranslateMock } from '../../../testing/translate-mock';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 const sortByTranslations = { 'sortBy.label': 'Sort by' };
 

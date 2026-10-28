@@ -1,13 +1,13 @@
-import { Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
 import { WinsBadgeComponent } from '@app/shared/ui/badges/wins-badge/wins-badge.component';
 import { WinnerBadgeComponent } from '@app/shared/ui/badges/winner-badge/winner-badge.component';
 import { FranchiseBadgeComponent } from '@app/shared/ui/badges/franchise-badge/franchise-badge.component';
-import { ContestantDetailComponent } from '../contestant-detail/contestant-detail.component';
 import { ContestantSectionSeason } from '@app/core/contestants/models/contestant-view.model';
 import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contestant-image.component';
+import { ContestantDetailComponent } from '../contestant-detail/contestant-detail.component';
 
 @Component({
   selector: 'app-contestant-card',
@@ -19,18 +19,24 @@ import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contes
     WinsBadgeComponent,
     WinnerBadgeComponent,
     FranchiseBadgeComponent,
+    // Only referenced inside @defer → compiler still emits a separate chunk
     ContestantDetailComponent,
   ],
   templateUrl: './contestant-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContestantCardComponent {
+  private static nextDetailId = 0;
+
   readonly contestant = input.required<Contestant>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
 
   readonly isExpanded = signal<boolean>(false);
+  protected readonly detailPanelId = `contestant-detail-${++ContestantCardComponent.nextDetailId}`;
 
+  /** Mini promo only — full wiki `imageUrl` is often multi‑MB and freezes expand/list decode. */
   protected getCardImageUrl(c: Contestant): string {
-    return c.miniPromoImageUrl?.trim() || c.imageUrl?.trim() || '';
+    return c.miniPromoImageUrl?.trim() || '';
   }
 
   protected isDisplayedSeasonWinner(c: Contestant): boolean {
@@ -46,6 +52,6 @@ export class ContestantCardComponent {
   }
 
   protected onClick(): void {
-    this.isExpanded.set(!this.isExpanded());
+    this.isExpanded.update((open) => !open);
   }
 }

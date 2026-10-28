@@ -1,11 +1,11 @@
 <div class="min-h-full px-4 pb-8 max-w-[42rem] mx-auto sm:px-5 sm:pb-10">
-  <header class="text-center mb-6">
-    <h1
-      class="text-[clamp(1.75rem,5vw,2.25rem)] font-bold text-[var(--color-gold)] m-0 tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
-    >
+  <header class="brand-header text-center">
+    <h1 class="brand-title text-[clamp(1.85rem,5.5vw,2.5rem)] m-0">
       {{ 'home.title' | translate }}
     </h1>
-    <p class="mt-1 text-[15px] text-[var(--color-text-muted)]">{{ 'home.subtitle' | translate }}</p>
+    <p class="mt-2 text-[15px] text-[var(--color-text-muted)] max-w-[34rem] mx-auto leading-snug">
+      {{ 'home.subtitle' | translate }}
+    </p>
   </header>
 
   @if (store.error()) {
@@ -16,8 +16,15 @@
       <p>{{ store.error() | translate }}</p>
     </div>
   } @else {
-    <p class="text-sm text-[var(--color-text-muted)] mb-4">
-      {{ 'home.contestantsCount' | translate: { count: store.filteredCount() } }}
+    <p class="text-sm text-[var(--color-text-muted)] mb-4" aria-live="polite">
+      @if (showPartialCount()) {
+        {{
+          'home.contestantsCountPartial'
+            | translate: { shown: displayedCount(), count: store.filteredCount() }
+        }}
+      } @else {
+        {{ 'home.contestantsCount' | translate: { count: store.filteredCount() } }}
+      }
     </p>
     <!-- Filters -->
     <app-contestant-list-filters
@@ -29,31 +36,99 @@
       (filtersChange)="onFiltersChange($event)"
       (resetAllFilters)="onResetAllFilters()"
     />
+    <ul
+      class="flex flex-wrap items-center gap-x-4 gap-y-1.5 list-none m-0 mb-3 px-0.5 text-xs text-[var(--color-text-muted)]"
+      [attr.aria-label]="'legend.label' | translate"
+    >
+      <li class="inline-flex items-center gap-1.5">
+        <span
+          class="inline-flex size-5 items-center justify-center rounded bg-[var(--color-gold-light)] text-[var(--color-gold-dark)]"
+          aria-hidden="true"
+        >
+          <app-crown-icon class="size-3.5" />
+        </span>
+        <span>{{ 'legend.winner' | translate }}</span>
+      </li>
+      <li class="inline-flex items-center gap-1.5">
+        <span
+          class="inline-flex h-5 items-center gap-0.5 rounded bg-[var(--color-pink-light)] px-1.5 text-[var(--color-pink-dark)] font-semibold"
+          aria-hidden="true"
+        >
+          <span class="text-[10px] leading-none">n</span>
+          <app-trophy-icon class="size-3" />
+        </span>
+        <span>{{ 'legend.challengeWins' | translate }}</span>
+      </li>
+      <li class="inline-flex items-center gap-1.5">
+        <span
+          class="inline-flex size-5 overflow-hidden rounded border border-[var(--color-border)]"
+          aria-hidden="true"
+        >
+          <span class="w-[40%] h-full bg-[var(--color-pink)]"></span>
+          <span class="flex-1 h-full bg-[var(--color-bg-subtle)]"></span>
+        </span>
+        <span>{{ 'legend.franchise' | translate }}</span>
+      </li>
+    </ul>
     <!-- List -->
     @if (store.loading()) {
       <div
-        class="flex items-center justify-center gap-3 py-8 text-[15px] text-[var(--color-text-muted)]"
+        class="flex flex-col gap-2"
         role="status"
+        aria-busy="true"
         [attr.aria-label]="'aria.loading' | translate"
       >
-        <span
-          class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
-        ></span>
-        <span>{{ 'home.loading' | translate }}</span>
+        <span class="sr-only">{{ 'home.loading' | translate }}</span>
+        @for (slot of skeletonSlots; track slot) {
+          <div
+            class="flex items-center gap-3 sm:gap-4 p-3 border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)] overflow-hidden"
+            aria-hidden="true"
+          >
+            <div
+              class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-[var(--color-pink-light)]/70 to-[var(--color-gold-light)]/70 animate-pulse"
+            ></div>
+            <div class="flex-1 min-w-0 flex flex-col gap-2">
+              <div
+                class="h-3.5 rounded-md bg-[var(--color-border)] animate-pulse"
+                [style.width.%]="55 + (slot % 3) * 12"
+              ></div>
+              <div class="h-2.5 w-1/3 rounded-md bg-[var(--color-border)]/80 animate-pulse"></div>
+            </div>
+            <div class="shrink-0 flex gap-1">
+              <div class="h-8 w-10 rounded-md bg-[var(--color-pink-light)]/50 animate-pulse"></div>
+              <div class="h-8 w-8 rounded-md bg-[var(--color-border)] animate-pulse"></div>
+            </div>
+          </div>
+        }
       </div>
     } @else {
       <app-contestant-list [viewModel]="store.viewModel()" />
+
       @if (store.loadingMore()) {
         <div
           class="flex items-center justify-center gap-3 py-6 text-[15px] text-[var(--color-text-muted)]"
           role="status"
+          aria-busy="true"
           [attr.aria-label]="'aria.loadingMore' | translate"
         >
           <span
             class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
+            aria-hidden="true"
           ></span>
           <span>{{ 'home.loadingMore' | translate }}</span>
         </div>
+      } @else if (store.hasMore()) {
+        <p
+          class="text-center text-sm text-[var(--color-text-muted)] py-6"
+          role="status"
+          [attr.aria-label]="'aria.scrollForMore' | translate"
+        >
+          {{ 'home.scrollForMore' | translate }}
+        </p>
+      } @else if (displayedCount() > 0) {
+        <p class="text-center text-sm text-[var(--color-text-muted)] py-6" role="status">
+          {{ 'home.endOfList' | translate }}
+        </p>
       }
     }
   }

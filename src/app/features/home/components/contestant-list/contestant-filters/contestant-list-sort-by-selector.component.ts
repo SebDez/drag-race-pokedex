@@ -10,12 +10,13 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslateModule],
   template: `
-    <div class="mb-4 text-sm flex flex-col gap-3">
-      <label class="text-[var(--color-text)] font-semibold">
+    <div class="text-sm flex flex-col gap-1.5">
+      <label class="text-[var(--color-text)] font-semibold" [attr.for]="selectId">
         {{ 'sortBy.label' | translate }}
       </label>
       <select
-        class="cursor-pointer rounded-full border border-[var(--color-pink)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-surface)]"
+        [id]="selectId"
+        class="w-full cursor-pointer rounded-full border border-[var(--color-pink)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-surface)]"
         [value]="mode()"
         (change)="onChange($event)"
       >
@@ -34,6 +35,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ContestantListSortBySelectorComponent {
   protected readonly SortMode = SortMode;
+  protected readonly selectId = 'contestant-sort-by-select';
   readonly mode = input<ContestantSortMode>(SortMode.DragNameAsc);
   readonly modeChange = output<ContestantSortMode>();
 

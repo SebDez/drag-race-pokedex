@@ -11,8 +11,8 @@ import {
 import {
   DEFAULT_CONTESTANT_FILTERS,
   type ContestantFilters,
-} from '@app/core/contestants/store/contestant-view.model';
-import { provideTranslateMock } from '../../../testing/translate-mock';
+} from '@app/core/contestants/models/contestant-view.model';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 function setFilterInputs(
   fixture: { componentRef: { setInput: (name: string, value: unknown) => void } },
@@ -53,7 +53,7 @@ describe('ContestantListFiltersComponent', () => {
     expect(el.querySelector('app-contestant-list-advanced-filters')).toBeTruthy();
   });
 
-  it('should emit filtersChange with searchQuery when search input changes', () => {
+  it('should emit filtersChange with searchQuery when search input changes', async () => {
     const fixture = TestBed.createComponent(ContestantListFiltersComponent);
     setFilterInputs(fixture);
     fixture.detectChanges();
@@ -65,6 +65,9 @@ describe('ContestantListFiltersComponent', () => {
     expect(searchEl).toBeTruthy();
     searchEl.value = 'Raja';
     searchEl.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(emitted.length).toBe(0);
+    await new Promise((r) => setTimeout(r, 300));
     fixture.detectChanges();
     expect(emitted.length).toBe(1);
     expect(emitted[0].searchQuery).toBe('Raja');
@@ -107,7 +110,7 @@ describe('ContestantListFiltersComponent', () => {
     expect(emitted).toEqual([GroupMode.Seasons]);
   });
 
-  it('should pass filters to advanced-filters and emit filtersChange when they change', () => {
+  it('should pass filters to advanced-filters and emit filtersChange when they change', async () => {
     const fixture = TestBed.createComponent(ContestantListFiltersComponent);
     setFilterInputs(fixture);
     fixture.detectChanges();
@@ -121,14 +124,19 @@ describe('ContestantListFiltersComponent', () => {
     ) as HTMLElement | null;
     openBtn?.click();
     fixture.detectChanges();
-    const winnersCheckbox = (fixture.nativeElement as HTMLElement).querySelector(
-      'app-contestant-list-advanced-filters input[type="checkbox"]',
-    ) as HTMLInputElement;
-    winnersCheckbox.checked = true;
-    winnersCheckbox.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const winnersCheckbox = document.querySelector(
+      '[role="dialog"] input[type="checkbox"]',
+    ) as HTMLInputElement | null;
+    expect(winnersCheckbox).toBeTruthy();
+    winnersCheckbox!.checked = true;
+    winnersCheckbox!.dispatchEvent(new Event('change'));
     fixture.detectChanges();
     expect(emitted.length).toBe(1);
     expect(emitted[0].winnersOnly).toBe(true);
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+    document.body.style.overflow = '';
   });
 
   it('should emit sortModeChange when sort-by selector changes', () => {

@@ -10,55 +10,43 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LangService, type SupportedLang } from '@app/core/lang.service';
 import { Subscription } from 'rxjs';
-import { FlagDisplayerComponent } from '../flag-displayer/flag-displayer.component';
-
-const LANG_TO_COUNTRY: Record<SupportedLang, string> = {
-  en: 'US',
-  fr: 'FR',
-  es: 'ES',
-};
 
 @Component({
   selector: 'app-lang-selector',
   standalone: true,
-  imports: [TranslateModule, FlagDisplayerComponent],
+  imports: [TranslateModule],
   template: `
-    <div
-      class="fixed top-3 right-3 z-[100]"
-      role="combobox"
-      [attr.aria-expanded]="open()"
-      [attr.aria-haspopup]="'listbox'"
-      [attr.aria-label]="'aria.language' | translate"
-    >
+    <div class="fixed top-3 right-3 z-[100]">
       <button
         type="button"
-        class="flex items-center justify-center gap-2 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-sm font-medium text-(--color-text) shadow-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+        class="flex items-center justify-center gap-2 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-sm font-semibold uppercase tracking-wide text-(--color-text) shadow-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
         (click)="toggle()"
         [attr.aria-label]="'aria.language' | translate"
+        [attr.aria-haspopup]="'menu'"
+        [attr.aria-expanded]="open()"
+        [attr.aria-controls]="menuId"
       >
-        <app-flag-displayer
-          [countryCode]="currentCountryCode()"
-          [title]="'aria.language' | translate"
-          sizeClass="size-6"
-        />
+        {{ current() }}
       </button>
       @if (open()) {
         <ul
+          [id]="menuId"
           class="absolute right-0 top-full mt-1 min-w-[8rem] rounded-lg border border-(--color-pink)/40 bg-(--color-surface-elevated) py-1 shadow-lg"
-          role="listbox"
+          role="menu"
+          [attr.aria-label]="'aria.language' | translate"
         >
           @for (opt of options(); track opt.code) {
-            <li role="option" [attr.aria-selected]="current() === opt.code">
+            <li role="none">
               <button
                 type="button"
+                role="menuitem"
                 class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-(--color-text) hover:bg-(--color-pink)/10 focus-visible:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--color-pink)"
+                [attr.aria-current]="current() === opt.code ? 'true' : null"
                 (click)="selectLang(opt.code)"
               >
-                <app-flag-displayer
-                  [countryCode]="getCountryCode(opt.code)"
-                  [title]="opt.label"
-                  sizeClass="size-6"
-                />
+                <span class="w-6 text-xs font-semibold uppercase text-(--color-text-muted)">{{
+                  opt.code
+                }}</span>
                 <span>{{ opt.label }}</span>
               </button>
             </li>
@@ -70,15 +58,12 @@ const LANG_TO_COUNTRY: Record<SupportedLang, string> = {
 })
 export class LangSelectorComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
+  protected readonly menuId = 'app-lang-menu';
   protected readonly current = signal<SupportedLang>('en');
   protected readonly options = computed<{ code: SupportedLang; label: string }[]>(
     () => this.langService.supported,
   );
   protected readonly open = signal<boolean>(false);
-
-  protected readonly currentCountryCode = computed<string | null>(
-    () => LANG_TO_COUNTRY[this.current()],
-  );
 
   constructor(
     protected readonly langService: LangService,
@@ -86,13 +71,16 @@ export class LangSelectorComponent implements OnInit, OnDestroy {
     private readonly el: ElementRef<HTMLElement>,
   ) {}
 
-  protected getCountryCode(lang: SupportedLang): string {
-    return LANG_TO_COUNTRY[lang];
-  }
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (this.open() && !this.el.nativeElement.contains(event.target as Node)) {
+      this.open.set(false);
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.open()) {
       this.open.set(false);
     }
   }

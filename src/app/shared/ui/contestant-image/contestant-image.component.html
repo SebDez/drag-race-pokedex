@@ -2,41 +2,44 @@
   class="relative w-full h-full overflow-hidden bg-[var(--color-bg-subtle)]"
   [class]="wrapperClass()"
 >
-  @if (!hasSrc()) {
+  @if (!hasSrc() || loadFailed()) {
     <span
-      class="block w-full h-full bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
+      class="absolute inset-0 block bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-70"
+      aria-hidden="true"
+    ></span>
+    <span
+      class="absolute inset-[22%] rounded-md bg-[var(--color-surface)]/35"
       aria-hidden="true"
     ></span>
   } @else {
     <div
-      class="absolute inset-0 z-0 bg-gradient-to-br from-[var(--color-pink-light)]/40 to-[var(--color-gold-light)]/40 transition-opacity duration-300 ease-out"
+      class="absolute inset-0 z-0 overflow-hidden transition-opacity duration-300 ease-out"
       [class.opacity-0]="showLoadedImage()"
-      [class.animate-pulse]="!showLoadedImage() && !loadFailed()"
       aria-hidden="true"
-    ></div>
+    >
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-[var(--color-pink-light)]/50 to-[var(--color-gold-light)]/50"
+      ></div>
+      <div
+        class="absolute inset-0 -translate-x-full animate-[contestant-image-shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[var(--color-surface)]/55 to-transparent"
+      ></div>
+    </div>
 
-    @if (!loadFailed()) {
-      <img
-        [src]="src()!"
-        [alt]="alt()"
-        [width]="width()"
-        [height]="height()"
-        [attr.loading]="loadingAttr()"
-        [attr.fetchpriority]="fetchPriorityAttr()"
-        decoding="async"
-        class="relative z-10 h-full w-full transition-opacity duration-300 ease-out"
-        [class.object-cover]="objectFit() === 'cover'"
-        [class.object-contain]="objectFit() === 'contain'"
-        [class.opacity-0]="!imageDecoded()"
-        [class.opacity-100]="imageDecoded()"
-        (load)="onLoad()"
-        (error)="onError()"
-      />
-    } @else {
-      <span
-        class="absolute inset-0 z-10 block bg-gradient-to-br from-[var(--color-pink-light)] to-[var(--color-gold-light)] opacity-60"
-        aria-hidden="true"
-      ></span>
-    }
+    <img
+      [src]="src()!"
+      [alt]="alt()"
+      [width]="width()"
+      [height]="height()"
+      [attr.loading]="loadingAttr()"
+      [attr.fetchpriority]="fetchPriorityAttr()"
+      decoding="async"
+      class="relative z-10 h-full w-full transition-opacity duration-300 ease-out"
+      [class.object-cover]="objectFit() === 'cover'"
+      [class.object-contain]="objectFit() === 'contain'"
+      [class.opacity-0]="!imageDecoded()"
+      [class.opacity-100]="imageDecoded()"
+      (load)="onLoad()"
+      (error)="onError()"
+    />
   }
 </div>

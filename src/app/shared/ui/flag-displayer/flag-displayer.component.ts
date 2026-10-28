@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { UsaFlagIconComponent } from '../../icons/usa-flag-icon.component';
 import { FranceFlagIconComponent } from '../../icons/france-flag-icon.component';
 import { SpainFlagIconComponent } from '../../icons/spain-flag-icon.component';
@@ -14,6 +14,7 @@ import { BrasilFlagIconComponent } from '../../icons/brasil-flag-icon.component'
 import { GermanyFlagIconComponent } from '../../icons/germany-flag-icon.component';
 import { ItalyFlagIconComponent } from '../../icons/italy-flag-icon.component';
 import { BelgiumFlagIconComponent } from '../../icons/belgium-flag-icon.component';
+
 @Component({
   selector: 'app-flag-displayer',
   standalone: true,
@@ -35,10 +36,11 @@ import { BelgiumFlagIconComponent } from '../../icons/belgium-flag-icon.componen
     BelgiumFlagIconComponent,
   ],
   templateUrl: './flag-displayer.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex items-center shrink-0' },
 })
 export class FlagDisplayerComponent {
-    readonly countryCode = input<string | null>(null);
+  readonly countryCode = input<string | null>(null);
   readonly title = input<string>('');
-    readonly sizeClass = input<string>('size-4');
+  readonly sizeClass = input<string>('size-4');
 }

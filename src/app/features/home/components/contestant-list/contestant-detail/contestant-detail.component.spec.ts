@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ContestantDetailComponent } from './contestant-detail.component';
-import { provideTranslateMock } from '../../../testing/translate-mock';
-import { createContestant } from '../../../testing/contestant-fixture';
+import { provideTranslateMock } from '@app/testing/translate-mock';
+import { createContestant } from '@app/testing/contestant-fixture';
 
 describe('ContestantDetailComponent', () => {
   beforeEach(async () => {
@@ -69,15 +69,15 @@ describe('ContestantDetailComponent', () => {
     expect(el.textContent).toContain('S1');
   });
 
-  it('getDetailImageUrl should prefer imageUrl then miniPromoImageUrl', () => {
+  it('getDetailImageUrl should use miniPromo only (never full wiki imageUrl)', () => {
     const fixture = TestBed.createComponent(ContestantDetailComponent);
     const comp = fixture.componentInstance;
     const withBoth = createContestant({
       imageUrl: 'https://main.jpg',
       miniPromoImageUrl: 'https://promo.jpg',
     });
-    expect(comp['getDetailImageUrl'](withBoth)).toBe('https://main.jpg');
-    const onlyPromo = createContestant({ imageUrl: '', miniPromoImageUrl: 'https://promo.jpg' });
-    expect(comp['getDetailImageUrl'](onlyPromo)).toBe('https://promo.jpg');
+    expect(comp['getDetailImageUrl'](withBoth)).toBe('https://promo.jpg');
+    const onlyMain = createContestant({ imageUrl: 'https://main.jpg', miniPromoImageUrl: '' });
+    expect(comp['getDetailImageUrl'](onlyMain)).toBe('');
   });
 });

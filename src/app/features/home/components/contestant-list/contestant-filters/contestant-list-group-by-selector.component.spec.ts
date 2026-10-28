@@ -4,7 +4,7 @@ import {
   GroupMode,
   type ContestantGroupMode,
 } from '@app/core/contestants/constants/group-mode.constants';
-import { provideTranslateMock } from '../../../testing/translate-mock';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 const groupByTranslations = { 'groupBy.label': 'Group by' };
 

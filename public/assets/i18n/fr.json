@@ -4,13 +4,22 @@
     "subtitle": "Parce que vous connaissez la reine, mais vous ne vous souvenez pas dans quelle saison elle était...",
     "loading": "Chargement des reines...",
     "loadingMore": "Chargement…",
-    "contestantsCount": "{{count}} Reines"
+    "contestantsCount": "{{count}} Reines",
+    "contestantsCountPartial": "{{shown}} sur {{count}} reines",
+    "scrollForMore": "Faites défiler pour en voir plus",
+    "endOfList": "Fin de la liste"
   },
   "common": {
     "win": "1 victoire",
     "wins": "{{count}} victoires",
     "winner": "Gagnante",
     "noResults": "Aucun résultat"
+  },
+  "legend": {
+    "label": "Légende des badges",
+    "winner": "Gagnante d’une saison",
+    "challengeWins": "Victoires aux défis",
+    "franchise": "Franchise"
   },
   "detail": {
     "seasons": "Saisons",
@@ -24,6 +33,7 @@
   "aria": {
     "loading": "Chargement",
     "loadingMore": "Chargement en cours",
+    "scrollForMore": "Faites défiler pour charger plus de reines",
     "language": "Langue"
   },
   "filters": {
@@ -34,14 +44,15 @@
     "searchLabel": "Rechercher par nom de scène",
     "winnersOnly": "Gagnantes uniquement",
     "allFranchises": "Toutes les franchises",
-    "franchiseTreeHint": "Sélectionnez une ou plusieurs franchises et saisons",
+    "showAllFranchises": "Afficher toutes les franchises",
+    "franchiseTreeHint": "Aucune sélection = toutes les franchises. Cochez pour restreindre la liste.",
     "seasonShort": "S{{season}}",
     "resetAll": "Réinitialiser les filtres"
   },
   "groupBy": {
     "label": "Grouper par",
-    "all": "Toutes",
-    "alphabetical": "Alphabétique",
+    "all": "Sans groupement",
+    "alphabetical": "Lettre (A–Z)",
     "franchise": "Franchise",
     "franchiseAndSeasons": "Saisons"
   },

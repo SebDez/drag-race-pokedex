@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FlagDisplayerComponent } from '../../flag-displayer/flag-displayer.component';
 import { FRANCHISE_COUNTRY_MAP } from '@app/core/contestants/constants/franchises.constants';
 
@@ -24,6 +24,7 @@ const COUNTRY_ISO_MAP: Record<string, string> = {
   selector: 'app-franchise-badge',
   standalone: true,
   imports: [FlagDisplayerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex h-full items-center' },
   template: `@if (franchiseName(); as name) {
     <span
@@ -31,10 +32,10 @@ const COUNTRY_ISO_MAP: Record<string, string> = {
       [class.truncate]="truncate()"
       [class.max-w-[120px]]="truncate()"
       [class.sm:max-w-[160px]]="truncate()"
-      [attr.title]="title()"
+      [attr.title]="accessibleName()"
     >
       @if (countryIsoCode(); as iso) {
-        <app-flag-displayer [countryCode]="iso" [title]="title()" sizeClass="size-8" />
+        <app-flag-displayer [countryCode]="iso" [title]="accessibleName()" sizeClass="size-8" />
       }
     </span>
   }`,
@@ -56,12 +57,11 @@ export class FranchiseBadgeComponent {
     return COUNTRY_ISO_MAP[country] ?? null;
   });
 
-  readonly title = computed<string>(() => {
+  readonly accessibleName = computed<string>(() => {
     const name = this.franchiseName();
     const country = this.resolvedCountry();
     if (!name) return '';
-    if (this.truncate() && country) return `${name} · ${country}`;
-    if (this.truncate()) return name;
-    return '';
+    if (country) return `${name} · ${country}`;
+    return name;
   });
 }

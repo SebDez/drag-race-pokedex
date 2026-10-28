@@ -1,5 +1,7 @@
-import { Component, input } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { map, startWith } from 'rxjs/operators';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
 import { WinsBadgeComponent } from '@app/shared/ui/badges/wins-badge/wins-badge.component';
 import { WinnerBadgeComponent } from '@app/shared/ui/badges/winner-badge/winner-badge.component';
@@ -20,14 +22,25 @@ import { ContestantSectionSeason } from '@app/core/contestants/models/contestant
     PlaceOrdinalPipe,
   ],
   templateUrl: './contestant-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContestantDetailComponent {
+  private readonly translate = inject(TranslateService);
+
   readonly contestant = input.required<Contestant>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
 
+  protected readonly lang = toSignal(
+    this.translate.onLangChange.pipe(
+      map((e) => e.lang.slice(0, 2).toLowerCase()),
+      startWith((this.translate.currentLang ?? 'en').slice(0, 2).toLowerCase()),
+    ),
+    { initialValue: 'en' },
+  );
+
+  /** Mini promo only — never fall back to full wiki assets (decode jank on expand). */
   protected getDetailImageUrl(c: Contestant): string {
-    const url = c.imageUrl?.trim() || c.miniPromoImageUrl?.trim() || '';
-    return url;
+    return c.miniPromoImageUrl?.trim() || '';
   }
 
   protected isDisplayedSeasonWinner(c: Contestant): boolean {

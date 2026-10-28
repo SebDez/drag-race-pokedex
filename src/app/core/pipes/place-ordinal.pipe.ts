@@ -1,17 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { sanitizeWikiMarkup } from './wiki-markup.util';
 
-@Pipe({ name: 'placeOrdinal', standalone: true, pure: false })
+@Pipe({ name: 'placeOrdinal', standalone: true, pure: true })
 export class PlaceOrdinalPipe implements PipeTransform {
-  constructor(private readonly translate: TranslateService) {}
+  transform(rawPlace: string | null | undefined, lang = 'en'): string {
+    const trimmed = rawPlace?.trim() ?? '';
+    if (!trimmed) return trimmed;
 
-  transform(rawPlace: string | null | undefined): string {
-    const value = rawPlace?.trim() ?? '';
+    const value = sanitizeWikiMarkup(trimmed);
     if (!value) return value;
 
-    const lang = (this.translate.currentLang ?? '').slice(0, 2).toLowerCase();
+    const code = lang.slice(0, 2).toLowerCase();
 
-    if (lang === 'fr') {
+    if (code === 'fr') {
       return value
         .replace(/(\d+)st\b/g, (_, n) => (n === '1' ? '1er' : `${n}e`))
         .replace(/(\d+)nd\b/g, (_, n) => `${n}e`)
@@ -19,7 +20,7 @@ export class PlaceOrdinalPipe implements PipeTransform {
         .replace(/(\d+)th\b/g, (_, n) => `${n}e`);
     }
 
-    if (lang === 'es') {
+    if (code === 'es') {
       return value
         .replace(/(\d+)st\b/g, (_, n) => `${n}.º`)
         .replace(/(\d+)nd\b/g, (_, n) => `${n}.º`)

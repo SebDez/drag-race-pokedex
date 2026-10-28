@@ -4,13 +4,22 @@
     "subtitle": "Because you know the queen… but you can't remember which season she was on...",
     "loading": "Loading Queens…",
     "loadingMore": "Loading more…",
-    "contestantsCount": "{{count}} Queens"
+    "contestantsCount": "{{count}} Queens",
+    "contestantsCountPartial": "Showing {{shown}} of {{count}} queens",
+    "scrollForMore": "Scroll for more",
+    "endOfList": "You've reached the end"
   },
   "common": {
     "win": "1 win",
     "wins": "{{count}} wins",
     "winner": "Winner",
     "noResults": "No results"
+  },
+  "legend": {
+    "label": "Badge legend",
+    "winner": "Season winner",
+    "challengeWins": "Challenge wins",
+    "franchise": "Franchise"
   },
   "detail": {
     "seasons": "Seasons",
@@ -24,6 +33,7 @@
   "aria": {
     "loading": "Loading",
     "loadingMore": "Loading more",
+    "scrollForMore": "Scroll for more queens",
     "language": "Language"
   },
   "filters": {
@@ -34,14 +44,15 @@
     "searchLabel": "Search by drag name",
     "winnersOnly": "Winners only",
     "allFranchises": "All franchises",
-    "franchiseTreeHint": "Select one or more franchises and seasons",
+    "showAllFranchises": "Show all franchises",
+    "franchiseTreeHint": "Nothing selected = all franchises. Check items to narrow the list.",
     "seasonShort": "S{{season}}",
     "resetAll": "Reset all filters"
   },
   "groupBy": {
     "label": "Group by",
-    "all": "All",
-    "alphabetical": "Alphabetical",
+    "all": "No grouping",
+    "alphabetical": "Letter (A–Z)",
     "franchise": "Franchise",
     "franchiseAndSeasons": "Seasons"
   },

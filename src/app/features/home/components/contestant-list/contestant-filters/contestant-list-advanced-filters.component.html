@@ -1,11 +1,13 @@
-<div class="h-full mb-4 text-sm flex flex-col justify-end gap-3 pb-4">
+<div class="text-sm flex flex-col gap-1.5 sm:h-full sm:justify-end">
   <button
     #openFiltersBtn
     type="button"
     data-testid="open-advanced-filters-btn"
-    class="flex items-center gap-1.5 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) text-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+    class="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-(--color-text) text-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface) sm:w-auto sm:justify-start"
     (click)="openDialog()"
     [attr.aria-label]="'filters.openDialog' | translate"
+    [attr.aria-haspopup]="'dialog'"
+    [attr.aria-expanded]="dialogOpen()"
   >
     <span class="inline-flex size-4 shrink-0" aria-hidden="true">
       <svg
@@ -34,6 +36,7 @@
 
 @if (dialogOpen()) {
   <div
+    #dialogRoot
     class="fixed inset-0 z-40 flex items-center justify-center p-4"
     role="dialog"
     [attr.aria-modal]="true"
@@ -45,17 +48,19 @@
       (click)="closeDialog()"
     ></div>
     <div
-      [id]="dialogTitleId"
-      class="relative z-50 w-full max-w-md max-h-[85vh] flex flex-col rounded-xl border border-(--color-pink)/30 bg-(--color-surface) shadow-xl"
+      #dialogPanel
+      tabindex="-1"
+      class="relative z-50 w-full max-w-md max-h-[85vh] flex flex-col rounded-xl border border-(--color-pink)/30 bg-(--color-surface) shadow-xl outline-none"
     >
       <div
         class="flex items-center justify-between shrink-0 border-b border-(--color-pink)/20 px-4 py-3"
       >
-        <h2 class="text-base font-semibold text-(--color-text) m-0">
+        <h2 [id]="dialogTitleId" class="text-base font-semibold text-(--color-text) m-0">
           {{ 'filters.label' | translate }}
         </h2>
         <button
           type="button"
+          data-testid="dialog-close-btn"
           class="rounded-full p-1.5 text-(--color-text-muted) hover:bg-(--color-pink)/10 hover:text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
           (click)="closeDialog()"
           [attr.aria-label]="'filters.close' | translate"
@@ -75,15 +80,15 @@
             <span class="text-(--color-text)">{{ 'filters.winnersOnly' | translate }}</span>
           </label>
 
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
-              [checked]="allFranchisesSelected()"
-              (change)="onToggleAllFranchises($event)"
-            />
-            <span class="text-(--color-text)">{{ 'filters.allFranchises' | translate }}</span>
-          </label>
+          <button
+            type="button"
+            data-testid="clear-franchise-filters-btn"
+            class="self-start text-sm font-medium text-(--color-text-muted) hover:text-(--color-pink) underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) rounded px-1 disabled:opacity-40 disabled:no-underline disabled:cursor-not-allowed disabled:hover:text-(--color-text-muted)"
+            [disabled]="allFranchisesSelected()"
+            (click)="clearFranchiseFilters()"
+          >
+            {{ 'filters.showAllFranchises' | translate }}
+          </button>
         </div>
 
         <div

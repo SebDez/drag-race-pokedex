@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { WinnerBadgeComponent } from './winner-badge.component';
-import { provideTranslateMock } from '../../../testing/translate-mock';
+import { provideTranslateMock } from '@app/testing/translate-mock';
 
 describe('WinnerBadgeComponent', () => {
   beforeEach(async () => {

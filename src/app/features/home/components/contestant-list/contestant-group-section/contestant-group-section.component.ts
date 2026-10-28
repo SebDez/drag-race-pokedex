@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
 import { ContestantCardComponent } from '../contestant-card/contestant-card.component';
 import { ContestantGroupMode } from '@app/core/contestants/constants/group-mode.constants';
@@ -8,6 +8,7 @@ import { ContestantSectionSeason } from '@app/core/contestants/models/contestant
   selector: 'app-contestant-group-section',
   standalone: true,
   imports: [ContestantCardComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="flex flex-col gap-3">
       <h2

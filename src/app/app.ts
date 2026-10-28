@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LangService } from './core/lang.service';
 import { LangSelectorComponent } from './shared/ui/lang-selector/lang-selector.component';
@@ -8,6 +8,7 @@ import { LangSelectorComponent } from './shared/ui/lang-selector/lang-selector.c
   imports: [RouterOutlet, LangSelectorComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   constructor(private readonly langService: LangService) {

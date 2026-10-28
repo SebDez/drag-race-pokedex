@@ -3,10 +3,14 @@ import {
   DOCUMENT,
   ElementRef,
   Inject,
+  Injector,
+  OnDestroy,
+  afterNextRender,
+  computed,
   effect,
+  inject,
   input,
   output,
-  computed,
   signal,
   viewChild,
 } from '@angular/core';
@@ -18,14 +22,29 @@ import {
 import { DEFAULT_CONTESTANT_FILTERS } from '@app/core/contestants/models/contestant-view.model';
 import { ContestantFilters } from '@app/core/contestants/models/query.model';
 
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
 @Component({
   selector: 'app-contestant-list-advanced-filters',
   standalone: true,
   imports: [TranslateModule],
   templateUrl: './contestant-list-advanced-filters.component.html',
 })
-export class ContestantListAdvancedFiltersComponent {
+export class ContestantListAdvancedFiltersComponent implements OnDestroy {
   private readonly openFiltersBtnRef = viewChild<ElementRef<HTMLButtonElement>>('openFiltersBtn');
+  private readonly dialogRootRef = viewChild<ElementRef<HTMLElement>>('dialogRoot');
+  private readonly dialogPanelRef = viewChild<ElementRef<HTMLElement>>('dialogPanel');
+  private readonly injector = inject(Injector);
+
+  private inertTargets: HTMLElement[] = [];
+  private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 
   readonly filters = input<ContestantFilters>(DEFAULT_CONTESTANT_FILTERS);
   readonly filtersChange = output<ContestantFilters>();
@@ -39,16 +58,24 @@ export class ContestantListAdvancedFiltersComponent {
   constructor(@Inject(DOCUMENT) private readonly document: Document) {
     effect(() => {
       if (!this.dialogOpen()) {
+        this.teardownDialogA11y();
         return;
       }
-      const handler = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          this.closeDialog();
-        }
-      };
-      this.document.addEventListener('keydown', handler);
-      return () => this.document.removeEventListener('keydown', handler);
+
+      afterNextRender(
+        () => {
+          if (!this.dialogOpen()) {
+            return;
+          }
+          this.setupDialogA11y();
+        },
+        { injector: this.injector },
+      );
     });
+  }
+
+  ngOnDestroy(): void {
+    this.teardownDialogA11y();
   }
 
   protected hasActiveFilters(): boolean {
@@ -62,7 +89,6 @@ export class ContestantListAdvancedFiltersComponent {
 
   protected closeDialog(): void {
     this.dialogOpen.set(false);
-    // Restore focus to the open button for accessibility
     setTimeout(() => this.openFiltersBtnRef()?.nativeElement?.focus(), 0);
   }
 
@@ -73,6 +99,17 @@ export class ContestantListAdvancedFiltersComponent {
 
   protected allFranchisesSelected(): boolean {
     return (this.filters().franchiseSeasonKeys?.length ?? 0) === 0;
+  }
+
+  protected clearFranchiseFilters(): void {
+    if (this.allFranchisesSelected()) {
+      return;
+    }
+    const current = this.filters();
+    this.filtersChange.emit({
+      ...current,
+      franchiseSeasonKeys: [],
+    });
   }
 
   protected seasonsForFranchise(franchise: string): number[] {
@@ -97,18 +134,6 @@ export class ContestantListAdvancedFiltersComponent {
       ...current,
       winnersOnly: checked,
     });
-  }
-
-  protected onToggleAllFranchises(event: Event): void {
-    const checked = (event.target as HTMLInputElement | null)?.checked ?? false;
-    const current = this.filters();
-    if (checked) {
-      this.filtersChange.emit({
-        ...current,
-        franchiseSeasonKeys: [],
-      });
-    }
-    // When unchecked and already empty, no need to emit (no-op).
   }
 
   protected onToggleFranchise(franchise: string, event: Event): void {
@@ -159,5 +184,86 @@ export class ContestantListAdvancedFiltersComponent {
 
   private seasonKey(franchise: string, season: number): string {
     return `season::${franchise}::${season}`;
+  }
+
+  private setupDialogA11y(): void {
+    const root = this.dialogRootRef()?.nativeElement;
+    const panel = this.dialogPanelRef()?.nativeElement;
+    if (!root || !panel) {
+      return;
+    }
+
+    // Move overlay to <body> so we can inert the whole app-root safely.
+    if (root.parentElement !== this.document.body) {
+      this.document.body.appendChild(root);
+    }
+
+    this.teardownInertOnly();
+    const appRoot = this.document.querySelector('app-root');
+    if (appRoot instanceof HTMLElement) {
+      appRoot.inert = true;
+      this.inertTargets = [appRoot];
+    }
+    this.document.body.style.overflow = 'hidden';
+
+    this.keydownHandler = (e: KeyboardEvent) => this.onDialogKeydown(e, panel);
+    this.document.addEventListener('keydown', this.keydownHandler);
+
+    const focusables = this.getFocusableElements(panel);
+    (focusables[0] ?? panel).focus();
+  }
+
+  private teardownDialogA11y(): void {
+    if (this.keydownHandler) {
+      this.document.removeEventListener('keydown', this.keydownHandler);
+      this.keydownHandler = null;
+    }
+    this.teardownInertOnly();
+    this.document.body.style.overflow = '';
+  }
+
+  private teardownInertOnly(): void {
+    for (const el of this.inertTargets) {
+      el.inert = false;
+    }
+    this.inertTargets = [];
+  }
+
+  private onDialogKeydown(e: KeyboardEvent, panel: HTMLElement): void {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.closeDialog();
+      return;
+    }
+    if (e.key !== 'Tab') {
+      return;
+    }
+
+    const focusables = this.getFocusableElements(panel);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      panel.focus();
+      return;
+    }
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = this.document.activeElement as HTMLElement | null;
+
+    if (e.shiftKey) {
+      if (active === first || !panel.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (active === last || !panel.contains(active)) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  private getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return [...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(
+      (el) => !el.hasAttribute('disabled') && el.getClientRects().length > 0,
+    );
   }
 }

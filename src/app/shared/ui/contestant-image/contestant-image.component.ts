@@ -1,9 +1,17 @@
-import { Component, input, signal, computed, effect } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  signal,
+  computed,
+  effect,
+} from '@angular/core';
 
 @Component({
   selector: 'app-contestant-image',
   standalone: true,
   templateUrl: './contestant-image.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContestantImageComponent {
   constructor() {
