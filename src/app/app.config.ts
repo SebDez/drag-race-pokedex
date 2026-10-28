@@ -7,6 +7,8 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { CONTESTANTS_DATA_PROVIDER } from '@app/core/contestants/providers/contestants.provider';
 import { LocalJsonContestantsProvider } from '@app/core/contestants/providers/local-json-contestants.provider';
+import { QUIZ_DATA_PROVIDER } from '@app/core/quiz/providers/quiz.provider';
+import { LocalQuizDataProvider } from '@app/core/quiz/providers/local-quiz.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +20,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: CONTESTANTS_DATA_PROVIDER,
       useClass: LocalJsonContestantsProvider,
+    },
+    {
+      provide: QUIZ_DATA_PROVIDER,
+      useClass: LocalQuizDataProvider,
     },
   ],
 };

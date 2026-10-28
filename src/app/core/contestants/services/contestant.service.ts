@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import type { Contestant } from '../models/contestant.model';
 import type { ContestantsQuery } from '../models/query.model';
 import type { ContestantsFetchResult } from '../models/fetch-results.model';
 import {
@@ -15,5 +16,9 @@ export class ContestantsService {
 
   fetchContestants(query: ContestantsQuery): Observable<ContestantsFetchResult> {
     return this.provider.queryContestants(query);
+  }
+
+  getAllContestants(): Observable<Contestant[]> {
+    return this.provider.getAllContestants();
   }
 }

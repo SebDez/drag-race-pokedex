@@ -1,0 +1,153 @@
+<section class="quiz-play" aria-labelledby="quiz-play-progress">
+  <div class="quiz-play__top">
+    <div class="quiz-play__top-row">
+      <p id="quiz-play-progress" class="quiz-play__progress" aria-live="polite">
+        {{
+          'quiz.play.progress'
+            | translate: { current: store.currentIndex() + 1, total: store.totalQuestions() }
+        }}
+      </p>
+      <button type="button" class="quiz-play__quit" (click)="onQuit()">
+        {{ 'quiz.play.quit' | translate }}
+      </button>
+    </div>
+    <div class="quiz-play__bar" aria-hidden="true">
+      <span
+        class="quiz-play__bar-fill"
+        [style.width.%]="((store.currentIndex() + 1) / store.totalQuestions()) * 100"
+      ></span>
+    </div>
+  </div>
+
+  @if (store.currentQuestion(); as question) {
+    <article class="quiz-play__card filters-panel rounded-2xl p-4 sm:p-5" [attr.data-qid]="question.id">
+      <h2 class="quiz-play__prompt">
+        {{ question.promptKey | translate: question.promptParams }}
+      </h2>
+
+      @if (question.imageUrl) {
+        <div class="quiz-play__image-wrap">
+          <div class="quiz-play__image">
+            <app-contestant-image
+              [src]="question.imageUrl"
+              [alt]="'quiz.play.mysteryAlt' | translate"
+              [width]="280"
+              [height]="360"
+              [priority]="true"
+              objectFit="cover"
+              objectPosition="center top"
+            />
+          </div>
+          <button
+            type="button"
+            class="quiz-play__enlarge"
+            (click)="openLightbox()"
+            [attr.aria-label]="'quiz.play.enlargeImage' | translate"
+          >
+            <span aria-hidden="true">🔍</span>
+            <span class="quiz-play__enlarge-text">{{ 'quiz.play.enlargeImage' | translate }}</span>
+          </button>
+        </div>
+      }
+
+      @if (!store.selectedMode()) {
+        <div class="quiz-play__modes">
+          <p class="quiz-play__modes-label">{{ 'quiz.play.chooseMode' | translate }}</p>
+          <div class="quiz-play__mode-grid">
+            @for (mode of modes; track mode) {
+              <button type="button" class="quiz-mode-btn" (click)="onSelectMode(mode)">
+                <span class="quiz-mode-btn__emoji" aria-hidden="true">{{ modeEmoji[mode] }}</span>
+                <span class="quiz-mode-btn__name">{{ 'quiz.modes.' + mode + '.short' | translate }}</span>
+                <span class="quiz-mode-btn__pts">
+                  {{ 'quiz.play.points' | translate: { points: modePoints[mode] } }}
+                </span>
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="quiz-play__answer quiz-play__answer-enter">
+          <p class="quiz-play__locked-mode">
+            {{ 'quiz.play.modeLocked' | translate: { mode: lockedModeLabel() } }}
+          </p>
+
+          @if (store.selectedMode() === 'cash') {
+            <div class="quiz-play__cash">
+              <label class="sr-only" for="quiz-cash-search">{{ 'quiz.play.cashLabel' | translate }}</label>
+              <p class="quiz-play__cash-hint">{{ 'quiz.play.cashSearchHint' | translate }}</p>
+              <input
+                #cashInput
+                id="quiz-cash-search"
+                type="search"
+                class="quiz-play__cash-input"
+                autocomplete="off"
+                autocapitalize="words"
+                [attr.aria-controls]="'quiz-cash-options'"
+                [attr.aria-autocomplete]="'list'"
+                [placeholder]="'quiz.play.cashPlaceholder' | translate"
+                [ngModel]="cashQuery()"
+                (ngModelChange)="cashQuery.set($event)"
+                name="cashSearch"
+              />
+
+              @if (cashResults().length > 0) {
+                <ul
+                  id="quiz-cash-options"
+                  class="quiz-play__cash-select"
+                  role="listbox"
+                  [attr.aria-label]="'quiz.play.cashSuggestions' | translate"
+                >
+                  @for (option of cashResults(); track option) {
+                    <li role="option">
+                      <button type="button" class="quiz-play__cash-option" (click)="onSelectCash(option)">
+                        {{ option }}
+                      </button>
+                    </li>
+                  }
+                </ul>
+              } @else if (showCashEmpty()) {
+                <p class="quiz-play__cash-empty" role="status">{{ 'quiz.play.cashEmpty' | translate }}</p>
+              }
+            </div>
+          } @else {
+            <div
+              class="quiz-play__options"
+              [class.quiz-play__options--duo]="store.selectedMode() === 'duo'"
+              [class.quiz-play__options--square]="store.selectedMode() === 'square'"
+            >
+              @for (option of options(); track option) {
+                <button type="button" class="quiz-option-btn" (click)="onSelectOption(option)">
+                  {{ option }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </article>
+
+    @if (lightboxOpen() && question.imageUrl) {
+      <div
+        class="quiz-play__lightbox"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="'quiz.play.enlargeImage' | translate"
+        (click)="closeLightbox()"
+      >
+        <button
+          type="button"
+          class="quiz-play__lightbox-close"
+          (click)="closeLightbox(); $event.stopPropagation()"
+        >
+          {{ 'quiz.play.closePreview' | translate }}
+        </button>
+        <img
+          class="quiz-play__lightbox-img"
+          [src]="question.imageUrl"
+          [alt]="'quiz.play.mysteryAlt' | translate"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+    }
+  }
+</section>

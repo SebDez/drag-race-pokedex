@@ -1,4 +1,112 @@
 {
+  "nav": {
+    "main": "Navegación principal",
+    "pokedex": "Pokédex",
+    "quiz": "Quiz",
+    "skipToContent": "Ir al contenido"
+  },
+  "quiz": {
+    "title": "Quiz Drag Race",
+    "intro": {
+      "headline": "¡Bienvenides al Quizz Drag Race!",
+      "lead": "¿Crees que lo sabes todo de las queens? Es hora de demostrarlo. 💅",
+      "description": "Cada partida tiene 10 preguntas generadas al azar sobre las contestants del universo Drag Race.",
+      "questionsTitle": "Las preguntas pueden tratar, por ejemplo, de:",
+      "questionsList": {
+        "whoIsThisQueen": "¿Quién es esta queen? (identificar a una contestant por su foto)",
+        "whichFranchise": "¿De qué franquicia es esta queen?",
+        "whoWonSeason": "¿Quién ganó la temporada 3 de la franquicia USA?",
+        "otherTrivia": "Y más trivia del universo Drag Race…"
+      },
+      "everyGameDifferent": "Cada partida es distinta: ninguna sesión se parece del todo."
+    },
+    "scoring": {
+      "title": "🧠 Puntuación",
+      "totalPoints": "Cada quiz vale 100 puntos como máximo (10 preguntas × 10 pts en Cash).",
+      "confidenceIntro": "Antes de responder, eliges tu nivel de confianza con un modo de dificultad. Cuanto más arriesgado, más puntos puedes ganar."
+    },
+    "howToWin": {
+      "title": "👑 Cómo ganar",
+      "steps": {
+        "answerQuestions": "Responder las 10 preguntas",
+        "chooseRisk": "Elegir bien el nivel de riesgo",
+        "scorePoints": "Sumar el máximo de puntos sobre 100"
+      },
+      "goodLuck": "Buena suerte… y no la liéis. 💄"
+    },
+    "setup": {
+      "quick": "Modo rápido",
+      "quickHint": "10 preguntas · todas las franquicias",
+      "custom": "Personalizado",
+      "customHint": "10 preguntas · elegir franquicias",
+      "franchises": "Franquicias",
+      "franchisesHint": "Sin selección = todas las franquicias.",
+      "startCustom": "Empezar mi quiz",
+      "loading": "Preparando el quiz…"
+    },
+    "play": {
+      "progress": "Pregunta {{current}} / {{total}}",
+      "chooseMode": "Elige tu modo de respuesta",
+      "points": "{{points}} pts",
+      "modeLocked": "Modo {{mode}} — un solo intento",
+      "cashLabel": "Tu respuesta",
+      "cashPlaceholder": "Busca y selecciona…",
+      "cashSearchHint": "Escribe para filtrar y elige una respuesta de la lista.",
+      "cashEmpty": "Sin resultados — prueba otra búsqueda.",
+      "cashSuggestions": "Respuestas posibles",
+      "validate": "Validar",
+      "mysteryAlt": "Queen misteriosa",
+      "quit": "Salir",
+      "quitConfirm": "¿Salir del quiz? Se perderá el progreso.",
+      "enlargeImage": "Ver más grande",
+      "closePreview": "Cerrar"
+    },
+    "modes": {
+      "duo": {
+        "short": "Duo",
+        "label": "✌️ Duo — 2 puntos",
+        "description": "Tienes 2 respuestas posibles. Una es correcta y la otra falsa. Un 50/50: la forma más segura de asegurar algunos puntos.",
+        "reward": "Respuesta correcta: +2 puntos"
+      },
+      "square": {
+        "short": "Cuadrado",
+        "label": "💅 Cuadrado — 5 puntos",
+        "description": "Tienes 4 respuestas posibles. Solo una es correcta. Un test clásico: seguro, pero no el más rentable.",
+        "reward": "Respuesta correcta: +5 puntos"
+      },
+      "cash": {
+        "short": "Cash",
+        "label": "👑 Cash — 10 puntos",
+        "description": "Sin QCM visible: buscas en la lista y seleccionas la respuesta correcta. Alto riesgo, gran recompensa.",
+        "reward": "Respuesta correcta: +10 puntos"
+      }
+    },
+    "questions": {
+      "whoIsThis": "¿Quién es esta queen?",
+      "firstFranchise": "¿En qué franquicia se descubrió esta queen?",
+      "seasonWinner": "¿Quién ganó la temporada {{season}} de {{franchise}}?"
+    },
+    "recap": {
+      "title": "¡Se acabó el lip sync!",
+      "vibeHigh": "¡Condragulations!",
+      "vibeMid": "Shantay, you stay!",
+      "vibeLow": "Sashay away...",
+      "correctCount": "{{correct}} / {{total}} correctas",
+      "replay": "Jugar de nuevo",
+      "newSetup": "Nueva configuración",
+      "correct": "Correcta",
+      "wrong": "Incorrecta",
+      "yourAnswer": "Respuesta dada",
+      "trueAnswer": "Respuesta correcta",
+      "emptyAnswer": "(vacío)",
+      "reviewImage": "Ver la imagen",
+      "wikiLink": "Ver ficha wiki"
+    },
+    "errors": {
+      "loadFailed": "No se pudo cargar el quiz",
+      "noQuestions": "No hay datos suficientes para generar un quiz con estos filtros"
+    }
+  },
   "home": {
     "title": "Drag Race Pokédex",
     "subtitle": "Porque sabes a quién estás hablando, pero no recuerdas en qué temporada estuvo...",

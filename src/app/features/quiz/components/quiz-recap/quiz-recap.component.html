@@ -1,0 +1,116 @@
+<section class="quiz-recap" aria-labelledby="quiz-recap-title">
+  <header class="quiz-recap__hero" [class.quiz-recap__hero--glow]="scoreRatio() >= 0.8">
+    <h1 id="quiz-recap-title" class="brand-title text-[clamp(1.75rem,5vw,2.25rem)] m-0">
+      {{ 'quiz.recap.title' | translate }}
+    </h1>
+    <p class="quiz-recap__vibe">{{ vibeKey() | translate }}</p>
+    <p class="quiz-recap__score" aria-live="polite">
+      <span class="quiz-recap__score-value">{{ store.score() }}</span>
+      <span class="quiz-recap__score-max">/ {{ store.maxScore() }}</span>
+    </p>
+    <p class="quiz-recap__correct">
+      {{
+        'quiz.recap.correctCount'
+          | translate: { correct: store.correctCount(), total: store.totalQuestions() }
+      }}
+    </p>
+  </header>
+
+  <div class="quiz-recap__actions">
+    <button type="button" class="quiz-btn quiz-btn--primary quiz-btn--pulse" (click)="onReplay()">
+      {{ 'quiz.recap.replay' | translate }}
+    </button>
+    <button type="button" class="quiz-btn quiz-btn--secondary" (click)="onBackToSetup()">
+      {{ 'quiz.recap.newSetup' | translate }}
+    </button>
+    <a routerLink="/" class="quiz-btn quiz-btn--ghost">{{ 'nav.pokedex' | translate }}</a>
+  </div>
+
+  <ol class="quiz-recap__list">
+    @for (item of store.recapItems(); track item.question.id; let i = $index) {
+      <li
+        class="quiz-recap__item filters-panel rounded-xl"
+        [class.quiz-recap__item--ok]="item.answer.correct"
+        [class.quiz-recap__item--ko]="!item.answer.correct"
+      >
+        <div class="quiz-recap__item-top">
+          <span class="quiz-recap__index">{{ i + 1 }}</span>
+          <span
+            class="quiz-recap__badge"
+            [class.quiz-recap__badge--ok]="item.answer.correct"
+            [class.quiz-recap__badge--ko]="!item.answer.correct"
+          >
+            {{
+              item.answer.correct
+                ? ('quiz.recap.correct' | translate)
+                : ('quiz.recap.wrong' | translate)
+            }}
+          </span>
+          <span class="quiz-recap__pts">
+            {{ item.answer.points }}/{{ item.answer.maxPoints }}
+          </span>
+        </div>
+        <p class="quiz-recap__q">
+          {{ item.question.promptKey | translate: item.question.promptParams }}
+        </p>
+        <p class="quiz-recap__meta">
+          {{ 'quiz.modes.' + item.answer.mode + '.short' | translate }}
+        </p>
+        <p class="quiz-recap__line">
+          <span class="quiz-recap__label">{{ 'quiz.recap.yourAnswer' | translate }}</span>
+          {{ item.answer.userAnswer || ('quiz.recap.emptyAnswer' | translate) }}
+        </p>
+        <p class="quiz-recap__line">
+          <span class="quiz-recap__label">{{ 'quiz.recap.trueAnswer' | translate }}</span>
+          {{ correctLabel(item.question.correctAnswers) }}
+        </p>
+        <div class="quiz-recap__links">
+          @for (wiki of item.question.correctAnswerWikis; track wiki.wikiUrl) {
+            <a
+              class="quiz-recap__wiki-btn"
+              [href]="wiki.wikiUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ 'quiz.recap.wikiLink' | translate }}
+              <span>({{ wiki.name }})</span>
+            </a>
+          }
+          @if (item.question.imageUrl) {
+            <button
+              type="button"
+              class="quiz-recap__image-btn"
+              (click)="openLightbox(item.question.imageUrl!)"
+            >
+              🔍 {{ 'quiz.recap.reviewImage' | translate }}
+            </button>
+          }
+        </div>
+      </li>
+    }
+  </ol>
+
+  @if (lightboxUrl(); as url) {
+    <div
+      class="quiz-recap__lightbox"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="'quiz.recap.reviewImage' | translate"
+      (click)="closeLightbox()"
+    >
+      <button
+        type="button"
+        class="quiz-recap__lightbox-close"
+        (click)="closeLightbox(); $event.stopPropagation()"
+      >
+        {{ 'quiz.play.closePreview' | translate }}
+      </button>
+      <img
+        class="quiz-recap__lightbox-img"
+        [src]="url"
+        [alt]="'quiz.play.mysteryAlt' | translate"
+        (click)="$event.stopPropagation()"
+      />
+    </div>
+  }
+</section>

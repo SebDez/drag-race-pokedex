@@ -1,0 +1,13 @@
+<div class="quiz-page min-h-full px-4 pb-8 max-w-[42rem] mx-auto sm:px-5 sm:pb-10">
+  @switch (store.phase()) {
+    @case ('setup') {
+      <app-quiz-setup />
+    }
+    @case ('playing') {
+      <app-quiz-play />
+    }
+    @case ('recap') {
+      <app-quiz-recap />
+    }
+  }
+</div>

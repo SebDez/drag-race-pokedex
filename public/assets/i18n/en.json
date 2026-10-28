@@ -1,7 +1,115 @@
 {
+  "nav": {
+    "main": "Main navigation",
+    "pokedex": "Pokédex",
+    "quiz": "Quiz",
+    "skipToContent": "Skip to content"
+  },
+  "quiz": {
+    "title": "Drag Race Quiz",
+    "intro": {
+      "headline": "Welcome to the Drag Race Quiz!",
+      "lead": "Think you know your queens? Time to prove it. 💅",
+      "description": "Each round has 10 randomly generated questions about Drag Race contestants.",
+      "questionsTitle": "Questions can cover things like:",
+      "questionsList": {
+        "whoIsThisQueen": "Who is this queen? (spot a contestant from their photo)",
+        "whichFranchise": "Which franchise is this queen from?",
+        "whoWonSeason": "Who won season 3 of the USA franchise?",
+        "otherTrivia": "And more Drag Race universe trivia…"
+      },
+      "everyGameDifferent": "Every game is different — no two sessions feel the same."
+    },
+    "scoring": {
+      "title": "🧠 Score",
+      "totalPoints": "Each quiz is worth 100 points max (10 questions × 10 Cash pts).",
+      "confidenceIntro": "Before answering, pick your confidence level with a difficulty mode. The riskier the mode, the more points you can earn."
+    },
+    "howToWin": {
+      "title": "👑 How to win",
+      "steps": {
+        "answerQuestions": "Answer all 10 questions",
+        "chooseRisk": "Choose your risk level wisely",
+        "scorePoints": "Score as many points as you can out of 100"
+      },
+      "goodLuck": "Good luck… and don’t flop it. 💄"
+    },
+    "setup": {
+      "quick": "Quick play",
+      "quickHint": "10 questions · all franchises",
+      "custom": "Custom",
+      "customHint": "10 questions · pick franchises",
+      "franchises": "Franchises",
+      "franchisesHint": "Nothing selected = all franchises.",
+      "startCustom": "Start the quiz",
+      "loading": "Building your quiz…"
+    },
+    "play": {
+      "progress": "Question {{current}} / {{total}}",
+      "chooseMode": "Pick your answer mode",
+      "points": "{{points}} pts",
+      "modeLocked": "{{mode}} mode — one shot only",
+      "cashLabel": "Your answer",
+      "cashPlaceholder": "Search then select…",
+      "cashSearchHint": "Type to filter, then pick an answer from the list.",
+      "cashEmpty": "No results — try another search.",
+      "cashSuggestions": "Possible answers",
+      "validate": "Submit",
+      "mysteryAlt": "Mystery queen",
+      "quit": "Quit",
+      "quitConfirm": "Leave this quiz? Your progress will be lost.",
+      "enlargeImage": "See larger",
+      "closePreview": "Close"
+    },
+    "modes": {
+      "duo": {
+        "short": "Duo",
+        "label": "✌️ Duo — 2 points",
+        "description": "Two possible answers. One is right, one is wrong. A 50/50 — the safest way to bank a few points.",
+        "reward": "Correct answer: +2 points"
+      },
+      "square": {
+        "short": "Square",
+        "label": "💅 Square — 5 points",
+        "description": "Four possible answers. Only one is correct. A classic multiple-choice: safer, but not the most lucrative.",
+        "reward": "Correct answer: +5 points"
+      },
+      "cash": {
+        "short": "Cash",
+        "label": "👑 Cash — 10 points",
+        "description": "No multiple-choice shown: search the list and select the right answer. High risk, high reward.",
+        "reward": "Correct answer: +10 points"
+      }
+    },
+    "questions": {
+      "whoIsThis": "Who is this queen?",
+      "firstFranchise": "Which franchise introduced this queen?",
+      "seasonWinner": "Who won season {{season}} of {{franchise}}?"
+    },
+    "recap": {
+      "title": "Lip sync is over!",
+      "vibeHigh": "Condragulations!",
+      "vibeMid": "Shantay, you stay!",
+      "vibeLow": "Sashay away...",
+      "correctCount": "{{correct}} / {{total}} correct",
+      "replay": "Play again",
+      "newSetup": "New settings",
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "yourAnswer": "Answer given",
+      "trueAnswer": "Correct answer",
+      "emptyAnswer": "(empty)",
+      "reviewImage": "Review image",
+      "wikiLink": "View wiki page"
+    },
+    "errors": {
+      "loadFailed": "Could not load the quiz",
+      "noQuestions": "Not enough data to build a quiz with these filters"
+    }
+  },
   "home": {
     "title": "Drag Race Pokédex",
-    "subtitle": "Because you know the queen… but you can't remember which season she was on...",
+    "subtitle": "Because you know the queen… but you can't remember which season they were on...",
     "loading": "Loading Queens…",
     "loadingMore": "Loading more…",
     "contestantsCount": "{{count}} Queens",
