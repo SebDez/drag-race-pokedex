@@ -133,7 +133,9 @@
     "seasons": "Seasons",
     "place": "Place",
     "challengeWins": "Wins",
-    "wikiLink": "Wiki page"
+    "wikiLink": "Wiki page",
+    "enlargeImage": "See larger",
+    "closePreview": "Close"
   },
   "errors": {
     "loadFailed": "Error loading contestants"

@@ -1,4 +1,5 @@
 @let c = contestant();
+@let detailImageUrl = getDetailImageUrl(c);
 <div
   class="contestant-detail-panel bg-[var(--color-surface)] border-t border-[var(--color-border)] p-4 sm:p-5"
   role="region"
@@ -6,15 +7,31 @@
 >
   <div class="flex gap-4 sm:gap-6 items-stretch">
     <!-- LEFT COLUMN -->
-    <aside class="shrink-0 w-28 sm:w-36 min-h-0" aria-hidden="true">
-      <div class="h-full min-h-0 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]">
-        <app-contestant-image
-          [src]="getDetailImageUrl(c)"
-          [alt]="c.dragName"
-          [width]="200"
-          [height]="200"
-        />
-      </div>
+    <aside class="shrink-0 w-28 sm:w-36 min-h-0">
+      @if (detailImageUrl) {
+        <button
+          type="button"
+          class="block h-full min-h-0 w-full rounded-lg overflow-hidden bg-[var(--color-bg-subtle)] cursor-zoom-in p-0 border-0"
+          (click)="openLightbox()"
+          [attr.aria-label]="'detail.enlargeImage' | translate"
+        >
+          <app-contestant-image
+            [src]="detailImageUrl"
+            [alt]="c.dragName"
+            [width]="200"
+            [height]="200"
+          />
+        </button>
+      } @else {
+        <div class="h-full min-h-0 rounded-lg overflow-hidden bg-[var(--color-bg-subtle)]" aria-hidden="true">
+          <app-contestant-image
+            [src]="''"
+            [alt]="c.dragName"
+            [width]="200"
+            [height]="200"
+          />
+        </div>
+      }
     </aside>
     <!-- RIGHT COLUMN -->
     <div class="min-w-0 flex-1 flex flex-col">

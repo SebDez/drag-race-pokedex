@@ -133,7 +133,9 @@
     "seasons": "Temporadas",
     "place": "Lugar",
     "challengeWins": "Victorias",
-    "wikiLink": "Ficha wiki"
+    "wikiLink": "Ficha wiki",
+    "enlargeImage": "Ver más grande",
+    "closePreview": "Cerrar"
   },
   "errors": {
     "loadFailed": "Error al cargar los contestants"

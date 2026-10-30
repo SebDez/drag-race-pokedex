@@ -1,0 +1,39 @@
+<div
+  class="image-lightbox"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="dialogLabelKey() | translate"
+  (click)="onBackdropClick()"
+>
+  <button
+    type="button"
+    class="image-lightbox__close"
+    (click)="onCloseClick($event)"
+  >
+    {{ closeLabelKey() | translate }}
+  </button>
+
+  <div class="image-lightbox__stage" (click)="$event.stopPropagation()">
+    <img
+      class="image-lightbox__img"
+      [src]="src()"
+      [alt]="alt()"
+      (mousemove)="onImageMove($event)"
+      (mouseleave)="onImageLeave()"
+    />
+
+    @if (loupe(); as glass) {
+      <div
+        class="image-lightbox__loupe"
+        aria-hidden="true"
+        [style.width.px]="loupeSize"
+        [style.height.px]="loupeSize"
+        [style.left.px]="glass.x"
+        [style.top.px]="glass.y"
+        [style.backgroundImage]="'url(' + src() + ')'"
+        [style.backgroundSize]="glass.bgSize"
+        [style.backgroundPosition]="glass.bgPos"
+      ></div>
+    }
+  </div>
+</div>

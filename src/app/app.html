@@ -20,3 +20,13 @@
 <main id="main-content" class="app-main">
   <router-outlet />
 </main>
+
+@if (lightbox.active(); as preview) {
+  <app-image-lightbox
+    [src]="preview.src"
+    [alt]="preview.alt"
+    [closeLabelKey]="preview.closeLabelKey"
+    [dialogLabelKey]="preview.dialogLabelKey"
+    (closed)="lightbox.close()"
+  />
+}
