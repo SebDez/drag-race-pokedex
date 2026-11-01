@@ -1,13 +1,17 @@
-/** Shape of `src/data/contestants_extract.json` (v2). */
+/** Shape of `src/data/contestants_extract.json` (v3). */
+
+export interface ContestantsExtractFranchiseStatDto {
+  franchise: string;
+  seasonCount: number;
+}
 
 export interface ContestantsExtractLastUpdateDto {
-  franchise: string;
-  season: string;
-  seasonPage: string;
-  added: number;
-  updated: number;
-  skipped: number;
-  failed: number;
+  seasonsProcessed: number;
+  seasonsEmpty: number;
+  seasonsFailed: number;
+  queensAdded: number;
+  queensFailed: number;
+  franchises: ContestantsExtractFranchiseStatDto[];
 }
 
 export interface ContestantsExtractMetaDto {

@@ -3,7 +3,33 @@
     "main": "Navigation principale",
     "pokedex": "Pokédex",
     "quiz": "Quiz",
+    "about": "À propos",
     "skipToContent": "Aller au contenu"
+  },
+  "footer": {
+    "label": "Informations de version",
+    "app": "App",
+    "extract": "Extract",
+    "aboutLink": "À propos"
+  },
+  "about": {
+    "eyebrow": "👑 Drag Race Pokédex",
+    "title": "Drag Race Pokédex — parce que le multivers est devenu trop grand",
+    "lead": "Tu vois une queen, tu la reconnais… et boom 💥 : UK ? Canada ? All Stars ? Quelle saison déjà ?",
+    "why": "J’ai créé cette appli pour ça. Juste pour avoir un petit coin fan où retrouver les queens et participantes de Drag Race quand la mémoire fait des siennes. Un Pokédex, mais pour les légendes en talons. 👠✨",
+    "what": "Feuilleter, chercher, se rappeler… et se faire un quiz pour voir si on est vraiment à jour ! 💅📚",
+    "tagline": "Shantay, you stay. 💖",
+    "versionsLabel": "Versions",
+    "appVersion": "App",
+    "extractVersion": "Extract",
+    "extractDate": "Données du",
+    "feedbackTitle": "Un bug ? Une idée ? 💌",
+    "feedbackLead": "Dis-nous ce qui coince ou ce qui te ferait plaisir — un petit formulaire, et c’est envoyé.",
+    "feedbackCta": "Envoyer un retour",
+    "feedbackSoon": "Le formulaire de retours arrive bientôt.",
+    "dataSource": "Les données viennent du projet",
+    "dataSourceLink": "Drag Race Contestants JSON Dataset",
+    "disclaimer": "Projet fan-made, non affilié à RuPaul’s Drag Race, World of Wonder, VH1, MTV ou toute entité officielle. Fourni tel quel, sans garantie d’exhaustivité."
   },
   "quiz": {
     "title": "Quiz Drag Race",

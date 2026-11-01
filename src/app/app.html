@@ -13,6 +13,9 @@
     <a routerLink="/quiz" routerLinkActive="app-nav__link--active" class="app-nav__link">
       {{ 'nav.quiz' | translate }}
     </a>
+    <a routerLink="/about" routerLinkActive="app-nav__link--active" class="app-nav__link">
+      {{ 'nav.about' | translate }}
+    </a>
   </nav>
   <app-lang-selector />
 </header>
@@ -20,6 +23,19 @@
 <main id="main-content" class="app-main">
   <router-outlet />
 </main>
+
+<footer class="app-footer" [attr.aria-label]="'footer.label' | translate">
+  <p class="app-footer__versions">
+    <span>{{ 'footer.app' | translate }} {{ info.appVersion }}</span>
+    @if (info.extractMeta(); as meta) {
+      <span aria-hidden="true">·</span>
+      <span>{{ 'footer.extract' | translate }} {{ meta.version }}</span>
+      <span aria-hidden="true">·</span>
+      <span>{{ meta.generatedAt | date: 'mediumDate' }}</span>
+    }
+  </p>
+  <a routerLink="/about" class="app-footer__about">{{ 'footer.aboutLink' | translate }}</a>
+</footer>
 
 @if (lightbox.active(); as preview) {
   <app-image-lightbox

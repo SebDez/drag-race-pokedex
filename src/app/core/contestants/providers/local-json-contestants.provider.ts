@@ -14,7 +14,10 @@ import type {
   ContestantSection,
   ContestantsViewModel,
 } from '@app/core/contestants/models/contestant-view.model';
-import type { ContestantsExtractDto } from '../models/contestant.dto';
+import type {
+  ContestantsExtractDto,
+  ContestantsExtractMetaDto,
+} from '../models/contestant.dto';
 import { mapContestantsExtract } from '../utils/contestant.mapper';
 
 interface SeasonPageEntry {
@@ -26,7 +29,8 @@ interface SeasonPageEntry {
 @Injectable({ providedIn: 'root' })
 export class LocalJsonContestantsProvider extends ContestantsDataProvider {
   private readonly dataPath = '/data/contestants_extract.json';
-  private cache$: Observable<Contestant[]> | null = null;
+  private extract$: Observable<ContestantsExtractDto> | null = null;
+  private contestants$: Observable<Contestant[]> | null = null;
 
   constructor(private http: HttpClient) {
     super();
@@ -40,14 +44,27 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
     return this.getRawContestants$();
   }
 
+  override getExtractMeta(): Observable<ContestantsExtractMetaDto | null> {
+    return this.getExtract$().pipe(map((data) => data?.meta ?? null));
+  }
+
+  private getExtract$(): Observable<ContestantsExtractDto> {
+    if (!this.extract$) {
+      this.extract$ = this.http.get<ContestantsExtractDto>(this.dataPath).pipe(
+        shareReplay({ bufferSize: 1, refCount: false }),
+      );
+    }
+    return this.extract$;
+  }
+
   private getRawContestants$(): Observable<Contestant[]> {
-    if (!this.cache$) {
-      this.cache$ = this.http.get<ContestantsExtractDto>(this.dataPath).pipe(
+    if (!this.contestants$) {
+      this.contestants$ = this.getExtract$().pipe(
         map((data) => mapContestantsExtract(data)),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
     }
-    return this.cache$;
+    return this.contestants$;
   }
 
   private buildResult(all: Contestant[], query: ContestantsQuery): ContestantsFetchResult {

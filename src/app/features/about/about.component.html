@@ -1,0 +1,65 @@
+<section class="about">
+  <header class="about__hero">
+    <p class="about__eyebrow">{{ 'about.eyebrow' | translate }}</p>
+    <h1 class="about__title">
+      <img
+        class="about__title-gif"
+        src="/assets/images/about-hero.gif"
+        [alt]="'about.title' | translate"
+        width="640"
+        height="360"
+      />
+    </h1>
+    <p class="about__lead">{{ 'about.lead' | translate }}</p>
+  </header>
+
+  <div class="about__body">
+    <p>{{ 'about.why' | translate }}</p>
+    <p>{{ 'about.what' | translate }}</p>
+    <p class="about__tagline">{{ 'about.tagline' | translate }}</p>
+  </div>
+
+  <aside class="about__versions" [attr.aria-label]="'about.versionsLabel' | translate">
+    <p>
+      <span class="about__versions-label">{{ 'about.appVersion' | translate }}</span>
+      {{ info.appVersion }}
+    </p>
+    @if (info.extractMeta(); as meta) {
+      <p>
+        <span class="about__versions-label">{{ 'about.extractVersion' | translate }}</span>
+        {{ meta.version }}
+      </p>
+      <p>
+        <span class="about__versions-label">{{ 'about.extractDate' | translate }}</span>
+        {{ meta.generatedAt | date: 'mediumDate' }}
+      </p>
+    }
+  </aside>
+
+  <section class="about__feedback">
+    <h2>{{ 'about.feedbackTitle' | translate }}</h2>
+    <p>{{ 'about.feedbackLead' | translate }}</p>
+    @if (info.feedbackConfigured) {
+      <a
+        class="about__cta"
+        [href]="info.feedbackFormUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {{ 'about.feedbackCta' | translate }}
+      </a>
+    } @else {
+      <p class="about__feedback-soon">{{ 'about.feedbackSoon' | translate }}</p>
+    }
+  </section>
+
+  <section class="about__meta">
+    <p>
+      {{ 'about.dataSource' | translate }}
+      <a [href]="info.datasetRepoUrl" target="_blank" rel="noopener noreferrer">
+        {{ 'about.dataSourceLink' | translate }}
+      </a>
+    </p>
+    <p class="about__disclaimer">{{ 'about.disclaimer' | translate }}</p>
+  </section>
+</section>
