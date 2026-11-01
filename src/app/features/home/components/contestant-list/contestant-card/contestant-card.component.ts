@@ -34,9 +34,9 @@ export class ContestantCardComponent {
   readonly isExpanded = signal<boolean>(false);
   protected readonly detailPanelId = `contestant-detail-${++ContestantCardComponent.nextDetailId}`;
 
-  /** Mini promo only — full wiki `imageUrl` is often multi‑MB and freezes expand/list decode. */
+  /** List thumbnails use the main wiki `imageUrl` (promo is reserved for detail). */
   protected getCardImageUrl(c: Contestant): string {
-    return c.miniPromoImageUrl?.trim() || '';
+    return c.imageUrl?.trim() || '';
   }
 
   protected isDisplayedSeasonWinner(c: Contestant): boolean {

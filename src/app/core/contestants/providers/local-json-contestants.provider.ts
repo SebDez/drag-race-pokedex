@@ -14,6 +14,8 @@ import type {
   ContestantSection,
   ContestantsViewModel,
 } from '@app/core/contestants/models/contestant-view.model';
+import type { ContestantsExtractDto } from '../models/contestant.dto';
+import { mapContestantsExtract } from '../utils/contestant.mapper';
 
 interface SeasonPageEntry {
   contestant: Contestant;
@@ -40,8 +42,8 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
 
   private getRawContestants$(): Observable<Contestant[]> {
     if (!this.cache$) {
-      this.cache$ = this.http.get<Contestant[]>(this.dataPath).pipe(
-        map((data) => (Array.isArray(data) ? data : [])),
+      this.cache$ = this.http.get<ContestantsExtractDto>(this.dataPath).pipe(
+        map((data) => mapContestantsExtract(data)),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
     }

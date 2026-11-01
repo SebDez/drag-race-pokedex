@@ -57,9 +57,10 @@ function uniqueStrings(values: string[]): string[] {
   return [...new Set(values.filter((v) => v.trim().length > 0))];
 }
 
-/** Prefer main imageUrl — mini promos often print the queen's name on the photo. */
+/** Quiz images use the main wiki `imageUrl` only (promo is reserved for detail). */
 function contestantImage(c: Contestant): string | null {
-  return c.imageUrl || c.miniPromoImageUrl || null;
+  const url = c.imageUrl?.trim();
+  return url || null;
 }
 
 /** Queens who competed in at least one of the selected franchises (or all if empty). */

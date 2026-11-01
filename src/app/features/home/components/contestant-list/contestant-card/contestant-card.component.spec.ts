@@ -70,18 +70,18 @@ describe('ContestantCardComponent', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector(`#${detailId}`)).toBeTruthy();
   });
 
-  it('getCardImageUrl should use miniPromo only (never full wiki imageUrl)', () => {
+  it('getCardImageUrl should use imageUrl only (promo is for detail)', () => {
     const fixture = TestBed.createComponent(ContestantCardComponent);
     const comp = fixture.componentInstance;
-    const withMini = createContestant({
+    const withBoth = createContestant({
       miniPromoImageUrl: 'https://promo.jpg',
       imageUrl: 'https://main.jpg',
     });
-    const withoutMini = createContestant({
-      miniPromoImageUrl: '',
-      imageUrl: 'https://main.jpg',
+    const withoutMain = createContestant({
+      miniPromoImageUrl: 'https://promo.jpg',
+      imageUrl: '',
     });
-    expect(comp['getCardImageUrl'](withMini)).toBe('https://promo.jpg');
-    expect(comp['getCardImageUrl'](withoutMini)).toBe('');
+    expect(comp['getCardImageUrl'](withBoth)).toBe('https://main.jpg');
+    expect(comp['getCardImageUrl'](withoutMain)).toBe('');
   });
 });
