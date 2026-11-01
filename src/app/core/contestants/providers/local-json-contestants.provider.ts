@@ -34,6 +34,10 @@ export class LocalJsonContestantsProvider extends ContestantsDataProvider {
     return this.getRawContestants$().pipe(map((all) => this.buildResult(all, query)));
   }
 
+  override getAllContestants(): Observable<Contestant[]> {
+    return this.getRawContestants$();
+  }
+
   private getRawContestants$(): Observable<Contestant[]> {
     if (!this.cache$) {
       this.cache$ = this.http.get<Contestant[]>(this.dataPath).pipe(

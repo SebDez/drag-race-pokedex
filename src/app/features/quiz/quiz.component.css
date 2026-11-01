@@ -1,0 +1,1 @@
+/* Shared quiz button styles (used by setup / play / recap children via encapsulation pierce not needed — duplicated lightly in global quiz section below via :host ::ng-deep is avoided; children import shared via styles.css) */

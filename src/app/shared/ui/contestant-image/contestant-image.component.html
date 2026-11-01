@@ -36,6 +36,7 @@
       class="relative z-10 h-full w-full transition-opacity duration-300 ease-out"
       [class.object-cover]="objectFit() === 'cover'"
       [class.object-contain]="objectFit() === 'contain'"
+      [style.object-position]="objectPosition()"
       [class.opacity-0]="!imageDecoded()"
       [class.opacity-100]="imageDecoded()"
       (load)="onLoad()"

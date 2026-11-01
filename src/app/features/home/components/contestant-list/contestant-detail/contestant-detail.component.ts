@@ -8,6 +8,7 @@ import { WinnerBadgeComponent } from '@app/shared/ui/badges/winner-badge/winner-
 import { FranchiseBadgeComponent } from '@app/shared/ui/badges/franchise-badge/franchise-badge.component';
 import { PlaceOrdinalPipe } from '@app/core/pipes/place-ordinal.pipe';
 import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contestant-image.component';
+import { ImageLightboxService } from '@app/shared/ui/image-lightbox/image-lightbox.service';
 import { ContestantSectionSeason } from '@app/core/contestants/models/contestant-view.model';
 
 @Component({
@@ -26,6 +27,7 @@ import { ContestantSectionSeason } from '@app/core/contestants/models/contestant
 })
 export class ContestantDetailComponent {
   private readonly translate = inject(TranslateService);
+  private readonly lightbox = inject(ImageLightboxService);
 
   readonly contestant = input.required<Contestant>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
@@ -38,9 +40,14 @@ export class ContestantDetailComponent {
     { initialValue: 'en' },
   );
 
-  /** Mini promo only — never fall back to full wiki assets (decode jank on expand). */
+  /** Detail panel uses promo (`miniPromoImageUrl` ← `promoImageURL`). */
   protected getDetailImageUrl(c: Contestant): string {
     return c.miniPromoImageUrl?.trim() || '';
+  }
+
+  protected openLightbox(): void {
+    const c = this.contestant();
+    this.lightbox.open(this.getDetailImageUrl(c), c.dragName);
   }
 
   protected isDisplayedSeasonWinner(c: Contestant): boolean {

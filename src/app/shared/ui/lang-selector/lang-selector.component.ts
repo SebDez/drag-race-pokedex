@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [TranslateModule],
   template: `
-    <div class="fixed top-3 right-3 z-[100]">
+    <div class="relative z-[100] shrink-0">
       <button
         type="button"
         class="flex items-center justify-center gap-2 rounded-full border border-(--color-pink) bg-(--color-surface-elevated) px-3 py-1.5 text-sm font-semibold uppercase tracking-wide text-(--color-text) shadow-sm hover:bg-(--color-pink)/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"

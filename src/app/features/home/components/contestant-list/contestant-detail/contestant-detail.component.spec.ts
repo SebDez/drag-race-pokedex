@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ContestantDetailComponent } from './contestant-detail.component';
 import { provideTranslateMock } from '@app/testing/translate-mock';
 import { createContestant } from '@app/testing/contestant-fixture';
+import { ImageLightboxService } from '@app/shared/ui/image-lightbox/image-lightbox.service';
 
 describe('ContestantDetailComponent', () => {
   beforeEach(async () => {
@@ -69,7 +70,7 @@ describe('ContestantDetailComponent', () => {
     expect(el.textContent).toContain('S1');
   });
 
-  it('getDetailImageUrl should use miniPromo only (never full wiki imageUrl)', () => {
+  it('getDetailImageUrl should use promo only (never list imageUrl)', () => {
     const fixture = TestBed.createComponent(ContestantDetailComponent);
     const comp = fixture.componentInstance;
     const withBoth = createContestant({
@@ -80,4 +81,30 @@ describe('ContestantDetailComponent', () => {
     const onlyMain = createContestant({ imageUrl: 'https://main.jpg', miniPromoImageUrl: '' });
     expect(comp['getDetailImageUrl'](onlyMain)).toBe('');
   });
+
+  it('should open root lightbox when promo image is clicked', () => {
+    const contestant = createContestant({
+      dragName: 'Fancy Queen',
+      miniPromoImageUrl: 'https://promo.jpg',
+    });
+    const fixture = TestBed.createComponent(ContestantDetailComponent);
+    const lightbox = TestBed.inject(ImageLightboxService);
+    fixture.componentRef.setInput('contestant', contestant);
+    fixture.detectChanges();
+
+    const button = (fixture.nativeElement as HTMLElement).querySelector(
+      'aside button',
+    ) as HTMLButtonElement | null;
+    expect(button).toBeTruthy();
+    button!.click();
+
+    expect(lightbox.active()).toEqual({
+      src: 'https://promo.jpg',
+      alt: 'Fancy Queen',
+      closeLabelKey: 'detail.closePreview',
+      dialogLabelKey: 'detail.enlargeImage',
+    });
+  });
 });
+
+

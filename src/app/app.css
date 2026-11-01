@@ -1,4 +1,84 @@
+.app-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.app-skip:focus {
+  left: 0.75rem;
+  top: 0.75rem;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.app-nav__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.app-nav__link:hover {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-pink) 10%, transparent);
+}
+
+.app-nav__link--active {
+  color: var(--color-pink-dark);
+  background: color-mix(in srgb, var(--color-pink) 16%, var(--color-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-pink) 28%, transparent);
+}
+
 .app-main {
-  min-height: 100vh;
+  min-height: calc(100vh - 3.25rem);
   isolation: isolate;
+}
+
+@media (min-width: 480px) {
+  .app-header {
+    padding: 0.75rem 1.1rem;
+  }
+
+  .app-nav__link {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-nav__link {
+    transition: none;
+  }
 }

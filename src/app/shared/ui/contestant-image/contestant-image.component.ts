@@ -28,6 +28,8 @@ export class ContestantImageComponent {
   readonly height = input.required<number>();
   readonly priority = input(false);
   readonly objectFit = input<'cover' | 'contain'>('cover');
+  /** CSS object-position, e.g. `center top` for portrait heads. */
+  readonly objectPosition = input('center');
   readonly wrapperClass = input<string>('');
 
   protected readonly loadFailed = signal(false);

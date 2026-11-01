@@ -1,0 +1,109 @@
+<section class="quiz-setup" aria-labelledby="quiz-setup-title">
+  <header class="brand-header text-center">
+    <h1 id="quiz-setup-title" class="brand-title text-[clamp(1.85rem,5.5vw,2.5rem)] m-0">
+      {{ 'quiz.title' | translate }}
+    </h1>
+  </header>
+
+  <div class="quiz-setup__intro filters-panel rounded-2xl p-4 sm:p-5">
+    <h2 class="quiz-setup__intro-headline">{{ 'quiz.intro.headline' | translate }}</h2>
+    <p class="quiz-setup__intro-lead">{{ 'quiz.intro.lead' | translate }}</p>
+    <p class="quiz-setup__intro-text">{{ 'quiz.intro.description' | translate }}</p>
+
+    <p class="quiz-setup__intro-subtitle">{{ 'quiz.intro.questionsTitle' | translate }}</p>
+    <ul class="quiz-setup__intro-list">
+      <li>{{ 'quiz.intro.questionsList.whoIsThisQueen' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.whichFranchise' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.whoWonSeason' | translate }}</li>
+      <li>{{ 'quiz.intro.questionsList.otherTrivia' | translate }}</li>
+    </ul>
+    <p class="quiz-setup__intro-text">{{ 'quiz.intro.everyGameDifferent' | translate }}</p>
+
+    <h3 class="quiz-setup__section-title">{{ 'quiz.scoring.title' | translate }}</h3>
+    <p class="quiz-setup__intro-text">{{ 'quiz.scoring.totalPoints' | translate }}</p>
+    <p class="quiz-setup__intro-text">{{ 'quiz.scoring.confidenceIntro' | translate }}</p>
+
+    <div class="quiz-setup__mode-cards">
+      @for (mode of introModes; track mode) {
+        <article class="quiz-setup__mode-card">
+          <h4 class="quiz-setup__mode-label">{{ 'quiz.modes.' + mode + '.label' | translate }}</h4>
+          <p class="quiz-setup__mode-desc">{{ 'quiz.modes.' + mode + '.description' | translate }}</p>
+          <p class="quiz-setup__mode-reward">{{ 'quiz.modes.' + mode + '.reward' | translate }}</p>
+        </article>
+      }
+    </div>
+
+    <h3 class="quiz-setup__section-title">{{ 'quiz.howToWin.title' | translate }}</h3>
+    <ol class="quiz-setup__intro-list quiz-setup__intro-list--ordered">
+      <li>{{ 'quiz.howToWin.steps.answerQuestions' | translate }}</li>
+      <li>{{ 'quiz.howToWin.steps.chooseRisk' | translate }}</li>
+      <li>{{ 'quiz.howToWin.steps.scorePoints' | translate }}</li>
+    </ol>
+    <p class="quiz-setup__intro-luck">{{ 'quiz.howToWin.goodLuck' | translate }}</p>
+  </div>
+
+  @if (store.error()) {
+    <p class="quiz-setup__error" role="alert">{{ store.error() | translate }}</p>
+  }
+
+  <div class="quiz-setup__actions">
+    <button
+      type="button"
+      class="quiz-btn quiz-btn--primary quiz-btn--pulse"
+      [disabled]="store.loading()"
+      (click)="onQuickStart()"
+    >
+      <span class="quiz-btn__label">{{ 'quiz.setup.quick' | translate }}</span>
+      <span class="quiz-btn__hint">{{ 'quiz.setup.quickHint' | translate }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="quiz-btn quiz-btn--secondary"
+      [attr.aria-expanded]="store.showCustom()"
+      (click)="onToggleCustom()"
+    >
+      <span class="quiz-btn__label">{{ 'quiz.setup.custom' | translate }}</span>
+      <span class="quiz-btn__hint">{{ 'quiz.setup.customHint' | translate }}</span>
+    </button>
+  </div>
+
+  @if (store.showCustom()) {
+    <div
+      #customPanel
+      class="quiz-setup__custom filters-panel rounded-2xl p-4 sm:p-5 quiz-setup__custom-enter"
+      tabindex="-1"
+      [attr.aria-label]="'quiz.setup.custom' | translate"
+    >
+      <fieldset class="quiz-setup__fieldset">
+        <legend class="quiz-setup__legend">{{ 'quiz.setup.franchises' | translate }}</legend>
+        <p class="quiz-setup__hint">{{ 'quiz.setup.franchisesHint' | translate }}</p>
+        <div class="quiz-setup__franchise-list">
+          @for (franchise of franchiseNames; track franchise) {
+            <label class="quiz-setup__franchise">
+              <input
+                type="checkbox"
+                [checked]="isFranchiseSelected(franchise)"
+                (change)="onToggleFranchise(franchise)"
+              />
+              <span>{{ franchise }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <button
+        type="button"
+        class="quiz-btn quiz-btn--primary mt-5 w-full"
+        [disabled]="store.loading()"
+        (click)="onStartCustom()"
+      >
+        {{ 'quiz.setup.startCustom' | translate }}
+      </button>
+    </div>
+  }
+
+  @if (store.loading()) {
+    <p class="quiz-setup__loading" aria-live="polite">{{ 'quiz.setup.loading' | translate }}</p>
+  }
+</section>

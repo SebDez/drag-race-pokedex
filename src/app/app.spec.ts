@@ -22,11 +22,12 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render router-outlet and lang selector', () => {
+  it('should render router-outlet, nav and lang selector', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-lang-selector')).toBeTruthy();
+    expect(compiled.querySelector('nav.app-nav')).toBeTruthy();
     expect(compiled.querySelector('main.app-main')).toBeTruthy();
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
