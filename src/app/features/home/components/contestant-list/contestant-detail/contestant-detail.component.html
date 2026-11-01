@@ -1,7 +1,11 @@
 @let c = contestant();
 @let detailImageUrl = getDetailImageUrl(c);
 <div
-  class="contestant-detail-panel bg-[var(--color-surface)] border-t border-[var(--color-border)] p-4 sm:p-5"
+  class="contestant-detail-panel bg-[var(--color-surface)] p-4 sm:p-5"
+  [ngClass]="{
+    'rounded-xl border border-[var(--color-border)]': variant() === 'pane',
+    'border-0': variant() === 'fullscreen',
+  }"
   role="region"
   [attr.aria-label]="c.dragName"
 >

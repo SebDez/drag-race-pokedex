@@ -7,6 +7,7 @@ import { provideTranslateMock } from '@app/testing/translate-mock';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
 import { DEFAULT_CONTESTANT_FILTERS } from '@app/core/contestants/models/contestant-view.model';
+import { createContestant } from '@app/testing/contestant-fixture';
 
 describe('HomeComponent', () => {
   let loadContestantsSpy: unknown;
@@ -25,6 +26,7 @@ describe('HomeComponent', () => {
       setGroupMode: () => {},
       setSortMode: () => {},
       setFilters: () => {},
+      resetAllFilters: () => {},
       loadContestants: () => {},
       loadMore: () => {},
     };
@@ -122,5 +124,98 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('app-contestant-list')).toBeTruthy();
+  });
+
+  it('should show empty placeholder when filteredCount is zero', () => {
+    const store = TestBed.inject(ContestantsStore) as unknown as {
+      loading: ReturnType<typeof signal>;
+      error: ReturnType<typeof signal>;
+      groupMode: ReturnType<typeof signal>;
+      sortMode: ReturnType<typeof signal>;
+      filters: ReturnType<typeof signal>;
+      filteredCount: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
+      loadContestants: () => void;
+    };
+    store.loading = signal(false);
+    store.error = signal(null);
+    store.groupMode = signal(GroupMode.All);
+    store.sortMode = signal(SortMode.DragNameAsc);
+    store.filters = signal({
+      ...DEFAULT_CONTESTANT_FILTERS,
+      searchQuery: 'zzzz',
+    });
+    store.viewModel = signal({ mode: GroupMode.All, list: [], sections: null });
+    store.filteredCount = signal(0);
+
+    const fixture = TestBed.createComponent(HomeComponent);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('[data-testid="contestant-list-empty"]')).toBeTruthy();
+    expect(el.querySelector('app-contestant-list')).toBeFalsy();
+  });
+
+  it('should show detail pane empty state on desktop when nothing selected', () => {
+    const fixture = TestBed.createComponent(HomeComponent);
+    fixture.componentInstance['isDesktop'].set(true);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('home.selectPrompt');
+  });
+
+  it('should open mobile detail dialog after selection while keeping the list', () => {
+    const store = TestBed.inject(ContestantsStore) as unknown as {
+      filteredCount: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
+    };
+    store.filteredCount = signal(1);
+    store.viewModel = signal({
+      mode: GroupMode.All,
+      list: [createContestant({ dragName: 'Mobile Queen' })],
+      sections: null,
+    });
+
+    const contestant = createContestant({ dragName: 'Mobile Queen' });
+    const fixture = TestBed.createComponent(HomeComponent);
+    fixture.componentInstance['isDesktop'].set(false);
+    fixture.componentInstance['onSelectContestant']({ contestant });
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-contestant-list')).toBeTruthy();
+    expect(document.querySelector('[data-testid="mobile-detail-dialog"]')).toBeTruthy();
+    expect(document.querySelector('app-contestant-detail')).toBeTruthy();
+  });
+
+  it('should close mobile detail dialog when close is clicked', () => {
+    const store = TestBed.inject(ContestantsStore) as unknown as {
+      filteredCount: ReturnType<typeof signal>;
+      viewModel: ReturnType<typeof signal>;
+    };
+    store.filteredCount = signal(1);
+    store.viewModel = signal({
+      mode: GroupMode.All,
+      list: [createContestant({ dragName: 'Back Queen' })],
+      sections: null,
+    });
+
+    const contestant = createContestant({ dragName: 'Back Queen' });
+    const fixture = TestBed.createComponent(HomeComponent);
+    fixture.componentInstance['isDesktop'].set(false);
+    fixture.componentInstance['onSelectContestant']({ contestant });
+    fixture.detectChanges();
+    const closeBtn = document.querySelector(
+      '[data-testid="mobile-detail-close"]',
+    ) as HTMLElement | null;
+    closeBtn?.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance['selectedContestant']()).toBeNull();
+    expect(document.querySelector('[data-testid="mobile-detail-dialog"]')).toBeFalsy();
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-contestant-list')).toBeTruthy();
+  });
+
+  afterEach(() => {
+    document.querySelectorAll('[data-testid="mobile-detail-dialog"]').forEach((el) => el.remove());
+    document.querySelector('app-root')?.removeAttribute('inert');
+    document.body.style.overflow = '';
   });
 });

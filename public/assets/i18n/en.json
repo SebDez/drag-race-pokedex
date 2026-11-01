@@ -34,7 +34,7 @@
   "quiz": {
     "title": "Drag Race Quiz",
     "intro": {
-      "headline": "Welcome to the Drag Race Quiz!",
+      "headline": "Discover the rules",
       "lead": "Think you know your queens? Time to prove it. 💅",
       "description": "Each round has 10 randomly generated questions about Drag Race contestants.",
       "questionsTitle": "Questions can cover things like:",
@@ -141,7 +141,19 @@
     "contestantsCount": "{{count}} Queens",
     "contestantsCountPartial": "Showing {{shown}} of {{count}} queens",
     "scrollForMore": "Scroll for more",
-    "endOfList": "You've reached the end"
+    "endOfList": "You've reached the end",
+    "selectPrompt": "Select a queen from the list to see her profile.",
+    "backToList": "Back to Pokédex",
+    "closeDetail": "Close profile",
+    "detailPane": "Queen profile",
+    "noResultsTitle": "No queens found",
+    "noResultsHint": "Nothing matches your search and current filters.",
+    "currentFilters": "Current filters",
+    "filterRecap": {
+      "search": "Search: “{{query}}”",
+      "franchise": "Franchise: {{name}}",
+      "season": "Season: {{franchise}} S{{season}}"
+    }
   },
   "common": {
     "win": "1 win",
@@ -161,7 +173,8 @@
     "challengeWins": "Wins",
     "wikiLink": "Wiki page",
     "enlargeImage": "See larger",
-    "closePreview": "Close"
+    "closePreview": "Close",
+    "zoomHint": "Hover the image to zoom"
   },
   "errors": {
     "loadFailed": "Error loading contestants"
@@ -181,9 +194,14 @@
     "winnersOnly": "Winners only",
     "allFranchises": "All franchises",
     "showAllFranchises": "Show all franchises",
-    "franchiseTreeHint": "Nothing selected = all franchises. Check items to narrow the list.",
+    "franchiseTreeHint": "Nothing selected = all franchises. Expand a franchise to filter by season.",
     "seasonShort": "S{{season}}",
-    "resetAll": "Reset all filters"
+    "resetAll": "Reset all filters",
+    "expandFranchise": "Show seasons",
+    "collapseFranchise": "Hide seasons",
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove filter {{label}}",
+    "winnersOnlyChip": "Winners"
   },
   "groupBy": {
     "label": "Group by",

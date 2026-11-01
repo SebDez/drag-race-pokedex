@@ -20,24 +20,38 @@
   </div>
 
   @if (store.currentQuestion(); as question) {
-    <article class="quiz-play__card filters-panel rounded-2xl p-4 sm:p-5" [attr.data-qid]="question.id">
+    <article
+      class="quiz-play__card filters-panel rounded-2xl p-4 sm:p-5"
+      [class.quiz-play__card--with-image]="!!question.imageUrl"
+      [class.quiz-play__card--franchise-image]="question.type === 'seasonWinner'"
+      [attr.data-qid]="question.id"
+    >
       <h2 class="quiz-play__prompt">
         {{ question.promptKey | translate: question.promptParams }}
       </h2>
 
       @if (question.imageUrl) {
         <div class="quiz-play__image-wrap">
-          <div class="quiz-play__image">
+          <button
+            type="button"
+            class="quiz-play__image quiz-play__image--button"
+            (click)="openLightbox()"
+            [attr.aria-label]="'quiz.play.enlargeImage' | translate"
+          >
             <app-contestant-image
               [src]="question.imageUrl"
-              [alt]="'quiz.play.mysteryAlt' | translate"
+              [alt]="
+                question.type === 'seasonWinner'
+                  ? question.promptParams['franchise']
+                  : ('quiz.play.mysteryAlt' | translate)
+              "
               [width]="280"
-              [height]="360"
+              [height]="question.type === 'seasonWinner' ? 180 : 360"
               [priority]="true"
-              objectFit="cover"
-              objectPosition="center top"
+              [objectFit]="question.type === 'seasonWinner' ? 'contain' : 'cover'"
+              [objectPosition]="question.type === 'seasonWinner' ? 'center' : 'center top'"
             />
-          </div>
+          </button>
           <button
             type="button"
             class="quiz-play__enlarge"
@@ -125,29 +139,5 @@
         </div>
       }
     </article>
-
-    @if (lightboxOpen() && question.imageUrl) {
-      <div
-        class="quiz-play__lightbox"
-        role="dialog"
-        aria-modal="true"
-        [attr.aria-label]="'quiz.play.enlargeImage' | translate"
-        (click)="closeLightbox()"
-      >
-        <button
-          type="button"
-          class="quiz-play__lightbox-close"
-          (click)="closeLightbox(); $event.stopPropagation()"
-        >
-          {{ 'quiz.play.closePreview' | translate }}
-        </button>
-        <img
-          class="quiz-play__lightbox-img"
-          [src]="question.imageUrl"
-          [alt]="'quiz.play.mysteryAlt' | translate"
-          (click)="$event.stopPropagation()"
-        />
-      </div>
-    }
   }
 </section>

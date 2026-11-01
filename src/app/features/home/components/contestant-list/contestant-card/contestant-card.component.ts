@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
@@ -7,7 +7,11 @@ import { WinnerBadgeComponent } from '@app/shared/ui/badges/winner-badge/winner-
 import { FranchiseBadgeComponent } from '@app/shared/ui/badges/franchise-badge/franchise-badge.component';
 import { ContestantSectionSeason } from '@app/core/contestants/models/contestant-view.model';
 import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contestant-image.component';
-import { ContestantDetailComponent } from '../contestant-detail/contestant-detail.component';
+
+export interface ContestantSelectEvent {
+  contestant: Contestant;
+  displayedSeason?: ContestantSectionSeason;
+}
 
 @Component({
   selector: 'app-contestant-card',
@@ -19,20 +23,15 @@ import { ContestantDetailComponent } from '../contestant-detail/contestant-detai
     WinsBadgeComponent,
     WinnerBadgeComponent,
     FranchiseBadgeComponent,
-    // Only referenced inside @defer → compiler still emits a separate chunk
-    ContestantDetailComponent,
   ],
   templateUrl: './contestant-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContestantCardComponent {
-  private static nextDetailId = 0;
-
   readonly contestant = input.required<Contestant>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
-
-  readonly isExpanded = signal<boolean>(false);
-  protected readonly detailPanelId = `contestant-detail-${++ContestantCardComponent.nextDetailId}`;
+  readonly selected = input(false);
+  readonly selectContestant = output<ContestantSelectEvent>();
 
   /** List thumbnails use the main wiki `imageUrl` (promo is reserved for detail). */
   protected getCardImageUrl(c: Contestant): string {
@@ -52,6 +51,9 @@ export class ContestantCardComponent {
   }
 
   protected onClick(): void {
-    this.isExpanded.update((open) => !open);
+    this.selectContestant.emit({
+      contestant: this.contestant(),
+      displayedSeason: this.displayedSeason(),
+    });
   }
 }

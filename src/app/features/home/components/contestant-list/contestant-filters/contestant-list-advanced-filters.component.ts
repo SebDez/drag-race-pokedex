@@ -31,6 +31,12 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+export interface ActiveFilterChip {
+  key: string;
+  label: string;
+  kind: 'winners' | 'franchise' | 'season';
+}
+
 @Component({
   selector: 'app-contestant-list-advanced-filters',
   standalone: true,
@@ -52,8 +58,32 @@ export class ContestantListAdvancedFiltersComponent implements OnDestroy {
 
   protected readonly dialogOpen = signal(false);
   protected readonly dialogTitleId = 'contestant-filters-dialog-title';
+  protected readonly expandedFranchises = signal<ReadonlySet<string>>(new Set());
 
   protected readonly franchiseNames = computed(() => FRANCHISE_NAMES);
+
+  protected readonly activeChips = computed((): ActiveFilterChip[] => {
+    const f = this.filters();
+    const chips: ActiveFilterChip[] = [];
+    if (f.winnersOnly) {
+      chips.push({ key: 'winners', label: 'filters.winnersOnlyChip', kind: 'winners' });
+    }
+    for (const key of f.franchiseSeasonKeys ?? []) {
+      if (key.startsWith('franchise::')) {
+        const franchise = key.slice('franchise::'.length);
+        chips.push({ key, label: franchise, kind: 'franchise' });
+      } else if (key.startsWith('season::')) {
+        const rest = key.slice('season::'.length);
+        const sep = rest.lastIndexOf('::');
+        if (sep > 0) {
+          const franchise = rest.slice(0, sep);
+          const season = rest.slice(sep + 2);
+          chips.push({ key, label: `${franchise} S${season}`, kind: 'season' });
+        }
+      }
+    }
+    return chips;
+  });
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {
     effect(() => {
@@ -84,6 +114,7 @@ export class ContestantListAdvancedFiltersComponent implements OnDestroy {
   }
 
   protected openDialog(): void {
+    this.seedExpandedFromActiveFilters();
     this.dialogOpen.set(true);
   }
 
@@ -115,6 +146,20 @@ export class ContestantListAdvancedFiltersComponent implements OnDestroy {
   protected seasonsForFranchise(franchise: string): number[] {
     const total = SEASONS_PER_FRANCHISE[franchise] ?? 0;
     return Array.from({ length: total }, (_, index) => index + 1);
+  }
+
+  protected isFranchiseExpanded(franchise: string): boolean {
+    return this.expandedFranchises().has(franchise);
+  }
+
+  protected toggleFranchiseExpanded(franchise: string): void {
+    const next = new Set(this.expandedFranchises());
+    if (next.has(franchise)) {
+      next.delete(franchise);
+    } else {
+      next.add(franchise);
+    }
+    this.expandedFranchises.set(next);
   }
 
   protected isFranchiseSelected(franchise: string): boolean {
@@ -176,6 +221,32 @@ export class ContestantListAdvancedFiltersComponent implements OnDestroy {
       ...current,
       franchiseSeasonKeys: nextKeys,
     });
+  }
+
+  protected removeChip(chip: ActiveFilterChip): void {
+    const current = this.filters();
+    if (chip.kind === 'winners') {
+      this.filtersChange.emit({ ...current, winnersOnly: false });
+      return;
+    }
+    this.filtersChange.emit({
+      ...current,
+      franchiseSeasonKeys: (current.franchiseSeasonKeys ?? []).filter((k) => k !== chip.key),
+    });
+  }
+
+  private seedExpandedFromActiveFilters(): void {
+    const expanded = new Set<string>();
+    for (const key of this.filters().franchiseSeasonKeys ?? []) {
+      if (key.startsWith('season::')) {
+        const rest = key.slice('season::'.length);
+        const sep = rest.lastIndexOf('::');
+        if (sep > 0) {
+          expanded.add(rest.slice(0, sep));
+        }
+      }
+    }
+    this.expandedFranchises.set(expanded);
   }
 
   private franchiseKey(franchise: string): string {

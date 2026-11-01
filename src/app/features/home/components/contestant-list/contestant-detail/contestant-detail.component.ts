@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs/operators';
@@ -11,11 +12,14 @@ import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contes
 import { ImageLightboxService } from '@app/shared/ui/image-lightbox/image-lightbox.service';
 import { ContestantSectionSeason } from '@app/core/contestants/models/contestant-view.model';
 
+export type ContestantDetailVariant = 'pane' | 'fullscreen';
+
 @Component({
   selector: 'app-contestant-detail',
   standalone: true,
   imports: [
     ContestantImageComponent,
+    NgClass,
     TranslateModule,
     WinsBadgeComponent,
     WinnerBadgeComponent,
@@ -31,6 +35,7 @@ export class ContestantDetailComponent {
 
   readonly contestant = input.required<Contestant>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
+  readonly variant = input<ContestantDetailVariant>('pane');
 
   protected readonly lang = toSignal(
     this.translate.onLangChange.pipe(

@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Contestant } from '@app/core/contestants/models/contestant.model';
-import { ContestantCardComponent } from '../contestant-card/contestant-card.component';
+import {
+  ContestantCardComponent,
+  type ContestantSelectEvent,
+} from '../contestant-card/contestant-card.component';
 import { ContestantGroupMode } from '@app/core/contestants/constants/group-mode.constants';
 import { ContestantSectionSeason } from '@app/core/contestants/models/contestant-view.model';
+import { isSameContestantSelection } from '../contestant-selection.util';
 
 @Component({
   selector: 'app-contestant-group-section',
@@ -18,7 +22,12 @@ import { ContestantSectionSeason } from '@app/core/contestants/models/contestant
       </h2>
       <div class="flex flex-col gap-2">
         @for (contestant of contestants(); track trackByDragName($index, contestant)) {
-          <app-contestant-card [contestant]="contestant" [displayedSeason]="displayedSeason()" />
+          <app-contestant-card
+            [contestant]="contestant"
+            [displayedSeason]="displayedSeason()"
+            [selected]="isSelected(contestant)"
+            (selectContestant)="onSelect($event)"
+          />
         }
       </div>
     </section>
@@ -29,8 +38,24 @@ export class ContestantGroupSectionComponent {
   readonly contestants = input.required<Contestant[]>();
   readonly groupMode = input.required<ContestantGroupMode>();
   readonly displayedSeason = input<ContestantSectionSeason | undefined>();
+  readonly selectedContestant = input<Contestant | null>(null);
+  readonly selectedDisplayedSeason = input<ContestantSectionSeason | undefined>(undefined);
+  readonly selectContestant = output<ContestantSelectEvent>();
 
   protected trackByDragName(_index: number, contestant: Contestant): string {
     return contestant.dragName;
+  }
+
+  protected isSelected(contestant: Contestant): boolean {
+    return isSameContestantSelection(
+      this.selectedContestant(),
+      this.selectedDisplayedSeason(),
+      contestant,
+      this.displayedSeason(),
+    );
+  }
+
+  protected onSelect(event: ContestantSelectEvent): void {
+    this.selectContestant.emit(event);
   }
 }

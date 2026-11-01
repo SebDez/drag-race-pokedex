@@ -1,1 +1,30 @@
-/* Shared quiz button styles (used by setup / play / recap children via encapsulation pierce not needed — duplicated lightly in global quiz section below via :host ::ng-deep is avoided; children import shared via styles.css) */
+/* Shared quiz page shell */
+
+:host {
+  display: block;
+}
+
+@media (max-width: 639px) {
+  /* Fit play phase in the viewport (header + footer chrome ≈ 6.25rem). */
+  :host:has(.quiz-page--playing) {
+    height: calc(100dvh - 6.25rem);
+    max-height: calc(100dvh - 6.25rem);
+    overflow: hidden;
+  }
+
+  :host .quiz-page--playing {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+    overflow: hidden;
+  }
+
+  :host .quiz-page--playing > * {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}

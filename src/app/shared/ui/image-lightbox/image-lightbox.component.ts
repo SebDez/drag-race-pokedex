@@ -1,7 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostListener,
+  OnDestroy,
+  OnInit,
+  DOCUMENT,
+  inject,
   input,
   output,
   signal,
@@ -26,7 +31,10 @@ type LoupeState = {
   styleUrl: './image-lightbox.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageLightboxComponent {
+export class ImageLightboxComponent implements OnInit, OnDestroy {
+  private readonly document = inject(DOCUMENT);
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   readonly src = input.required<string>();
   readonly alt = input('');
   readonly closeLabelKey = input('detail.closePreview');
@@ -36,6 +44,20 @@ export class ImageLightboxComponent {
 
   protected readonly loupeSize = LOUPE_SIZE_PX;
   protected readonly loupe = signal<LoupeState | null>(null);
+  protected readonly loupeAvailable = signal(false);
+
+  ngOnInit(): void {
+    // Portal to <body> so the viewer stacks above modals moved out of app-root.
+    const el = this.host.nativeElement;
+    if (el.parentElement !== this.document.body) {
+      this.document.body.appendChild(el);
+    }
+    this.loupeAvailable.set(this.canUseLoupe());
+  }
+
+  ngOnDestroy(): void {
+    this.host.nativeElement.remove();
+  }
 
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
@@ -52,7 +74,7 @@ export class ImageLightboxComponent {
   }
 
   protected onImageMove(event: MouseEvent): void {
-    if (!this.canUseLoupe()) {
+    if (!this.loupeAvailable()) {
       this.loupe.set(null);
       return;
     }
@@ -80,13 +102,17 @@ export class ImageLightboxComponent {
     this.loupe.set(null);
   }
 
+  protected loupeBackgroundImage(): string {
+    const raw = this.src().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    return `url("${raw}")`;
+  }
+
   private canUseLoupe(): boolean {
     if (typeof window === 'undefined' || typeof matchMedia !== 'function') {
       return false;
     }
-    return (
-      matchMedia('(hover: hover) and (pointer: fine)').matches &&
-      !matchMedia('(prefers-reduced-motion: reduce)').matches
-    );
+    // Desktop / fine pointer only — do not gate on prefers-reduced-motion
+    // (Windows often enables it and would silently disable zoom).
+    return matchMedia('(hover: hover) and (pointer: fine)').matches;
   }
 }

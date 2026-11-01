@@ -34,7 +34,7 @@
   "quiz": {
     "title": "Quiz Drag Race",
     "intro": {
-      "headline": "Bienvenue dans le Quizz Drag Race !",
+      "headline": "Découvre les règles",
       "lead": "Tu penses tout connaître des queens ? Il est temps de le prouver. 💅",
       "description": "Chaque partie comporte 10 questions générées aléatoirement sur les contestants de l’univers Drag Race.",
       "questionsTitle": "Les questions peuvent porter par exemple sur :",
@@ -141,7 +141,19 @@
     "contestantsCount": "{{count}} Reines",
     "contestantsCountPartial": "{{shown}} sur {{count}} reines",
     "scrollForMore": "Faites défiler pour en voir plus",
-    "endOfList": "Fin de la liste"
+    "endOfList": "Fin de la liste",
+    "selectPrompt": "Sélectionne une queen dans la liste pour voir sa fiche.",
+    "backToList": "Retour au Pokédex",
+    "closeDetail": "Fermer la fiche",
+    "detailPane": "Fiche de la queen",
+    "noResultsTitle": "Aucune queen trouvée",
+    "noResultsHint": "Aucun résultat ne correspond à ta recherche et à tes filtres.",
+    "currentFilters": "Filtres actuels",
+    "filterRecap": {
+      "search": "Recherche : « {{query}} »",
+      "franchise": "Franchise : {{name}}",
+      "season": "Saison : {{franchise}} S{{season}}"
+    }
   },
   "common": {
     "win": "1 victoire",
@@ -161,7 +173,8 @@
     "challengeWins": "Victoires",
     "wikiLink": "Fiche wiki",
     "enlargeImage": "Voir plus grand",
-    "closePreview": "Fermer"
+    "closePreview": "Fermer",
+    "zoomHint": "Survole l’image pour zoomer"
   },
   "errors": {
     "loadFailed": "Erreur lors du chargement des contestants"
@@ -181,9 +194,14 @@
     "winnersOnly": "Gagnantes uniquement",
     "allFranchises": "Toutes les franchises",
     "showAllFranchises": "Afficher toutes les franchises",
-    "franchiseTreeHint": "Aucune sélection = toutes les franchises. Cochez pour restreindre la liste.",
+    "franchiseTreeHint": "Aucune sélection = toutes les franchises. Ouvre une franchise pour filtrer par saison.",
     "seasonShort": "S{{season}}",
-    "resetAll": "Réinitialiser les filtres"
+    "resetAll": "Réinitialiser les filtres",
+    "expandFranchise": "Afficher les saisons",
+    "collapseFranchise": "Masquer les saisons",
+    "activeFilters": "Filtres actifs",
+    "removeFilter": "Retirer le filtre {{label}}",
+    "winnersOnlyChip": "Gagnantes"
   },
   "groupBy": {
     "label": "Grouper par",

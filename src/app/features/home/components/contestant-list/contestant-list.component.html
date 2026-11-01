@@ -2,7 +2,11 @@
 @if (vm.mode === GroupMode.All) {
   <div class="flex flex-col gap-2 list-none m-0 p-0">
     @for (contestant of vm.list; track trackByDragName($index, contestant)) {
-      <app-contestant-card [contestant]="contestant" />
+      <app-contestant-card
+        [contestant]="contestant"
+        [selected]="isSelected(contestant)"
+        (selectContestant)="onSelect($event)"
+      />
     }
   </div>
 } @else if (vm.sections.length) {
@@ -13,9 +17,10 @@
         [contestants]="group.contestants"
         [groupMode]="vm.mode"
         [displayedSeason]="group.season"
+        [selectedContestant]="selectedContestant()"
+        [selectedDisplayedSeason]="selectedDisplayedSeason()"
+        (selectContestant)="onSelect($event)"
       />
     }
   </div>
-} @else if (vm.sections !== null) {
-  <p class="text-sm text-[var(--color-text-muted)] py-4">{{ 'common.noResults' | translate }}</p>
 }

@@ -16,6 +16,7 @@
   <div class="image-lightbox__stage" (click)="$event.stopPropagation()">
     <img
       class="image-lightbox__img"
+      [class.image-lightbox__img--zoomable]="loupeAvailable()"
       [src]="src()"
       [alt]="alt()"
       (mousemove)="onImageMove($event)"
@@ -30,10 +31,17 @@
         [style.height.px]="loupeSize"
         [style.left.px]="glass.x"
         [style.top.px]="glass.y"
-        [style.backgroundImage]="'url(' + src() + ')'"
+        [style.backgroundImage]="loupeBackgroundImage()"
         [style.backgroundSize]="glass.bgSize"
         [style.backgroundPosition]="glass.bgPos"
       ></div>
     }
   </div>
+
+  @if (loupeAvailable()) {
+    <p class="image-lightbox__hint" role="note">
+      <span class="image-lightbox__hint-icon" aria-hidden="true">🔍</span>
+      {{ 'detail.zoomHint' | translate }}
+    </p>
+  }
 </div>

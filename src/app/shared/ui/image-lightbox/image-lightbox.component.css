@@ -1,7 +1,8 @@
 :host {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  /* Above filters (z-40) and mobile detail dialog (z-50) on <body> */
+  z-index: 2000;
   display: block;
 }
 
@@ -37,10 +38,30 @@
   background: var(--color-surface);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .image-lightbox__img {
-    cursor: crosshair;
-  }
+.image-lightbox__img--zoomable {
+  cursor: zoom-in;
+}
+
+.image-lightbox__hint {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.image-lightbox__hint-icon {
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 .image-lightbox__loupe {
@@ -71,8 +92,3 @@
   cursor: pointer;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .image-lightbox__loupe {
-    display: none;
-  }
-}

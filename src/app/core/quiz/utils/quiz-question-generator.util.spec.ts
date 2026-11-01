@@ -90,6 +90,19 @@ describe('generateQuizQuestions', () => {
     }
   });
 
+  it('attaches a franchise image on season-winner questions', () => {
+    const questions = generateQuizQuestions(pool, {
+      questionCount: 10,
+      franchises: [],
+    }).filter((q) => q.type === 'seasonWinner');
+
+    expect(questions.length).toBeGreaterThan(0);
+    for (const q of questions) {
+      expect(q.imageUrl).toBeTruthy();
+      expect(q.imageUrl).toContain('/assets/images/franchises/');
+    }
+  });
+
   it('keeps season-winner proposals inside that franchise only', () => {
     const enriched: Contestant[] = [
       ...pool,

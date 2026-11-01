@@ -1,15 +1,7 @@
-import { DeferBlockState, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ContestantCardComponent } from './contestant-card.component';
 import { provideTranslateMock } from '@app/testing/translate-mock';
 import { createContestant } from '@app/testing/contestant-fixture';
-
-async function renderDeferredDetail(fixture: { getDeferBlocks: () => Promise<{ render: (s: DeferBlockState) => Promise<void> }[]>; detectChanges: () => void }) {
-  const blocks = await fixture.getDeferBlocks();
-  if (blocks[0]) {
-    await blocks[0].render(DeferBlockState.Complete);
-    fixture.detectChanges();
-  }
-}
 
 describe('ContestantCardComponent', () => {
   beforeEach(async () => {
@@ -36,38 +28,35 @@ describe('ContestantCardComponent', () => {
     expect(btn?.textContent).toContain('Card Queen');
   });
 
-  it('should toggle detail panel on click', async () => {
+  it('should emit selectContestant on click', () => {
+    const contestant = createContestant({ dragName: 'Select Queen' });
     const fixture = TestBed.createComponent(ContestantCardComponent);
-    fixture.componentRef.setInput('contestant', createContestant());
+    fixture.componentRef.setInput('contestant', contestant);
     fixture.detectChanges();
-    const el = fixture.nativeElement as HTMLElement;
-    const btn = el.querySelector('button');
-    expect(fixture.componentInstance.isExpanded()).toBe(false);
-    expect(el.querySelector('app-contestant-detail')).toBeNull();
+    const emitted: unknown[] = [];
+    fixture.componentInstance.selectContestant.subscribe((e) => emitted.push(e));
+    const btn = (fixture.nativeElement as HTMLElement).querySelector('button');
     btn?.click();
-    fixture.detectChanges();
-    expect(fixture.componentInstance.isExpanded()).toBe(true);
-    await renderDeferredDetail(fixture);
-    expect(el.querySelector('app-contestant-detail')).toBeTruthy();
-    btn?.click();
-    fixture.detectChanges();
-    expect(fixture.componentInstance.isExpanded()).toBe(false);
-    expect(el.querySelector('app-contestant-detail')).toBeNull();
+    expect(emitted.length).toBe(1);
+    expect(emitted[0]).toEqual({ contestant, displayedSeason: undefined });
   });
 
-  it('should set aria-expanded and aria-controls on button', async () => {
+  it('should set aria-current when selected', () => {
     const fixture = TestBed.createComponent(ContestantCardComponent);
     fixture.componentRef.setInput('contestant', createContestant());
+    fixture.componentRef.setInput('selected', true);
     fixture.detectChanges();
     const btn = (fixture.nativeElement as HTMLElement).querySelector('button');
-    const detailId = fixture.componentInstance['detailPanelId'];
-    expect(btn?.getAttribute('aria-expanded')).toBe('false');
-    expect(btn?.getAttribute('aria-controls')).toBe(detailId);
-    btn?.click();
+    expect(btn?.getAttribute('aria-current')).toBe('true');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.queen-card--expanded')).toBeTruthy();
+  });
+
+  it('should not render inline detail', () => {
+    const fixture = TestBed.createComponent(ContestantCardComponent);
+    fixture.componentRef.setInput('contestant', createContestant());
+    fixture.componentRef.setInput('selected', true);
     fixture.detectChanges();
-    expect(btn?.getAttribute('aria-expanded')).toBe('true');
-    await renderDeferredDetail(fixture);
-    expect((fixture.nativeElement as HTMLElement).querySelector(`#${detailId}`)).toBeTruthy();
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-contestant-detail')).toBeNull();
   });
 
   it('getCardImageUrl should use imageUrl only (promo is for detail)', () => {

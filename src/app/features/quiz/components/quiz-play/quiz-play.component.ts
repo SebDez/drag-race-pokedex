@@ -3,15 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostListener,
   Injector,
   computed,
+  inject,
   signal,
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ContestantImageComponent } from '@app/shared/ui/contestant-image/contestant-image.component';
+import { ImageLightboxService } from '@app/shared/ui/image-lightbox/image-lightbox.service';
 import {
   ANSWER_MODE_EMOJI,
   ANSWER_MODE_POINTS,
@@ -32,9 +33,9 @@ const MAX_CASH_RESULTS = 12;
 })
 export class QuizPlayComponent {
   private readonly cashInput = viewChild<ElementRef<HTMLInputElement>>('cashInput');
+  private readonly lightbox = inject(ImageLightboxService);
 
   protected readonly cashQuery = signal('');
-  protected readonly lightboxOpen = signal(false);
   protected readonly modePoints = ANSWER_MODE_POINTS;
   protected readonly modeEmoji = ANSWER_MODE_EMOJI;
   protected readonly modes: AnswerMode[] = ['duo', 'square', 'cash'];
@@ -87,29 +88,30 @@ export class QuizPlayComponent {
     private readonly injector: Injector,
   ) {}
 
-  @HostListener('document:keydown.escape')
-  protected onEscape(): void {
-    if (this.lightboxOpen()) {
-      this.closeLightbox();
-    }
-  }
-
   protected onQuit(): void {
     const message = this.translate.instant('quiz.play.quitConfirm');
     if (typeof window !== 'undefined' && !window.confirm(message)) {
       return;
     }
-    this.closeLightbox();
+    this.lightbox.close();
     this.cashQuery.set('');
     this.store.backToSetup();
   }
 
   protected openLightbox(): void {
-    this.lightboxOpen.set(true);
-  }
-
-  protected closeLightbox(): void {
-    this.lightboxOpen.set(false);
+    const question = this.store.currentQuestion();
+    const url = question?.imageUrl?.trim();
+    if (!question || !url) {
+      return;
+    }
+    const alt =
+      question.type === 'seasonWinner'
+        ? String(question.promptParams['franchise'] ?? '')
+        : this.translate.instant('quiz.play.mysteryAlt');
+    this.lightbox.open(url, alt, {
+      closeLabelKey: 'quiz.play.closePreview',
+      dialogLabelKey: 'quiz.play.enlargeImage',
+    });
   }
 
   protected onSelectMode(mode: AnswerMode): void {
@@ -127,13 +129,13 @@ export class QuizPlayComponent {
   }
 
   protected onSelectOption(option: string): void {
-    this.closeLightbox();
+    this.lightbox.close();
     this.store.submitAnswer(option);
     this.cashQuery.set('');
   }
 
   protected onSelectCash(option: string): void {
-    this.closeLightbox();
+    this.lightbox.close();
     this.store.submitAnswer(option);
     this.cashQuery.set('');
   }

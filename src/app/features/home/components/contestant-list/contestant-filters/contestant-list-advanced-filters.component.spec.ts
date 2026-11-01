@@ -191,4 +191,42 @@ describe('ContestantListAdvancedFiltersComponent', () => {
     expect(emitted.length).toBe(1);
     expect(document.querySelector('[role="dialog"]')).toBeFalsy();
   });
+
+  it('should keep franchise seasons collapsed by default', async () => {
+    const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
+    fixture.detectChanges();
+    const dialog = await openDialog(fixture);
+    expect(dialog.querySelector('[data-testid="franchise-seasons"]')).toBeFalsy();
+  });
+
+  it('should expand franchise seasons when expand button is clicked', async () => {
+    const franchise = FRANCHISE_NAMES[0];
+    const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
+    fixture.componentRef.setInput('filters', DEFAULT_CONTESTANT_FILTERS);
+    fixture.detectChanges();
+    const dialog = await openDialog(fixture);
+    const expandBtn = dialog.querySelector(
+      `[data-testid="expand-franchise-${franchise}"]`,
+    ) as HTMLElement | null;
+    expect(expandBtn).toBeTruthy();
+    expandBtn!.click();
+    fixture.detectChanges();
+    expect(dialog.querySelector('[data-testid="franchise-seasons"]')).toBeTruthy();
+  });
+
+  it('should show active filter chips when filters are active', async () => {
+    const fixture = TestBed.createComponent(ContestantListAdvancedFiltersComponent);
+    fixture.componentRef.setInput('filters', {
+      ...DEFAULT_CONTESTANT_FILTERS,
+      winnersOnly: true,
+      franchiseSeasonKeys: [`franchise::${FRANCHISE_NAMES[0]}`],
+    });
+    fixture.detectChanges();
+    const dialog = await openDialog(fixture);
+    const chips = dialog.querySelector('[data-testid="active-filter-chips"]');
+    expect(chips).toBeTruthy();
+    expect(chips?.textContent).toContain('filters.winnersOnlyChip');
+    expect(chips?.textContent).toContain(FRANCHISE_NAMES[0]);
+  });
 });

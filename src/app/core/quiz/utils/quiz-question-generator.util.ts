@@ -1,4 +1,5 @@
 import type { Contestant } from '@app/core/contestants/models/contestant.model';
+import { franchiseImageUrl } from '@app/core/contestants/constants/franchise-images.constants';
 import type {
   QuizAnswerWiki,
   QuizConfig,
@@ -257,7 +258,7 @@ function createSeasonWinner(
   return {
     id,
     type: 'seasonWinner',
-    imageUrl: null,
+    imageUrl: franchiseImageUrl(candidate.franchise),
     promptKey: 'quiz.questions.seasonWinner',
     promptParams: {
       season: candidate.season,

@@ -9,7 +9,7 @@
     [attr.aria-haspopup]="'dialog'"
     [attr.aria-expanded]="dialogOpen()"
   >
-    <span class="inline-flex size-4 shrink-0" aria-hidden="true">
+    <span class="inline-flex size-5 shrink-0" aria-hidden="true">
       <svg
         class="size-full"
         xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@
 @if (dialogOpen()) {
   <div
     #dialogRoot
-    class="fixed inset-0 z-40 flex items-center justify-center p-4"
+    class="fixed inset-0 z-40 flex items-end justify-center p-0 sm:items-center sm:p-4"
     role="dialog"
     [attr.aria-modal]="true"
     [attr.aria-labelledby]="dialogTitleId"
@@ -50,7 +50,7 @@
     <div
       #dialogPanel
       tabindex="-1"
-      class="relative z-50 w-full max-w-md max-h-[85vh] flex flex-col rounded-xl border border-(--color-pink)/30 bg-(--color-surface) shadow-xl outline-none"
+      class="relative z-50 flex w-full max-h-[85vh] flex-col rounded-t-2xl border border-(--color-pink)/30 bg-(--color-surface) shadow-xl outline-none sm:max-w-lg sm:rounded-xl"
     >
       <div
         class="flex items-center justify-between shrink-0 border-b border-(--color-pink)/20 px-4 py-3"
@@ -61,19 +61,53 @@
         <button
           type="button"
           data-testid="dialog-close-btn"
-          class="rounded-full p-1.5 text-(--color-text-muted) hover:bg-(--color-pink)/10 hover:text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+          class="inline-flex size-10 items-center justify-center rounded-full text-(--color-text-muted) hover:bg-(--color-pink)/10 hover:text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
           (click)="closeDialog()"
           [attr.aria-label]="'filters.close' | translate"
         >
-          <span class="size-5 block" aria-hidden="true">&times;</span>
+          <span class="block text-2xl leading-none" aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="flex-1 overflow-auto p-4 flex flex-col gap-4">
+
+      <div class="themed-scroll flex-1 overflow-auto p-4 flex flex-col gap-4">
+        @if (activeChips().length) {
+          <div
+            class="flex flex-wrap gap-1.5"
+            data-testid="active-filter-chips"
+            [attr.aria-label]="'filters.activeFilters' | translate"
+          >
+            @for (chip of activeChips(); track chip.key) {
+              <button
+                type="button"
+                class="inline-flex max-w-full items-center gap-1 rounded-full border border-(--color-pink)/35 bg-(--color-pink)/10 px-2.5 py-1 text-xs font-medium text-(--color-text) hover:bg-(--color-pink)/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+                (click)="removeChip(chip)"
+                [attr.aria-label]="
+                  'filters.removeFilter'
+                    | translate
+                      : {
+                          label:
+                            chip.kind === 'winners' ? ('filters.winnersOnlyChip' | translate) : chip.label,
+                        }
+                "
+              >
+                <span class="truncate">
+                  @if (chip.kind === 'winners') {
+                    {{ 'filters.winnersOnlyChip' | translate }}
+                  } @else {
+                    {{ chip.label }}
+                  }
+                </span>
+                <span class="text-base leading-none" aria-hidden="true">&times;</span>
+              </button>
+            }
+          </div>
+        }
+
         <div class="flex flex-col gap-2">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
+          <label class="inline-flex items-center gap-2.5 cursor-pointer">
             <input
               type="checkbox"
-              class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+              class="size-5 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
               [checked]="filters().winnersOnly"
               (change)="onToggleWinners($event)"
             />
@@ -92,45 +126,73 @@
         </div>
 
         <div
-          class="rounded-lg border border-(--color-pink)/40 bg-(--color-surface-elevated) max-h-64 overflow-auto px-3 py-2"
+          class="themed-scroll rounded-lg border border-(--color-pink)/40 bg-(--color-surface-elevated) max-h-64 overflow-auto px-2 py-2"
           data-testid="franchise-tree"
         >
-          <p class="text-[11px] text-(--color-text-muted) mb-2">
+          <p class="text-[11px] text-(--color-text-muted) mb-2 px-1">
             {{ 'filters.franchiseTreeHint' | translate }}
           </p>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-0.5">
             @for (franchise of franchiseNames(); track franchise) {
-              <div class="flex flex-col gap-1">
-                <label class="inline-flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="h-4 w-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
-                    [checked]="isFranchiseSelected(franchise)"
-                    (change)="onToggleFranchise(franchise, $event)"
-                  />
-                  <span class="text-[13px] text-(--color-text)">{{ franchise }}</span>
-                </label>
-
-                <div class="ml-6 flex flex-col gap-0.5">
-                  @for (season of seasonsForFranchise(franchise); track season) {
-                    <label class="inline-flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        class="h-3.5 w-3.5 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
-                        [checked]="isSeasonSelected(franchise, season)"
-                        (change)="onToggleSeason(franchise, season, $event)"
-                      />
-                      <span class="text-[12px] text-(--color-text-muted)">
-                        {{ 'filters.seasonShort' | translate: { season: season } }}
-                      </span>
-                    </label>
-                  }
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1 rounded-md px-1 hover:bg-(--color-pink)/5">
+                  <label class="inline-flex min-w-0 flex-1 items-center gap-2.5 cursor-pointer py-1.5">
+                    <input
+                      type="checkbox"
+                      class="size-5 shrink-0 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+                      [checked]="isFranchiseSelected(franchise)"
+                      (change)="onToggleFranchise(franchise, $event)"
+                    />
+                    <span class="truncate text-sm text-(--color-text)">{{ franchise }}</span>
+                  </label>
+                  <button
+                    type="button"
+                    class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-(--color-text-muted) hover:bg-(--color-pink)/10 hover:text-(--color-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink)"
+                    (click)="toggleFranchiseExpanded(franchise)"
+                    [attr.aria-expanded]="isFranchiseExpanded(franchise)"
+                    [attr.aria-label]="
+                      (isFranchiseExpanded(franchise)
+                        ? 'filters.collapseFranchise'
+                        : 'filters.expandFranchise'
+                      ) | translate
+                    "
+                    [attr.data-testid]="'expand-franchise-' + franchise"
+                  >
+                    <span
+                      class="inline-block text-lg leading-none transition-transform"
+                      [class.rotate-90]="isFranchiseExpanded(franchise)"
+                      aria-hidden="true"
+                      >▸</span
+                    >
+                  </button>
                 </div>
+
+                @if (isFranchiseExpanded(franchise)) {
+                  <div
+                    class="ml-7 mb-1 flex flex-col gap-0.5 border-l border-(--color-pink)/20 pl-3"
+                    data-testid="franchise-seasons"
+                  >
+                    @for (season of seasonsForFranchise(franchise); track season) {
+                      <label class="inline-flex items-center gap-2.5 cursor-pointer py-1">
+                        <input
+                          type="checkbox"
+                          class="size-4 rounded border-(--color-pink) text-(--color-pink) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-pink) focus-visible:ring-offset-1 focus-visible:ring-offset-(--color-surface)"
+                          [checked]="isSeasonSelected(franchise, season)"
+                          (change)="onToggleSeason(franchise, season, $event)"
+                        />
+                        <span class="text-sm text-(--color-text-muted)">
+                          {{ 'filters.seasonShort' | translate: { season: season } }}
+                        </span>
+                      </label>
+                    }
+                  </div>
+                }
               </div>
             }
           </div>
         </div>
       </div>
+
       <div class="shrink-0 border-t border-(--color-pink)/20 px-4 py-3 flex flex-col gap-2">
         <button
           type="button"

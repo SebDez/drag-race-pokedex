@@ -1,4 +1,4 @@
-<div class="min-h-full px-4 pb-8 max-w-[42rem] mx-auto sm:px-5 sm:pb-10">
+<div class="min-h-full px-4 pb-8 max-w-[42rem] mx-auto sm:px-5 sm:pb-10 lg:max-w-7xl lg:pb-6">
   <header class="brand-header text-center">
     <h1 class="brand-title text-[clamp(1.85rem,5.5vw,2.5rem)] m-0">
       {{ 'home.title' | translate }}
@@ -70,66 +70,169 @@
         <span>{{ 'legend.franchise' | translate }}</span>
       </li>
     </ul>
-    <!-- List -->
-    @if (store.loading()) {
+
+    <!-- List / master-detail -->
+    <div
+      class="lg:grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-6 lg:items-stretch lg:h-[calc(100dvh-14rem)] lg:min-h-[28rem]"
+    >
       <div
-        class="flex flex-col gap-2"
-        role="status"
-        aria-busy="true"
-        [attr.aria-label]="'aria.loading' | translate"
+        #listPane
+        class="themed-scroll min-w-0 p-1.5 -m-1.5 lg:m-0 lg:overflow-y-auto lg:p-2"
+        (scroll)="onListPaneScroll($event)"
       >
-        <span class="sr-only">{{ 'home.loading' | translate }}</span>
-        @for (slot of skeletonSlots; track slot) {
+        @if (store.loading()) {
           <div
-            class="flex items-center gap-3 sm:gap-4 p-3 border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)] overflow-hidden"
-            aria-hidden="true"
+            class="flex flex-col gap-2"
+            role="status"
+            aria-busy="true"
+            [attr.aria-label]="'aria.loading' | translate"
           >
-            <div
-              class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-[var(--color-pink-light)]/70 to-[var(--color-gold-light)]/70 animate-pulse"
-            ></div>
-            <div class="flex-1 min-w-0 flex flex-col gap-2">
+            <span class="sr-only">{{ 'home.loading' | translate }}</span>
+            @for (slot of skeletonSlots; track slot) {
               <div
-                class="h-3.5 rounded-md bg-[var(--color-border)] animate-pulse"
-                [style.width.%]="55 + (slot % 3) * 12"
-              ></div>
-              <div class="h-2.5 w-1/3 rounded-md bg-[var(--color-border)]/80 animate-pulse"></div>
-            </div>
-            <div class="shrink-0 flex gap-1">
-              <div class="h-8 w-10 rounded-md bg-[var(--color-pink-light)]/50 animate-pulse"></div>
-              <div class="h-8 w-8 rounded-md bg-[var(--color-border)] animate-pulse"></div>
-            </div>
+                class="flex items-center gap-3 sm:gap-4 p-3 border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)] overflow-hidden"
+                aria-hidden="true"
+              >
+                <div
+                  class="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-[var(--color-pink-light)]/70 to-[var(--color-gold-light)]/70 animate-pulse"
+                ></div>
+                <div class="flex-1 min-w-0 flex flex-col gap-2">
+                  <div
+                    class="h-3.5 rounded-md bg-[var(--color-border)] animate-pulse"
+                    [style.width.%]="55 + (slot % 3) * 12"
+                  ></div>
+                  <div
+                    class="h-2.5 w-1/3 rounded-md bg-[var(--color-border)]/80 animate-pulse"
+                  ></div>
+                </div>
+                <div class="shrink-0 flex gap-1">
+                  <div
+                    class="h-8 w-10 rounded-md bg-[var(--color-pink-light)]/50 animate-pulse"
+                  ></div>
+                  <div class="h-8 w-8 rounded-md bg-[var(--color-border)] animate-pulse"></div>
+                </div>
+              </div>
+            }
           </div>
+        } @else if (store.filteredCount() === 0) {
+          <app-contestant-list-empty
+            [filters]="store.filters()"
+            [groupMode]="store.groupMode()"
+            [sortMode]="store.sortMode()"
+            (resetAllFilters)="onResetAllFilters()"
+          />
+        } @else {
+          <app-contestant-list
+            [viewModel]="store.viewModel()"
+            [selectedContestant]="selectedContestant()"
+            [selectedDisplayedSeason]="selectedDisplayedSeason()"
+            (selectContestant)="onSelectContestant($event)"
+          />
+
+          @if (store.loadingMore()) {
+            <div
+              class="flex items-center justify-center gap-3 py-6 text-[15px] text-[var(--color-text-muted)]"
+              role="status"
+              aria-busy="true"
+              [attr.aria-label]="'aria.loadingMore' | translate"
+            >
+              <span
+                class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
+                aria-hidden="true"
+              ></span>
+              <span>{{ 'home.loadingMore' | translate }}</span>
+            </div>
+          } @else if (store.hasMore()) {
+            <p
+              class="text-center text-sm text-[var(--color-text-muted)] py-6"
+              role="status"
+              [attr.aria-label]="'aria.scrollForMore' | translate"
+            >
+              {{ 'home.scrollForMore' | translate }}
+            </p>
+          } @else if (displayedCount() > 0) {
+            <p class="text-center text-sm text-[var(--color-text-muted)] py-6" role="status">
+              {{ 'home.endOfList' | translate }}
+            </p>
+          }
         }
       </div>
-    } @else {
-      <app-contestant-list [viewModel]="store.viewModel()" />
 
-      @if (store.loadingMore()) {
-        <div
-          class="flex items-center justify-center gap-3 py-6 text-[15px] text-[var(--color-text-muted)]"
-          role="status"
-          aria-busy="true"
-          [attr.aria-label]="'aria.loadingMore' | translate"
-        >
-          <span
-            class="w-5 h-5 border-2 border-[var(--color-pink-light)] border-t-[var(--color-pink)] rounded-full animate-spin"
-            aria-hidden="true"
-          ></span>
-          <span>{{ 'home.loadingMore' | translate }}</span>
-        </div>
-      } @else if (store.hasMore()) {
-        <p
-          class="text-center text-sm text-[var(--color-text-muted)] py-6"
-          role="status"
-          [attr.aria-label]="'aria.scrollForMore' | translate"
-        >
-          {{ 'home.scrollForMore' | translate }}
-        </p>
-      } @else if (displayedCount() > 0) {
-        <p class="text-center text-sm text-[var(--color-text-muted)] py-6" role="status">
-          {{ 'home.endOfList' | translate }}
-        </p>
-      }
-    }
+      <aside
+        class="themed-scroll hidden lg:flex lg:flex-col lg:min-h-0 lg:overflow-y-auto"
+        [attr.aria-label]="'home.detailPane' | translate"
+      >
+        @if (selectedContestant(); as selected) {
+          <app-contestant-detail
+            [contestant]="selected"
+            [displayedSeason]="selectedDisplayedSeason()"
+            variant="pane"
+          />
+        } @else {
+          <div
+            class="flex flex-1 flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)]/60 px-6 py-10 text-center"
+          >
+            <span
+              class="select-none text-[clamp(4.5rem,12vw,7rem)] leading-none opacity-90"
+              aria-hidden="true"
+              >💅</span
+            >
+            <p class="m-0 text-sm text-[var(--color-text-muted)] max-w-xs leading-relaxed">
+              {{ 'home.selectPrompt' | translate }}
+            </p>
+          </div>
+        }
+      </aside>
+    </div>
   }
 </div>
+
+@if (showMobileDetail(); as selected) {
+  <div
+    #detailDialogRoot
+    class="fixed inset-0 z-50 flex flex-col lg:hidden"
+    role="dialog"
+    data-testid="mobile-detail-dialog"
+    [attr.aria-modal]="true"
+    [attr.aria-labelledby]="detailDialogTitleId"
+  >
+    <div
+      class="absolute inset-0 bg-black/50"
+      data-testid="mobile-detail-backdrop"
+      (click)="clearSelection()"
+    ></div>
+    <div
+      #detailDialogPanel
+      tabindex="-1"
+      class="themed-scroll relative z-10 flex h-full min-h-0 w-full flex-col bg-[var(--color-bg)] outline-none"
+    >
+      <div
+        class="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5"
+      >
+        <h2
+          [id]="detailDialogTitleId"
+          class="m-0 min-w-0 flex-1 truncate text-base font-semibold text-[var(--color-text)]"
+        >
+          {{ selected.dragName }}
+        </h2>
+        <button
+          #backBtn
+          type="button"
+          data-testid="mobile-detail-close"
+          class="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-pink)]/10 hover:text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pink)]"
+          (click)="clearSelection()"
+          [attr.aria-label]="'home.closeDetail' | translate"
+        >
+          <span class="text-2xl leading-none" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="themed-scroll flex-1 overflow-y-auto px-3 py-4 sm:px-5">
+        <app-contestant-detail
+          [contestant]="selected"
+          [displayedSeason]="selectedDisplayedSeason()"
+          variant="fullscreen"
+        />
+      </div>
+    </div>
+  </div>
+}
