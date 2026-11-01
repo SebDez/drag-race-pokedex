@@ -112,6 +112,33 @@
       "firstFranchise": "¿En qué franquicia se descubrió esta queen?",
       "seasonWinner": "¿Quién ganó la temporada {{season}} de {{franchise}}?"
     },
+    "feedback": {
+      "successTitles": [
+        "Condragulations!",
+        "Shantay, you stay!",
+        "You're a winner, baby!",
+        "Charisma, uniqueness, nerve… and brains!",
+        "Serving excellence!",
+        "Opulence!",
+        "Look over there!",
+        "Beast!"
+      ],
+      "failTitles": [
+        "Sashay away…",
+        "Not today, Satan…",
+        "She done already done had herses…",
+        "Oppalance!",
+        "No T, no shade...",
+        "Shade!",
+        "Back rolls?!",
+        "How’s your head?"
+      ],
+      "yourAnswer": "Has respondido",
+      "correctAnswer": "La respuesta era",
+      "continue": "Continuar",
+      "pointsGained": "+{{points}} pts",
+      "timerLabel": "Temporizador de avance automático"
+    },
     "recap": {
       "title": "¡Se acabó el lip sync!",
       "vibeHigh": "¡Condragulations!",

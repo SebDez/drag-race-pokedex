@@ -112,6 +112,33 @@
       "firstFranchise": "Which franchise introduced this queen?",
       "seasonWinner": "Who won season {{season}} of {{franchise}}?"
     },
+    "feedback": {
+      "successTitles": [
+        "Condragulations!",
+        "Shantay, you stay!",
+        "You're a winner, baby!",
+        "Charisma, uniqueness, nerve… and brains!",
+        "Serving excellence!",
+        "Opulence!",
+        "Look over there!",
+        "Beast!"
+      ],
+      "failTitles": [
+        "Sashay away…",
+        "Not today, Satan…",
+        "She done already done had herses…",
+        "Oppalance!",
+        "No T, no shade...",
+        "Shade!",
+        "Back rolls?!",
+        "How’s your head?"
+      ],
+      "yourAnswer": "You answered",
+      "correctAnswer": "The answer was",
+      "continue": "Continue",
+      "pointsGained": "+{{points}} pts",
+      "timerLabel": "Auto-advance timer"
+    },
     "recap": {
       "title": "Lip sync is over!",
       "vibeHigh": "Condragulations!",

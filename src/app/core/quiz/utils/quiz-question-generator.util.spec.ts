@@ -103,6 +103,33 @@ describe('generateQuizQuestions', () => {
     }
   });
 
+  it('attaches answerImages for correct answers and options', () => {
+    const questions = generateQuizQuestions(pool, {
+      questionCount: 10,
+      franchises: [],
+    });
+
+    expect(questions.length).toBeGreaterThan(0);
+    for (const q of questions) {
+      expect(q.answerImages).toBeTruthy();
+      for (const answer of q.correctAnswers) {
+        expect(q.answerImages[answer]).toBeTruthy();
+      }
+      for (const option of q.duoOptions) {
+        expect(q.answerImages[option]).toBeTruthy();
+      }
+      if (q.type === 'firstFranchise') {
+        for (const option of q.duoOptions) {
+          expect(q.answerImages[option]).toContain('/assets/images/franchises/');
+        }
+      } else {
+        for (const answer of q.correctAnswers) {
+          expect(q.answerImages[answer]).toContain('https://example.com/');
+        }
+      }
+    }
+  });
+
   it('keeps season-winner proposals inside that franchise only', () => {
     const enriched: Contestant[] = [
       ...pool,

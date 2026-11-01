@@ -1,0 +1,88 @@
+<section
+  class="quiz-feedback"
+  [class.quiz-feedback--ok]="isCorrect()"
+  [class.quiz-feedback--ko]="!isCorrect()"
+  [attr.aria-label]="titleText()"
+>
+  <div class="quiz-feedback__card filters-panel rounded-2xl">
+    <div class="quiz-feedback__icon" aria-hidden="true">
+      {{ isCorrect() ? '✨' : '💔' }}
+    </div>
+
+    <h2 class="quiz-feedback__title" aria-live="assertive">
+      {{ titleText() }}
+    </h2>
+
+    @if (isCorrect()) {
+      <p class="quiz-feedback__points">
+        {{ 'quiz.feedback.pointsGained' | translate: { points: pointsGained() } }}
+      </p>
+    } @else {
+      <p class="quiz-feedback__points quiz-feedback__points--zero">
+        {{ 'quiz.feedback.pointsGained' | translate: { points: 0 } }}
+      </p>
+
+      <div class="quiz-feedback__compare">
+        <article class="quiz-feedback__block quiz-feedback__block--ko">
+          <p class="quiz-feedback__block-label">
+            {{ 'quiz.feedback.yourAnswer' | translate }}
+          </p>
+          <div class="quiz-feedback__block-media">
+            <app-contestant-image
+              [src]="userAnswerImage()"
+              [alt]="userAnswerLabel()"
+              [width]="160"
+              [height]="160"
+              [objectFit]="answerObjectFit()"
+              objectPosition="center top"
+              wrapperClass="quiz-feedback__img"
+            />
+          </div>
+          <p class="quiz-feedback__block-name">{{ userAnswerLabel() }}</p>
+        </article>
+
+        <article class="quiz-feedback__block quiz-feedback__block--ok">
+          <p class="quiz-feedback__block-label">
+            {{ 'quiz.feedback.correctAnswer' | translate }}
+          </p>
+          <div class="quiz-feedback__block-media">
+            <app-contestant-image
+              [src]="correctAnswerImage()"
+              [alt]="correctAnswerLabel()"
+              [width]="160"
+              [height]="160"
+              [objectFit]="answerObjectFit()"
+              objectPosition="center top"
+              wrapperClass="quiz-feedback__img"
+            />
+          </div>
+          <p class="quiz-feedback__block-name">{{ correctAnswerLabel() }}</p>
+        </article>
+      </div>
+    }
+
+    <p class="quiz-feedback__score" aria-live="polite">
+      <span class="quiz-feedback__score-value">{{ store.score() }}</span>
+      <span class="quiz-feedback__score-max">/ {{ store.maxScore() }}</span>
+    </p>
+
+    <div
+      class="quiz-feedback__timer"
+      role="progressbar"
+      [attr.aria-valuenow]="progress()"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-label]="'quiz.feedback.timerLabel' | translate"
+    >
+      <span class="quiz-feedback__timer-fill" [style.width.%]="progress()"></span>
+    </div>
+
+    <button
+      type="button"
+      class="quiz-btn quiz-btn--primary quiz-feedback__continue"
+      (click)="onContinue()"
+    >
+      {{ 'quiz.feedback.continue' | translate }}
+    </button>
+  </div>
+</section>

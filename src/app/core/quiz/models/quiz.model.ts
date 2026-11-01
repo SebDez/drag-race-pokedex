@@ -7,7 +7,7 @@ export type AnswerMode = (typeof ANSWER_MODES)[number];
 /** Fixed length for every quiz (quick + custom). */
 export const QUIZ_QUESTION_COUNT = 10;
 
-export type QuizPhase = 'setup' | 'playing' | 'recap';
+export type QuizPhase = 'setup' | 'playing' | 'feedback' | 'recap';
 
 export const ANSWER_MODE_POINTS: Record<AnswerMode, number> = {
   duo: 2,
@@ -48,6 +48,8 @@ export interface QuizQuestion {
   squareOptions: string[];
   /** Pool for cash autocomplete (names or franchises). */
   cashSuggestions: string[];
+  /** Portrait / logo URL by answer label (for feedback comparison). */
+  answerImages: Record<string, string>;
 }
 
 export interface QuizAnswerRecord {

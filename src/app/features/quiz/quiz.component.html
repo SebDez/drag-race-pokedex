@@ -1,6 +1,7 @@
 <div
   class="quiz-page min-h-full px-4 pb-8 max-w-[42rem] mx-auto sm:px-5 sm:pb-10"
   [class.quiz-page--playing]="store.phase() === 'playing'"
+  [class.quiz-page--feedback]="store.phase() === 'feedback'"
 >
   @switch (store.phase()) {
     @case ('setup') {
@@ -8,6 +9,9 @@
     }
     @case ('playing') {
       <app-quiz-play />
+    }
+    @case ('feedback') {
+      <app-quiz-feedback />
     }
     @case ('recap') {
       <app-quiz-recap />

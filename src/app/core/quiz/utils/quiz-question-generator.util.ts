@@ -64,6 +64,42 @@ function contestantImage(c: Contestant): string | null {
   return url || null;
 }
 
+function collectAnswerLabels(parts: string[][]): string[] {
+  return uniqueStrings(parts.flat());
+}
+
+function answerImagesForNames(
+  pool: Contestant[],
+  labels: string[],
+): Record<string, string> {
+  const byName = new Map<string, string>();
+  for (const c of pool) {
+    if (byName.has(c.dragName)) {
+      continue;
+    }
+    const url = contestantImage(c);
+    if (url) {
+      byName.set(c.dragName, url);
+    }
+  }
+  const result: Record<string, string> = {};
+  for (const label of labels) {
+    const url = byName.get(label);
+    if (url) {
+      result[label] = url;
+    }
+  }
+  return result;
+}
+
+function answerImagesForFranchises(labels: string[]): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const label of labels) {
+    result[label] = franchiseImageUrl(label);
+  }
+  return result;
+}
+
 /** Queens who competed in at least one of the selected franchises (or all if empty). */
 function filterContestants(all: Contestant[], franchises: string[]): Contestant[] {
   if (franchises.length === 0) {
@@ -131,6 +167,7 @@ function buildOptions(
 function createWhoIsThis(
   target: Contestant,
   namePool: string[],
+  pool: Contestant[],
   id: string,
 ): QuizQuestion | null {
   const correct = target.dragName;
@@ -139,7 +176,14 @@ function createWhoIsThis(
   if (!duoOptions) {
     return null;
   }
+  const square = squareOptions ?? duoOptions;
   const wiki = wikiEntry(target);
+  const labels = collectAnswerLabels([
+    [correct],
+    duoOptions,
+    square,
+    namePool,
+  ]);
   return {
     id,
     type: 'whoIsThis',
@@ -149,8 +193,9 @@ function createWhoIsThis(
     correctAnswers: [correct],
     correctAnswerWikis: wiki ? [wiki] : [],
     duoOptions,
-    squareOptions: squareOptions ?? duoOptions,
+    squareOptions: square,
     cashSuggestions: namePool,
+    answerImages: answerImagesForNames(pool, labels),
   };
 }
 
@@ -165,7 +210,14 @@ function createFirstFranchise(
   if (!duoOptions) {
     return null;
   }
+  const square = squareOptions ?? duoOptions;
   const wiki = wikiEntry(target);
+  const labels = collectAnswerLabels([
+    [correct],
+    duoOptions,
+    square,
+    franchisePool,
+  ]);
   return {
     id,
     type: 'firstFranchise',
@@ -176,8 +228,9 @@ function createFirstFranchise(
     // Wiki of the pictured queen (answer itself is a franchise name).
     correctAnswerWikis: wiki ? [wiki] : [],
     duoOptions,
-    squareOptions: squareOptions ?? duoOptions,
+    squareOptions: square,
     cashSuggestions: franchisePool,
+    answerImages: answerImagesForFranchises(labels),
   };
 }
 
@@ -255,6 +308,13 @@ function createSeasonWinner(
   if (!duoOptions) {
     return null;
   }
+  const square = squareOptions ?? duoOptions;
+  const labels = collectAnswerLabels([
+    candidate.winners,
+    duoOptions,
+    square,
+    franchisePool,
+  ]);
   return {
     id,
     type: 'seasonWinner',
@@ -267,8 +327,9 @@ function createSeasonWinner(
     correctAnswers: [...candidate.winners],
     correctAnswerWikis: wikisForNames(pool, candidate.winners),
     duoOptions,
-    squareOptions: squareOptions ?? duoOptions,
+    squareOptions: square,
     cashSuggestions: franchisePool,
+    answerImages: answerImagesForNames(pool, labels),
   };
 }
 
@@ -333,6 +394,7 @@ export function generateQuizQuestions(
           const q = createWhoIsThis(
             target,
             namePool,
+            pool,
             `q-${questions.length}-who`,
           );
           if (q) {

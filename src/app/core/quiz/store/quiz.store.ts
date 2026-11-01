@@ -75,6 +75,11 @@ export class QuizStore {
     () => this.answersSignal().filter((a) => a.correct).length,
   );
 
+  readonly lastAnswer = computed(() => {
+    const list = this.answersSignal();
+    return list.length > 0 ? list[list.length - 1] : null;
+  });
+
   constructor(
     @Inject(QUIZ_DATA_PROVIDER) private readonly provider: QuizDataProvider,
     private readonly prefs: QuizPrefsService,
@@ -161,13 +166,23 @@ export class QuizStore {
 
     this.answersSignal.update((list) => [...list, record]);
     this.selectedModeSignal.set(null);
+    this.phaseSignal.set('feedback');
+  }
+
+  continueAfterFeedback(): void {
+    if (this.phaseSignal() !== 'feedback') {
+      return;
+    }
 
     const nextIndex = this.currentIndexSignal() + 1;
     if (nextIndex >= this.questionsSignal().length) {
       this.phaseSignal.set('recap');
       return;
     }
+
     this.currentIndexSignal.set(nextIndex);
+    this.selectedModeSignal.set(null);
+    this.phaseSignal.set('playing');
   }
 
   private startQuiz(config: QuizConfig): void {

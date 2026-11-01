@@ -5,14 +5,16 @@
 }
 
 @media (max-width: 639px) {
-  /* Fit play phase in the viewport (header + footer chrome ≈ 6.25rem). */
-  :host:has(.quiz-page--playing) {
+  /* Fit play / feedback phases in the viewport (header + footer chrome ≈ 6.25rem). */
+  :host:has(.quiz-page--playing),
+  :host:has(.quiz-page--feedback) {
     height: calc(100dvh - 6.25rem);
     max-height: calc(100dvh - 6.25rem);
     overflow: hidden;
   }
 
-  :host .quiz-page--playing {
+  :host .quiz-page--playing,
+  :host .quiz-page--feedback {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -23,7 +25,8 @@
     overflow: hidden;
   }
 
-  :host .quiz-page--playing > * {
+  :host .quiz-page--playing > *,
+  :host .quiz-page--feedback > * {
     flex: 1 1 auto;
     min-height: 0;
   }
